@@ -41,3 +41,14 @@ export class StoreItem implements storeItem {
     this.additionalDescriptions = additionalDescription;
   }
 }
+
+export class Tag {
+  id: string;
+  description: string;
+  dimension: string;
+  constructor(id: string, description: string, dimension: string) {
+    this.id = id;
+    this.description = description;
+    this.dimension = dimension;
+  }
+}

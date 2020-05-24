@@ -4,7 +4,7 @@ import * as yup from 'yup';
 import { Formik } from 'formik';
 import { storeItem } from '../../../types/types';
 import { db } from '../../../firebase/firebaseConfig';
-import { StoreItem } from '../../../classes/classes';
+import { StoreItem, Tag } from '../../../classes/classes';
 import { baseBranches } from '../../../firebase/firebaseEndpoints';
 import MenuHeader from '../../atoms/MenuHeader/MenuHeader';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
@@ -59,8 +59,16 @@ const AddStoreForm = (props: Props) => {
     const key = await db.ref('QR').child(`${baseBranches.storesBranch}${storeType}`).push().key;
     const updates = {};
     updates[`${baseBranches.storesBranch}${storeType}/${key}`] = newItem;
-    //updates[`${baseBranches.storeTypeBranch}${identifier}`] = newStore;
     db.ref('QR/').update(updates);
+  };
+
+  const addNewTag = (newItem: StoreItem) => {
+    const { name, storeType, id, mainType, secondType, dimension } = newItem;
+    const description = `${name} ${mainType} ${secondType}`;
+    const idNumber = `${storeType}-${id.toString().padStart(3, '0')}`;
+    const newTag = new Tag(idNumber, description, dimension);
+
+    db.ref(`QR/${baseBranches.tagsBranch}`).push(newTag);
   };
 
   const createOrderDesc = (newItem: StoreItem) => {
@@ -91,8 +99,10 @@ const AddStoreForm = (props: Props) => {
           defaultOrderAmount!,
           additionalDescriptions!,
         );
+
         createOrderDesc(newItem);
         addNewItem(newItem);
+        addNewTag(newItem);
         toggleModal();
         resetForm();
         setSubmitting(false);

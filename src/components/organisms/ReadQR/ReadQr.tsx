@@ -27,10 +27,10 @@ const StyledButton = styled.button`
   margin: 20px;
 `;
 
-const ReadQr = () => {
+const ReadQr = ({ toggleScanning }) => {
   const [data, setData] = useState('Empty');
   const [status, setStatus] = useState('OK');
-  const [legacyMode, setMode] = useState(true);
+  //const [legacyMode, setMode] = useState(true);
 
   const handleErr = (err) => {
     setStatus(err);
@@ -39,23 +39,20 @@ const ReadQr = () => {
   const handleScan = (result) => {
     if (result) {
       setData(result);
-      setMode(false);
+      toggleScanning();
     }
   };
 
   const previewStyle = {
-    height: 300,
-    width: 300,
+    height: 350,
+    width: 350,
   };
 
   return (
     <StyledWrapper>
-      {legacyMode && (
-        <QrReader delay={200} onError={handleErr} onScan={handleScan} style={previewStyle} />
-      )}
-      <StyledP>{data}</StyledP>
+      <QrReader delay={200} onError={handleErr} onScan={handleScan} style={previewStyle} />
 
-      <StyledButton onClick={() => setMode(!legacyMode)}>Set mode</StyledButton>
+      <StyledP>{data}</StyledP>
     </StyledWrapper>
   );
 };
