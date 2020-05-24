@@ -11,14 +11,19 @@ const StyledWrapper = styled(MenuWrapper)`
   justify-content: flex-start;
 `;
 
-interface Props {}
+interface Props {
+  toggleModal: Function;
+}
 
 const StoreMenu = (props: Props) => {
   const { primaryBlue } = theme;
+  const { toggleModal } = props;
   return (
     <StyledWrapper>
       <MenuHeader>Akcje</MenuHeader>
-      <MenuButton color={primaryBlue}>Dodaj nowy</MenuButton>
+      <MenuButton color={primaryBlue} onClick={() => toggleModal()}>
+        Dodaj nowy
+      </MenuButton>
     </StyledWrapper>
   );
 };

@@ -6,6 +6,7 @@ import { storesPath } from '../../../firebase/firebaseEndpoints';
 import AppLogo from '../../atoms/AppLogo/AppLogo';
 import StoreMenu from '../../molecules/StoreMenu/StoreMenu';
 import StoreItemsView from '../StoreItemsView/StoreItemsView';
+import AddItemModal from '../AddItemModal/AddItemModal';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -53,24 +54,30 @@ const StoreType = (props: Props) => {
 
   const [isStoreEmpty, setIsStoreEmpty] = useState<boolean | undefined>(undefined);
   const [itemsList, setItemsList] = useState<storeItem[]>([]);
+  const [isAddItemModalOpened, setIsAddItemModalOpened] = useState(false);
 
-  const loadItemsList = (identifier: string, storesPath: string) => {
-    const ref = db.ref(storesPath);
-    return ref.child(identifier).on('value', async (snapshot) => {
-      const isEmpty =
-        isStoreEmpty === undefined ? (await snapshot.val()) === 'EMPTY' : isStoreEmpty;
-      setIsStoreEmpty(isEmpty);
-      if (!isEmpty) {
-        const items = await snapshot.val();
-        console.log(items);
-      }
-    });
+  const toggleAddItemsModal = () => {
+    setIsAddItemModalOpened(!isAddItemModalOpened);
   };
 
   useEffect(() => {
+    //!! Info about useCallback
+    const loadItemsList = (identifier: string, storesPath: string) => {
+      const ref = db.ref(storesPath);
+      return ref.child(identifier).on('value', async (snapshot) => {
+        const isEmpty =
+          isStoreEmpty === undefined ? (await snapshot.val()) === 'EMPTY' : isStoreEmpty;
+        setIsStoreEmpty(isEmpty);
+        if (!isEmpty) {
+          const items = await snapshot.val();
+
+          setItemsList(Object.values(items));
+        }
+      });
+    };
     const listener = loadItemsList(identifier, storesPath);
     return () => db.ref(storesPath).off('value', listener);
-  });
+  }, [identifier, isStoreEmpty]);
 
   return (
     <StyledWrapper>
@@ -82,9 +89,15 @@ const StoreType = (props: Props) => {
         </StyledColumnWrapper>
       </StyledFlexWrapper>
       <StyledFlexWrapper>
-        <StoreMenu />
+        <StoreMenu toggleModal={toggleAddItemsModal} />
         <StoreItemsView isStoreEmpty={isStoreEmpty!} items={itemsList} />
       </StyledFlexWrapper>
+      <AddItemModal
+        isModalOpened={isAddItemModalOpened}
+        toggleModal={toggleAddItemsModal}
+        storeType={identifier}
+        itemsList={itemsList}
+      />
     </StyledWrapper>
   );
 };

@@ -44,6 +44,7 @@ const AddStoreForm = (props: Props) => {
     const properties: string[] = [];
     stores.map((store) => {
       properties.push(store[propName]);
+      return undefined;
     });
     return properties;
   };
@@ -72,7 +73,7 @@ const AddStoreForm = (props: Props) => {
     const updates = {};
     updates[`${baseBranches.storesBranch}${identifier}`] = 'EMPTY';
     updates[`${baseBranches.storeTypeBranch}${identifier}`] = newStore;
-    const ref = db.ref('QR').update(updates);
+    db.ref('QR').update(updates);
   };
 
   return (
