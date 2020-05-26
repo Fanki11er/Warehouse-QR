@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
+import { storeItem } from '../../../types/types';
 
 const StyledListElement = styled.li`
   display: flex;
@@ -62,23 +63,24 @@ const StyledButton = styled(MenuButton)`
 `;
 
 interface Props {
-  orderDescription: string;
-  //id: number,
+  item: storeItem;
 
-  /*actions: {
-        order: Function,
-        addTag: Function,
-    }*/
+  actions: {
+    //order: Function,
+    addNewTag: (item: storeItem) => void;
+  };
 }
 
 const StoreItem = (props: Props) => {
-  const { orderDescription } = props;
+  const { item, actions } = props;
+  const { orderDescription } = item;
+  const { addNewTag } = actions;
   return (
     <StyledListElement>
       <StyledItem>{orderDescription}</StyledItem>
       <StyledButtonsWrapper>
         <StyledButton>Zamów</StyledButton>
-        <StyledButton>Etykieta</StyledButton>
+        <StyledButton onClick={(e) => addNewTag(item)}>Etykieta</StyledButton>
       </StyledButtonsWrapper>
     </StyledListElement>
   );

@@ -19,10 +19,12 @@ export class StoreItem implements storeItem {
   additionalDescriptions: string = '';
   orderDescription: string = '';
   name: string;
+  identifier: string = '';
   constructor(
     storeType: string,
     name: string,
     id: number,
+    identifier: string,
     dimension: string,
     mainType: string,
     secondType: string,
@@ -32,6 +34,7 @@ export class StoreItem implements storeItem {
     this.storeType = storeType;
     this.name = name.toUpperCase();
     this.id = id;
+    this.identifier = identifier;
     this.dimension = dimension;
     this.mainType = mainType.toUpperCase();
     this.secondType = secondType.toUpperCase();

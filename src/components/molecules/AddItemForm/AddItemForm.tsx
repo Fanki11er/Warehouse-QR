@@ -6,6 +6,7 @@ import { storeItem } from '../../../types/types';
 import { db } from '../../../firebase/firebaseConfig';
 import { StoreItem, Tag } from '../../../classes/classes';
 import { baseBranches } from '../../../firebase/firebaseEndpoints';
+import { addNewTag } from '../../../tools/tools';
 import MenuHeader from '../../atoms/MenuHeader/MenuHeader';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
 import Form from '../../atoms/Form/Form';
@@ -55,20 +56,15 @@ const AddStoreForm = (props: Props) => {
       : 0;
     return sortedList ? sortedList[sortedList.length - 1].id + 1 : 1;
   };
+
+  const makeIdentifier = (id: number, storeType: string): string => {
+    return `${storeType}-${id.toString().padStart(3, '0')}`;
+  };
   const addNewItem = async (newItem: StoreItem) => {
     const key = await db.ref('QR').child(`${baseBranches.storesBranch}${storeType}`).push().key;
     const updates = {};
     updates[`${baseBranches.storesBranch}${storeType}/${key}`] = newItem;
     db.ref('QR/').update(updates);
-  };
-
-  const addNewTag = (newItem: StoreItem) => {
-    const { name, storeType, id, mainType, secondType, dimension } = newItem;
-    const description = `${name} ${mainType} ${secondType}`;
-    const idNumber = `${storeType}-${id.toString().padStart(3, '0')}`;
-    const newTag = new Tag(idNumber, description, dimension);
-
-    db.ref(`QR/${baseBranches.tagsBranch}`).push(newTag);
   };
 
   const createOrderDesc = (newItem: StoreItem) => {
@@ -89,10 +85,12 @@ const AddStoreForm = (props: Props) => {
           additionalDescriptions,
         } = values;
         const id = getNextItemNumber(itemsList);
+        const identifier = makeIdentifier(id, storeType);
         const newItem = new StoreItem(
           storeType,
           name!,
           id,
+          identifier,
           dimension!,
           mainType!,
           secondType!,
