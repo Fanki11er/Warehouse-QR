@@ -6,6 +6,10 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  @media (max-width: 600px) {
+    padding: 10px 0;
+  }
 `;
 
 export default Form;

@@ -1,60 +1,33 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import QrReader from 'react-qr-reader';
+import { findByLabelText } from '@testing-library/react';
 
-const StyledWrapper = styled.div`
-  margin-top: 50px;
-  display: flex;
-  flex-direction: column;
-  width: 500px;
-  height: 500px;
-  background-color: #010d26;
-`;
+interface Props {
+  toggleScanning: Function;
+  getScannedItemId: Function;
+  handleErr: Function;
+}
 
-const StyledP = styled.p`
-  margin-top: 150px;
-  font-size: 40px;
-  color: white;
-`;
+const ReadQr = (props: Props) => {
+  const { toggleScanning, getScannedItemId, handleErr } = props;
 
-const StyledButton = styled.button`
-  width: 100px;
-  height: 60px;
-  color: white;
-  background-color: black;
-  border: 2px solid white;
-  border-radius: 10%;
-  margin: 20px;
-`;
-
-const ReadQr = ({ toggleScanning }) => {
-  const [data, setData] = useState('Empty');
-  const [status, setStatus] = useState('OK');
-  //const [legacyMode, setMode] = useState(true);
-
-  const handleErr = (err) => {
-    setStatus(err);
-  };
-
-  const handleScan = (result) => {
+  const handleScan = (result: string) => {
     if (result) {
-      setData(result);
+      getScannedItemId(result);
       toggleScanning();
     }
   };
 
   const previewStyle = {
-    height: 350,
-    width: 350,
+    height: `98%`,
+    width: `98%`,
+    position: 'absolute',
+    left: '0',
+    top: '0',
   };
 
-  return (
-    <StyledWrapper>
-      <QrReader delay={200} onError={handleErr} onScan={handleScan} style={previewStyle} />
-
-      <StyledP>{data}</StyledP>
-    </StyledWrapper>
-  );
+  return <QrReader delay={200} onError={handleErr} onScan={handleScan} style={previewStyle} />;
 };
 
 export default ReadQr;

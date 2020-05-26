@@ -109,7 +109,7 @@ const AddStoreForm = (props: Props) => {
       }}
     >
       {({ handleSubmit, touched, errors, values, resetForm, setSubmitting }) => (
-        <Form onSubmit={handleSubmit} autoComplete={'off'}>
+        <Form onSubmit={handleSubmit}>
           <MenuHeader>Dodaj do magazynu</MenuHeader>
           <StyledInputsWrapper>
             <FormInput

@@ -16,6 +16,10 @@ const StyledWrapper = styled.ol`
   margin: 30px 100px;
   color: red;
   padding: 0 5px;
+
+  @media (max-width: 600px) {
+    width: 350px;
+  }
 `;
 
 const StyledLoading = styled.div`
@@ -35,7 +39,7 @@ const StoreItemsView = (props: Props) => {
   const { isStoreEmpty, items } = props;
   const renderItems = (items: storeItem[]) => {
     return items.length ? (
-      items.map(({ orderDescription }, index) => {
+      items.reverse().map(({ orderDescription }, index) => {
         return <StoreItem orderDescription={orderDescription} key={index} />;
       })
     ) : (
@@ -45,7 +49,7 @@ const StoreItemsView = (props: Props) => {
     );
   };
   return (
-    <StyledWrapper>
+    <StyledWrapper className={'withScroll'}>
       {isStoreEmpty ? (
         <StyledErrorInfo>Brak elementów do wyświetlenia</StyledErrorInfo>
       ) : (

@@ -10,7 +10,7 @@ const MenuButton = styled.button`
   width: 180px;
   height: 40px;
   color: ${(props: Props) => (props.color ? props.color : theme.green)};
-  border: 1px solid ${(props: Props) => (props.color ? props.color : theme.green)};
+  border: 2px solid ${(props: Props) => (props.color ? props.color : theme.green)};
   border-radius: 10px;
   background-color: transparent;
   align-self: center;
@@ -30,6 +30,10 @@ const MenuButton = styled.button`
     border: 1px solid ${({ theme }) => theme.gray};
     pointer-events: none;
     cursor: normal;
+  }
+
+  @media (max-width: 600px) {
+    transform: scale(0.9);
   }
 `;
 

@@ -2,9 +2,6 @@ import { createGlobalStyle } from 'styled-components';
 import theme from './mainTheme';
 
 const GlobalStyle = createGlobalStyle`
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap');
-
 
     *, *::before, *::after {
         box-sizing: border-box;
@@ -34,7 +31,7 @@ const GlobalStyle = createGlobalStyle`
         overflow-x: hidden;
   ::-webkit-scrollbar {
     width: 15px;
-    background-color: ${theme.primary};
+    background-color: transparent;
   }
 
   ::-webkit-scrollbar-thumb {
@@ -46,6 +43,17 @@ const GlobalStyle = createGlobalStyle`
   }
 
     }
+
+    @media print {
+  .printHide {
+     display: none;
+     
+   }
+   .page {
+
+     transform: scale(1);
+   }
+}
 `;
 
 export default GlobalStyle;

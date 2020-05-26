@@ -38,7 +38,7 @@ interface Props {
 
 const AddStoreForm = (props: Props) => {
   const { toggleModal, availableStores } = props;
-  const initialValues: storeType = { name: '', type: '', identifier: '' };
+  const initialValues: storeType = { name: '', identifier: '' };
 
   const getProperties = (propName: string, stores: storeType[]): string[] => {
     const properties: string[] = [];
@@ -49,27 +49,21 @@ const AddStoreForm = (props: Props) => {
     return properties;
   };
   const usedNames = getProperties('name', availableStores);
-  const usedTypes = getProperties('type', availableStores);
   const usedIdentifiers = getProperties('identifier', availableStores);
   let validateSchema = yup.object().shape({
     name: yup.string().required('Pole jest wymagane').notOneOf(usedNames, 'Nazwa już istnieje'),
 
-    type: yup
+    identifier: yup
       .string()
       .length(3, 'Typ musi zawierać 3 litery')
       .required('Pole jest wymagane')
       .uppercase()
-      .notOneOf(usedTypes, 'Typ już istnieje: '),
-    identifier: yup
-      .string()
-      .required('Pole jest wymagane')
-      .lowercase()
-      .notOneOf(usedIdentifiers, 'Etykieta już istnieje'),
+      .notOneOf(usedIdentifiers, 'Typ już istnieje: '),
   });
 
   const createNewStore = (values: storeType) => {
-    const { name, type, identifier } = values;
-    const newStore = new StoreType(name, identifier, type);
+    const { name, identifier } = values;
+    const newStore = new StoreType(name, identifier);
     const updates = {};
     updates[`${baseBranches.storesBranch}${identifier}`] = 'EMPTY';
     updates[`${baseBranches.storeTypeBranch}${identifier}`] = newStore;
@@ -99,19 +93,12 @@ const AddStoreForm = (props: Props) => {
               error={errors.name && touched.name ? true : false}
               errorText={errors.name && touched.name ? errors.name : ''}
             />
-            <FormInput
-              name={'type'}
-              type={'text'}
-              label={'Typ'}
-              maxLength={3}
-              error={errors.type && touched.type ? true : false}
-              errorText={errors.type && touched.type ? errors.type : ''}
-            />
+
             <FormInput
               name={'identifier'}
               type={'text'}
               label={'Etykieta'}
-              maxLength={25}
+              maxLength={3}
               error={errors.identifier && touched.identifier ? true : false}
               errorText={errors.identifier && touched.identifier ? errors.identifier : ''}
             />

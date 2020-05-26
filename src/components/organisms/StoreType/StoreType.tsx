@@ -7,6 +7,7 @@ import AppLogo from '../../atoms/AppLogo/AppLogo';
 import StoreMenu from '../../molecules/StoreMenu/StoreMenu';
 import StoreItemsView from '../StoreItemsView/StoreItemsView';
 import AddItemModal from '../AddItemModal/AddItemModal';
+import Navigation from '../../molecules/Navigation/Navigation';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -19,6 +20,10 @@ const StyledWrapper = styled.div`
 const StyledFlexWrapper = styled.div`
   display: flex;
   justify-content: space-between;
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 const StyledColumnWrapper = styled.div`
   width: 80%;
@@ -81,6 +86,7 @@ const StoreType = (props: Props) => {
 
   return (
     <StyledWrapper>
+      <Navigation />
       <StyledFlexWrapper>
         <AppLogo />
         <StyledColumnWrapper>

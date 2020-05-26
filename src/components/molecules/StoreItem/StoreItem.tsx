@@ -11,6 +11,12 @@ const StyledListElement = styled.li`
   border-radius: 10px;
   margin: 10px 10px 0 10px;
   justify-content: space-between;
+  @media (max-width: 600px) {
+    width: 100%;
+    min-height: 75px;
+    align-content: center;
+    justify-content: center;
+  }
 `;
 
 const StyledItem = styled.button`
@@ -28,12 +34,22 @@ const StyledItem = styled.button`
     background-color: ${({ theme }) => theme.transparentGreen};
     cursor: pointer;
   }
+
+  @media (max-width: 600px) {
+    display: flex;
+    font-size: ${({ theme }) => theme.fontSizeDesktop.normal};
+    width: 100%;
+    height: 45%;
+  }
 `;
 
 const StyledButtonsWrapper = styled.div`
   display: flex;
   width: 35%;
   justify-content: space-between;
+  @media (max-width: 600px) {
+    justify-content: space-around;
+  }
 `;
 
 const StyledButton = styled(MenuButton)`

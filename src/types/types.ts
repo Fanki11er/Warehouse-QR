@@ -10,7 +10,6 @@ export type button = {
 
 export interface storeType {
   name: string;
-  type: string;
   identifier: string;
 }
 

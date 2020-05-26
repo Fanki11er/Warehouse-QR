@@ -6,13 +6,20 @@ import { storeType } from '../../types/types';
 import AppLogo from '../../components/atoms/AppLogo/AppLogo';
 import StoreTypesMenu from '../../components/organisms/StoreTypesMenu/StoreTypesMenu';
 import AddStoreModal from '../../components/organisms/AddStoreModal/AddStoreModal';
+import Navigation from '../../components/molecules/Navigation/Navigation';
 
 const StyledWrapper = styled.div`
   display: flex;
+  flex-direction: row-reverse;
   width: 100%;
   min-height: 100vh;
   background-color: ${({ theme }) => theme.primary};
   padding: 20px 20px 0 20px;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const StyledFlexWrapper = styled.div`
@@ -51,6 +58,7 @@ const MainPage = () => {
   }, []);
   return (
     <StyledWrapper>
+      <Navigation />
       <StyledFlexWrapper>
         <AppLogo />
 

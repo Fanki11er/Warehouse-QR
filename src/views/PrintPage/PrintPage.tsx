@@ -6,10 +6,13 @@ import { tagsPath } from '../../firebase/firebaseEndpoints';
 import ItemTag from '../../components/atoms/ItemTag/ItemTag';
 import ErrorInfo from '../../components/atoms/ErrorInfo/ErrorInfo';
 import LoadingImage from '../../components/atoms/LoadingImage/LoadingImage';
+import Navigation from '../../components/molecules/Navigation/Navigation';
 
 const StyledWrapper = styled.div`
+  padding-top: 25px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   height: 100%;
   background-color: ${({ theme }) => theme.primary};
@@ -18,10 +21,15 @@ const StyledPage = styled.div`
   display: flex;
   flex-flow: wrap row;
   align-content: flex-start;
+  justify-content: center;
   margin: 20px;
   width: 180mm;
-  height: 260mm;
-  background-color: #bbb;
+  min-height: 240mm;
+  background-color: #ddd;
+  padding-top: 10px;
+  @media (max-width: 600px) {
+    transform: scale(0.5) translateY(-300px);
+  }
 `;
 
 const StyledLoading = styled.div`
@@ -29,7 +37,6 @@ const StyledLoading = styled.div`
   padding: 100px;
   align-self: center;
   justify-self: center;
-  margin-left: 150px;
 `;
 
 const StyledErrorInfo = styled(ErrorInfo)`
@@ -72,7 +79,8 @@ const PrintPage = () => {
   };
   return (
     <StyledWrapper>
-      <StyledPage>
+      <Navigation />
+      <StyledPage className={'page'}>
         {isStoreEmpty === true ? (
           <StyledErrorInfo>Brak elementów do wyświetlenia</StyledErrorInfo>
         ) : (
