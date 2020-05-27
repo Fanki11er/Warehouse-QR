@@ -15,6 +15,7 @@ const theme = {
 
   fontSizeDesktop: {
     smaller: '0.8em',
+    small: '0.9em',
     normal: '1em',
     larger: '1.3em',
     large: '1.6em',

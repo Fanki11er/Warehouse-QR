@@ -37,6 +37,7 @@ const GlobalStyle = createGlobalStyle`
   ::-webkit-scrollbar-thumb {
     background-color: ${theme.green};
     border-radius: 10px;
+    min-height: 100px;
     border: 3px solid;
     border: none;
     
@@ -49,10 +50,25 @@ const GlobalStyle = createGlobalStyle`
      display: none;
      
    }
-   .page {
-
-     transform: scale(1);
+   .pagePrinter {
+      transform: scale(1);
+      margin: 0;
+      padding: 0;
+      margin-top: 2px;
+      align-content: center;
+      height: 265mm;
+     
    }
+
+   .pagePdf {
+     transform: scale(1);
+     margin: 0;
+     margin-top: 2px;
+     padding:0;
+     height: 275mm;
+     align-content: center;
+   }
+ 
 }
 `;
 

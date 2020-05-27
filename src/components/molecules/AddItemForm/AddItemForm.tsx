@@ -4,7 +4,7 @@ import * as yup from 'yup';
 import { Formik } from 'formik';
 import { storeItem } from '../../../types/types';
 import { db } from '../../../firebase/firebaseConfig';
-import { StoreItem, Tag } from '../../../classes/classes';
+import { StoreItem } from '../../../classes/classes';
 import { baseBranches } from '../../../firebase/firebaseEndpoints';
 import { addNewTag } from '../../../tools/tools';
 import MenuHeader from '../../atoms/MenuHeader/MenuHeader';

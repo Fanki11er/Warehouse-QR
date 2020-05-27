@@ -1,7 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
 import QrReader from 'react-qr-reader';
-import { findByLabelText } from '@testing-library/react';
 
 interface Props {
   toggleScanning: Function;
