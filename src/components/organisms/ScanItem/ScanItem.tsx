@@ -16,11 +16,11 @@ const StyledWrapper = styled.div`
 const StyledScannerWrapper = styled.div`
   display: flex;
   position: relative;
-  width: 270px;
-  height: 270px;
+  width: 200px;
+  height: 200px;
   border: 3px solid ${({ theme }) => theme.green};
   border-radius: 5px;
-  margin-top: 20px;
+  margin-top: 40px;
 `;
 
 const StyledButton = styled.button`
@@ -75,7 +75,7 @@ const ScanItem = () => {
   const [scannedItemId, setScannedItemId] = useState<string>('');
   const [scanError, setScanError] = useState<string>('');
   const toggleScanning = () => {
-    setScannedItemId('');
+    !isScanning && setScannedItemId('');
     setIsScanning(!isScanning);
     setScanError('');
   };
