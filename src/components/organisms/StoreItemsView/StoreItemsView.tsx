@@ -10,15 +10,15 @@ const StyledWrapper = styled.ol`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 750px;
+  width: 830px;
   height: 400px;
   border: 2px solid ${({ theme }) => theme.primaryBlue};
   border-radius: 25px;
   border-bottom-right-radius: 10px;
   border-top-right-radius: 10px;
-  margin: 30px 100px;
+  margin: 30px 160px;
   color: red;
-  padding: 0 5px;
+  padding: 0 10px;
 
   @media (max-width: 600px) {
     width: 350px;
@@ -32,6 +32,7 @@ const StyledLoading = styled.div`
 type Props = {
   items: storeItem[];
   isStoreEmpty: boolean;
+  toggleEditItemModal: (a: storeItem) => void;
 };
 
 const StyledErrorInfo = styled(ErrorInfo)`
@@ -39,12 +40,11 @@ const StyledErrorInfo = styled(ErrorInfo)`
 `;
 
 const StoreItemsView = (props: Props) => {
-  const { isStoreEmpty, items } = props;
-  const actions = { addNewTag };
+  const { isStoreEmpty, items, toggleEditItemModal } = props;
+  const actions = { addNewTag, toggleEditItemModal };
   const renderItems = (items: storeItem[]) => {
     return items.length ? (
       items.reverse().map((item, index) => {
-        console.log(item);
         return <StoreItem item={item} key={index} actions={actions} />;
       })
     ) : (

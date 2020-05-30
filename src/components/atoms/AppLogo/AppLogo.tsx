@@ -9,6 +9,10 @@ const StyledWrapper = styled.div`
 
   border-radius: 15px;
   justify-content: center;
+
+  @media (max-width: 600px) {
+    margin-bottom: 15px;
+  }
 `;
 
 const StyledImage = styled.img`

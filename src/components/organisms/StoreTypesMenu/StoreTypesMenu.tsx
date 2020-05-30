@@ -30,6 +30,11 @@ const StoreTypesMenu = (props: Props) => {
   return (
     <MenuWrapper>
       <MenuHeader>Magazyny</MenuHeader>
+
+      <MenuButton className={!baseStatus ? 'notActive' : undefined} onClick={() => toggleModal()}>
+        Dodaj nowy
+      </MenuButton>
+      <MenuButton onClick={() => makeBackup()}>Kopia zapasowa</MenuButton>
       {!baseStatus ? (
         <ErrorInfo>
           Łączę
@@ -38,10 +43,6 @@ const StoreTypesMenu = (props: Props) => {
       ) : (
         renderAvailableStores(availableStores)
       )}
-      <MenuButton className={!baseStatus ? 'notActive' : undefined} onClick={() => toggleModal()}>
-        Dodaj nowy
-      </MenuButton>
-      <MenuButton onClick={() => makeBackup()}>Make backup</MenuButton>
     </MenuWrapper>
   );
 };

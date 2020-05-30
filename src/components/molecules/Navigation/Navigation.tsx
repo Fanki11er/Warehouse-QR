@@ -6,10 +6,14 @@ import { Link } from 'react-router-dom';
 
 const StyledWrapper = styled.nav`
   display: flex;
-  width: 100%;
   height: 100%;
   padding: 0 15px;
   justify-content: center;
+  width: 100%;
+
+  @media (max-width: 600px) {
+    padding: 0 5px;
+  }
 `;
 
 const StyledNavLink = styled(MenuButton)`
@@ -22,6 +26,9 @@ const StyledNavLink = styled(MenuButton)`
   color: ${({ theme }) => theme.primaryBlue};
   border: 2px solid ${({ theme }) => theme.primaryBlue};
   margin: 0 30px;
+  @media (max-width: 600px) {
+    margin: 0 5px;
+  }
 `;
 
 const Navigation = () => {

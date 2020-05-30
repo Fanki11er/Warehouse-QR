@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import ReadQr from '../ReadQR/ReadQr';
-import Navigation from '../../molecules/Navigation/Navigation';
+import TopWrapper from '../../molecules/TopWrapper/TopWrapper';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -89,7 +89,7 @@ const ScanItem = () => {
 
   return (
     <StyledWrapper>
-      <Navigation />
+      <TopWrapper />
       <StyledScannerWrapper>
         {isScanning && (
           <ReadQr

@@ -9,3 +9,18 @@ export const addNewTag = (newItem: StoreItem) => {
 
   db.ref(`QR/${baseBranches.tagsBranch}`).push(newTag);
 };
+
+export const createOrderDesc = (newItem: StoreItem) => {
+  newItem.orderDescription = `${newItem.name} ${newItem.dimension} ${newItem.mainType} ${newItem.secondType}`;
+};
+
+export const getStoreItemKey = async (storeType: string, identifier: string) => {
+  const item = await db
+    .ref('QR')
+    .child(`${baseBranches.storesBranch}${storeType}`)
+    .orderByChild('identifier')
+    .equalTo(identifier)
+    .once('value');
+  const [key] = Object.keys(item.val());
+  return key;
+};
