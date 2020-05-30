@@ -7,7 +7,7 @@ import AddItemForm from '../../molecules/AddItemForm/AddItemForm';
 const StyledWrapper = styled.div`
   display: flex;
   width: 500px;
-  height: 550px;
+  height: 600px;
   background-color: ${({ theme }) => theme.primary};
   border: 2px solid ${({ theme }) => theme.green};
   border-radius: 15px;
@@ -16,7 +16,7 @@ const StyledWrapper = styled.div`
   @media (max-width: 600px) {
     width: 350px;
     padding: 5px;
-    min-height: 590px;
+    min-height: 620px;
   }
 `;
 interface Props {
@@ -24,13 +24,19 @@ interface Props {
   toggleModal: Function;
   itemsList: storeItem[];
   storeType: string;
+  defaultItemName: string;
 }
 const AddItemModal = (props: Props) => {
-  const { isModalOpened, toggleModal, itemsList, storeType } = props;
+  const { isModalOpened, toggleModal, itemsList, storeType, defaultItemName } = props;
   return (
     <ModalCover isModalOpened={isModalOpened}>
       <StyledWrapper>
-        <AddItemForm toggleModal={toggleModal} itemsList={itemsList} storeType={storeType} />
+        <AddItemForm
+          toggleModal={toggleModal}
+          itemsList={itemsList}
+          storeType={storeType}
+          defaultItemName={defaultItemName}
+        />
       </StyledWrapper>
     </ModalCover>
   );

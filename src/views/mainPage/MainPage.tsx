@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { db } from '../../firebase/firebaseConfig';
+import { db, dbBackup } from '../../firebase/firebaseConfig';
 import { storeTypesPath } from '../../firebase/firebaseEndpoints';
 import { storeType } from '../../types/types';
 import AppLogo from '../../components/atoms/AppLogo/AppLogo';
 import StoreTypesMenu from '../../components/organisms/StoreTypesMenu/StoreTypesMenu';
 import AddStoreModal from '../../components/organisms/AddStoreModal/AddStoreModal';
 import Navigation from '../../components/molecules/Navigation/Navigation';
+import MenuButton from '../../components/atoms/MenuButton/MenuButton';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -56,6 +57,16 @@ const MainPage = () => {
       db.ref(storeTypesPath).off('value', listener);
     };
   }, []);
+
+  const makeBackup = async () => {
+    const originalBase = await (await db.ref().once('value')).val();
+    const stringified: any = JSON.stringify(originalBase);
+    const timestamp = new Date().toLocaleString();
+    dbBackup
+      .collection('BACKUP')
+      .doc()
+      .set({ [timestamp]: stringified });
+  };
   return (
     <StyledWrapper>
       <Navigation />
@@ -66,6 +77,7 @@ const MainPage = () => {
           availableStores={availableStores}
           baseStatus={isBaseStatus}
           toggleModal={toggleAddStoreModal}
+          makeBackup={makeBackup}
         />
       </StyledFlexWrapper>
       <AddStoreModal

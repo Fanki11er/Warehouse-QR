@@ -4,10 +4,9 @@ import { Field } from 'formik';
 
 const StyledWrapper = styled.div`
   display: flex;
-  flex-flow: wrap row;
-  justify-content: space-around;
+  flex-direction: column;
+  align-items: center;
   margin: 0 15px;
-  min-height: 70px;
 `;
 
 const StyledInput = styled(Field)`
@@ -28,12 +27,17 @@ const StyledInput = styled(Field)`
     color: ${({ theme }) => theme.lightRed};
     border: 2px solid ${({ theme }) => theme.lightRed};
   }
+
+  &::placeholder {
+    color: ${({ theme }) => theme.placeholderGreen};
+  }
 `;
 
 const StyledLabel = styled.label`
   color: ${({ theme }) => theme.primaryBlue};
   min-width: 80px;
   font-size: ${({ theme }) => theme.fontSizeDesktop.larger};
+  margin: 4px 0;
 `;
 
 const StyledError = styled.div`
@@ -42,7 +46,6 @@ const StyledError = styled.div`
   justify-self: center;
   width: 100%;
   height: 20px;
-  margin-bottom: 10px;
   color: ${({ theme }) => theme.lightRed};
 `;
 
@@ -53,10 +56,11 @@ interface Props {
   errorText?: string;
   maxLength?: number;
   error?: boolean;
+  placeholder?: string;
 }
 
 const FormInput = (props: Props) => {
-  const { label, type, errorText, name, maxLength, error } = props;
+  const { label, type, errorText, name, maxLength, error, placeholder } = props;
   return (
     <StyledWrapper>
       <StyledLabel>{`${label}:`}</StyledLabel>
@@ -65,6 +69,7 @@ const FormInput = (props: Props) => {
         name={name}
         maxLength={maxLength}
         className={error ? 'error' : undefined}
+        placeholder={placeholder}
       />
       <StyledError>{errorText}</StyledError>
     </StyledWrapper>

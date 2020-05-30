@@ -44,6 +44,7 @@ const StyledDimensionLabel = styled.label`
   font-weight: bolder;
   text-align: center;
   margin: 3px 0;
+  letter-spacing: 1px;
 `;
 
 interface Props {

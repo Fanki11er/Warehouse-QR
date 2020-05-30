@@ -6,6 +6,7 @@ const theme = {
   blue: '#2B6EFF',
   lightRed: '#D94863',
   transparentGreen: 'rgba(131, 179, 59, 0.1)',
+  placeholderGreen: 'rgba(131, 179, 59, 0.5)',
   transparentYellow: 'rgba(255, 195, 20, 0.18)',
   transparentBlue: 'rgba(1,160, 226, 0.1)',
   transparentRed: 'rgba(217, 72, 99, 0.4)',

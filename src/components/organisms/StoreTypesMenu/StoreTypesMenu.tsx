@@ -12,10 +12,11 @@ interface Props {
   availableStores: storeType[];
   baseStatus: boolean;
   toggleModal: Function;
+  makeBackup: Function;
 }
 const StoreTypesMenu = (props: Props) => {
   const { store } = routes;
-  const { availableStores, baseStatus, toggleModal } = props;
+  const { availableStores, baseStatus, toggleModal, makeBackup } = props;
 
   const renderAvailableStores = (availableStores: storeType[]) => {
     return availableStores.length ? (
@@ -40,6 +41,7 @@ const StoreTypesMenu = (props: Props) => {
       <MenuButton className={!baseStatus ? 'notActive' : undefined} onClick={() => toggleModal()}>
         Dodaj nowy
       </MenuButton>
+      <MenuButton onClick={() => makeBackup()}>Make backup</MenuButton>
     </MenuWrapper>
   );
 };

@@ -50,12 +50,16 @@ interface Props {
 }
 
 const StoreType = (props: Props) => {
-  const {
+  /*const {
     location: {
       state: { storeType },
     },
-  } = props;
-  const { name, identifier } = storeType;
+  } = props;*/
+
+  const storeType = props.location.state
+    ? props.location.state.storeType
+    : { name: '', identifier: '', defaultItemName: '' };
+  const { name, identifier, defaultItemName } = storeType;
 
   const [isStoreEmpty, setIsStoreEmpty] = useState<boolean | undefined>(undefined);
   const [itemsList, setItemsList] = useState<storeItem[]>([]);
@@ -66,6 +70,7 @@ const StoreType = (props: Props) => {
   };
 
   useEffect(() => {
+    if (!identifier) return;
     //!! Info about useCallback
     const loadItemsList = (identifier: string, storesPath: string) => {
       const ref = db.ref(storesPath);
@@ -87,6 +92,7 @@ const StoreType = (props: Props) => {
   return (
     <StyledWrapper>
       <Navigation />
+
       <StyledFlexWrapper>
         <AppLogo />
         <StyledColumnWrapper>
@@ -102,6 +108,7 @@ const StoreType = (props: Props) => {
         isModalOpened={isAddItemModalOpened}
         toggleModal={toggleAddItemsModal}
         storeType={identifier}
+        defaultItemName={defaultItemName}
         itemsList={itemsList}
       />
     </StyledWrapper>

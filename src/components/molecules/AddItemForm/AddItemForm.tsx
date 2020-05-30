@@ -29,12 +29,13 @@ interface Props {
   toggleModal: Function;
   itemsList: storeItem[];
   storeType: string;
+  defaultItemName: string;
 }
 
 const AddStoreForm = (props: Props) => {
-  const { toggleModal, itemsList, storeType } = props;
+  const { toggleModal, itemsList, storeType, defaultItemName } = props;
   const initialValues: Partial<storeItem> = {
-    name: '',
+    name: defaultItemName,
     dimension: '',
     mainType: '',
     secondType: '',
@@ -58,7 +59,7 @@ const AddStoreForm = (props: Props) => {
   };
 
   const makeIdentifier = (id: number, storeType: string): string => {
-    return `${storeType}-${id.toString().padStart(3, '0')}`;
+    return `${storeType}-${id.toString().padStart(4, '0')}`;
   };
   const addNewItem = async (newItem: StoreItem) => {
     const key = await db.ref('QR').child(`${baseBranches.storesBranch}${storeType}`).push().key;
