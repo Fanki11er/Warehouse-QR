@@ -6,7 +6,7 @@ import { storeItem } from '../../../types/types';
 import { db } from '../../../firebase/firebaseConfig';
 import { StoreItem } from '../../../classes/classes';
 import { baseBranches } from '../../../firebase/firebaseEndpoints';
-import { addNewTag } from '../../../tools/tools';
+import { createOrderDesc, getStoreItemKey } from '../../../tools/tools';
 import MenuHeader from '../../atoms/MenuHeader/MenuHeader';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
 import Form from '../../atoms/Form/Form';
@@ -27,20 +27,31 @@ const StyledButtonsWrapper = styled.div`
 
 interface Props {
   toggleModal: Function;
-  itemsList: storeItem[];
-  storeType: string;
-  defaultItemName: string;
+  item: storeItem | null;
 }
 
-const AddItemForm = (props: Props) => {
-  const { toggleModal, itemsList, storeType, defaultItemName } = props;
+const EditItemForm = (props: Props) => {
+  const { toggleModal, item } = props;
+  if (!item) return null;
+
+  const {
+    name,
+    dimension,
+    mainType,
+    secondType,
+    defaultOrderAmount,
+    storeType,
+    id,
+    identifier,
+    additionalDescriptions,
+  } = item;
   const initialValues: Partial<storeItem> = {
-    name: defaultItemName,
-    dimension: '',
-    mainType: '',
-    secondType: '',
-    defaultOrderAmount: 0,
-    additionalDescriptions: '',
+    name,
+    dimension,
+    mainType,
+    secondType,
+    defaultOrderAmount,
+    additionalDescriptions,
   };
 
   let validateSchema = yup.object().shape({
@@ -49,34 +60,19 @@ const AddItemForm = (props: Props) => {
     defaultOrderAmount: yup.number(),
   });
 
-  const getNextItemNumber = (itemsList: storeItem[]): number => {
-    const sortedList = itemsList.length
-      ? itemsList.sort((firstId, secondId) => {
-          return firstId.id - secondId.id;
-        })
-      : 0;
-    return sortedList ? sortedList[sortedList.length - 1].id + 1 : 1;
-  };
+  const editItem = async (editedItem: StoreItem) => {
+    const key = await getStoreItemKey(storeType, identifier);
 
-  const makeIdentifier = (id: number, storeType: string): string => {
-    return `${storeType}-${id.toString().padStart(4, '0')}`;
-  };
-  const addNewItem = async (newItem: StoreItem) => {
-    const key = await db.ref('QR').child(`${baseBranches.storesBranch}${storeType}`).push().key;
-    const updates = {};
-    updates[`${baseBranches.storesBranch}${storeType}/${key}`] = newItem;
-    db.ref('QR/').update(updates);
-  };
-
-  const createOrderDesc = (newItem: StoreItem) => {
-    newItem.orderDescription = `${newItem.name} ${newItem.dimension} ${newItem.mainType} ${newItem.secondType}`;
+    db.ref('QR/')
+      .child(`${baseBranches.storesBranch}${storeType}`)
+      .update({ [key]: editedItem });
   };
 
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validateSchema}
-      onSubmit={(values, { setSubmitting, resetForm }) => {
+      onSubmit={(values) => {
         const {
           name,
           dimension,
@@ -85,9 +81,7 @@ const AddItemForm = (props: Props) => {
           defaultOrderAmount,
           additionalDescriptions,
         } = values;
-        const id = getNextItemNumber(itemsList);
-        const identifier = makeIdentifier(id, storeType);
-        const newItem = new StoreItem(
+        const editedItem = new StoreItem(
           storeType,
           name!,
           id,
@@ -99,12 +93,9 @@ const AddItemForm = (props: Props) => {
           additionalDescriptions!,
         );
 
-        createOrderDesc(newItem);
-        addNewItem(newItem);
-        addNewTag(newItem);
-        toggleModal();
-        resetForm();
-        setSubmitting(false);
+        createOrderDesc(editedItem);
+        editItem(editedItem);
+        toggleModal(null);
       }}
     >
       {({ handleSubmit, touched, errors, values, resetForm, setSubmitting }) => (
@@ -155,13 +146,13 @@ const AddItemForm = (props: Props) => {
             />
           </StyledInputsWrapper>
           <StyledButtonsWrapper>
-            <MenuButton type={'submit'}>Dodaj nowy</MenuButton>
+            <MenuButton type="submit">Edytuj</MenuButton>
             <MenuButton
               type="reset"
               onClick={() => {
-                toggleModal();
                 setSubmitting(false);
                 resetForm();
+                toggleModal(null);
               }}
             >
               Anuluj
@@ -173,4 +164,4 @@ const AddItemForm = (props: Props) => {
   );
 };
 
-export default AddItemForm;
+export default EditItemForm;

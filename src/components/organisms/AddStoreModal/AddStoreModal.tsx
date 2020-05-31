@@ -7,7 +7,7 @@ import { storeType } from '../../../types/types';
 const StyledWrapper = styled.div`
   display: flex;
   width: 500px;
-  height: 360px;
+  height: 460px;
   background-color: ${({ theme }) => theme.primary};
   border: 2px solid ${({ theme }) => theme.green};
   border-radius: 15px;

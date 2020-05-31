@@ -11,6 +11,7 @@ export type button = {
 export interface storeType {
   name: string;
   identifier: string;
+  defaultItemName: string;
 }
 
 export type baseReference = firebase.database.Reference;

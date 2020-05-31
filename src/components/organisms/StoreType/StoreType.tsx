@@ -3,11 +3,13 @@ import styled from 'styled-components';
 import { storeItem } from '../../../types/types';
 import { db } from '../../../firebase/firebaseConfig';
 import { storesPath } from '../../../firebase/firebaseEndpoints';
-import AppLogo from '../../atoms/AppLogo/AppLogo';
+import { checkIfIsStoreEmpty } from '../../../tools/tools';
 import StoreMenu from '../../molecules/StoreMenu/StoreMenu';
 import StoreItemsView from '../StoreItemsView/StoreItemsView';
 import AddItemModal from '../AddItemModal/AddItemModal';
-import Navigation from '../../molecules/Navigation/Navigation';
+import EditItemModal from '../EditItemModal/EditItemModal';
+
+import TopWrapper from '../../molecules/TopWrapper/TopWrapper';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -19,17 +21,11 @@ const StyledWrapper = styled.div`
 `;
 const StyledFlexWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   @media (max-width: 600px) {
     flex-direction: column;
     align-items: center;
   }
-`;
-const StyledColumnWrapper = styled.div`
-  width: 80%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 `;
 
 const StyledStoreHeader = styled.div`
@@ -39,10 +35,10 @@ const StyledStoreHeader = styled.div`
   align-self: center;
   justify-self: center;
   text-align: center;
-`;
-const StyledNavigation = styled.nav`
-  width: 100%;
-  height: 50px;
+  margin: 30px;
+  @media (max-width: 600px) {
+    margin: 20px;
+  }
 `;
 
 interface Props {
@@ -50,33 +46,40 @@ interface Props {
 }
 
 const StoreType = (props: Props) => {
-  const {
-    location: {
-      state: { storeType },
-    },
-  } = props;
-  const { name, identifier } = storeType;
+  const storeType = props.location.state
+    ? props.location.state.storeType
+    : { name: '', identifier: '', defaultItemName: '' };
+  const { name, identifier, defaultItemName } = storeType;
+  console.log(storeType.defaultItemName);
 
   const [isStoreEmpty, setIsStoreEmpty] = useState<boolean | undefined>(undefined);
   const [itemsList, setItemsList] = useState<storeItem[]>([]);
   const [isAddItemModalOpened, setIsAddItemModalOpened] = useState(false);
+  const [isEditItemModalOpened, setIsEditItemModalOpened] = useState(false);
+  const [itemToEdition, setItemToEdition] = useState<storeItem | null>(null);
 
   const toggleAddItemsModal = () => {
     setIsAddItemModalOpened(!isAddItemModalOpened);
   };
 
+  const toggleEditItemModal = async (item: storeItem) => {
+    setItemToEdition(item);
+    setIsEditItemModalOpened(!isEditItemModalOpened);
+  };
+
   useEffect(() => {
+    if (!identifier) return;
     //!! Info about useCallback
     const loadItemsList = (identifier: string, storesPath: string) => {
       const ref = db.ref(storesPath);
       return ref.child(identifier).on('value', async (snapshot) => {
-        const isEmpty =
-          isStoreEmpty === undefined ? (await snapshot.val()) === 'EMPTY' : isStoreEmpty;
+        const isEmpty = await checkIfIsStoreEmpty(snapshot);
+
         setIsStoreEmpty(isEmpty);
         if (!isEmpty) {
           const items = await snapshot.val();
 
-          setItemsList(Object.values(items));
+          items ? setItemsList(Object.values(items)) : setItemsList([]);
         }
       });
     };
@@ -86,23 +89,29 @@ const StoreType = (props: Props) => {
 
   return (
     <StyledWrapper>
-      <Navigation />
-      <StyledFlexWrapper>
-        <AppLogo />
-        <StyledColumnWrapper>
-          <StyledNavigation />
-          <StyledStoreHeader>{`Magazyn: ${name}`}</StyledStoreHeader>
-        </StyledColumnWrapper>
-      </StyledFlexWrapper>
+      <TopWrapper />
+      <StyledStoreHeader>{`Magazyn: ${name}`}</StyledStoreHeader>
+
       <StyledFlexWrapper>
         <StoreMenu toggleModal={toggleAddItemsModal} />
-        <StoreItemsView isStoreEmpty={isStoreEmpty!} items={itemsList} />
+        <StoreItemsView
+          isStoreEmpty={isStoreEmpty!}
+          items={itemsList}
+          toggleEditItemModal={toggleEditItemModal}
+        />
       </StyledFlexWrapper>
       <AddItemModal
         isModalOpened={isAddItemModalOpened}
         toggleModal={toggleAddItemsModal}
         storeType={identifier}
+        defaultItemName={defaultItemName}
         itemsList={itemsList}
+      />
+
+      <EditItemModal
+        toggleModal={toggleEditItemModal}
+        isModalOpened={isEditItemModalOpened}
+        item={itemToEdition}
       />
     </StyledWrapper>
   );

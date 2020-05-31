@@ -1,8 +1,8 @@
 const routes = {
-  main: '/',
+  main: '/main',
   store: '/store',
   tags: '/tags',
-  scan: '/scan',
+  scan: '/',
 };
 
 export default routes;

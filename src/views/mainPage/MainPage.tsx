@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { db } from '../../firebase/firebaseConfig';
+import { db, dbBackup } from '../../firebase/firebaseConfig';
 import { storeTypesPath } from '../../firebase/firebaseEndpoints';
 import { storeType } from '../../types/types';
-import AppLogo from '../../components/atoms/AppLogo/AppLogo';
 import StoreTypesMenu from '../../components/organisms/StoreTypesMenu/StoreTypesMenu';
 import AddStoreModal from '../../components/organisms/AddStoreModal/AddStoreModal';
-import Navigation from '../../components/molecules/Navigation/Navigation';
+import TopWrapper from '../../components/molecules/TopWrapper/TopWrapper';
 
 const StyledWrapper = styled.div`
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   min-height: 100vh;
   background-color: ${({ theme }) => theme.primary};
@@ -20,11 +20,6 @@ const StyledWrapper = styled.div`
     flex-direction: column;
     align-items: center;
   }
-`;
-
-const StyledFlexWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
 `;
 
 const MainPage = () => {
@@ -56,18 +51,26 @@ const MainPage = () => {
       db.ref(storeTypesPath).off('value', listener);
     };
   }, []);
+
+  const makeBackup = async () => {
+    const originalBase = await (await db.ref().once('value')).val();
+    const stringified: any = JSON.stringify(originalBase);
+    const timestamp = new Date().toLocaleString();
+    dbBackup
+      .collection('BACKUP')
+      .doc()
+      .set({ [timestamp]: stringified });
+  };
   return (
     <StyledWrapper>
-      <Navigation />
-      <StyledFlexWrapper>
-        <AppLogo />
+      <TopWrapper />
 
-        <StoreTypesMenu
-          availableStores={availableStores}
-          baseStatus={isBaseStatus}
-          toggleModal={toggleAddStoreModal}
-        />
-      </StyledFlexWrapper>
+      <StoreTypesMenu
+        availableStores={availableStores}
+        baseStatus={isBaseStatus}
+        toggleModal={toggleAddStoreModal}
+        makeBackup={makeBackup}
+      />
       <AddStoreModal
         isModalOpened={isAddStoreModalOpened}
         toggleModal={toggleAddStoreModal}

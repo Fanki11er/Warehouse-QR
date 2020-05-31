@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import ModalCover from '../../atoms/ModalCover/ModalCover';
 import { storeItem } from '../../../types/types';
-import AddItemForm from '../../molecules/AddItemForm/AddItemForm';
+import EditItemForm from '../../molecules/EditItemForm/EditItemForm';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -22,24 +22,17 @@ const StyledWrapper = styled.div`
 interface Props {
   isModalOpened: boolean;
   toggleModal: Function;
-  itemsList: storeItem[];
-  storeType: string;
-  defaultItemName: string;
+  item: storeItem | null;
 }
-const AddItemModal = (props: Props) => {
-  const { isModalOpened, toggleModal, itemsList, storeType, defaultItemName } = props;
+const EditItemModal = (props: Props) => {
+  const { isModalOpened, toggleModal, item } = props;
   return (
     <ModalCover isModalOpened={isModalOpened}>
       <StyledWrapper>
-        <AddItemForm
-          toggleModal={toggleModal}
-          itemsList={itemsList}
-          storeType={storeType}
-          defaultItemName={defaultItemName}
-        />
+        <EditItemForm toggleModal={toggleModal} item={item} />
       </StyledWrapper>
     </ModalCover>
   );
 };
 
-export default AddItemModal;
+export default EditItemModal;

@@ -9,3 +9,37 @@ export const addNewTag = (newItem: StoreItem) => {
 
   db.ref(`QR/${baseBranches.tagsBranch}`).push(newTag);
 };
+
+export const createOrderDesc = (newItem: StoreItem) => {
+  newItem.orderDescription = `${newItem.name} ${newItem.dimension} ${newItem.mainType} ${newItem.secondType}`;
+};
+
+export const getStoreItemKey = async (storeType: string, identifier: string) => {
+  const item = await db
+    .ref('QR')
+    .child(`${baseBranches.storesBranch}${storeType}`)
+    .orderByChild('identifier')
+    .equalTo(identifier)
+    .once('value');
+  const [key] = Object.keys(item.val());
+  return key;
+};
+
+export const getTagKey = async (identifier: string) => {
+  const item = await db
+    .ref('QR')
+    .child(`${baseBranches.tagsBranch}`)
+    .orderByChild('id')
+    .equalTo(identifier)
+    .once('value');
+  if (item.val()) {
+    const [key] = Object.keys(item.val());
+    return key;
+  }
+  return null;
+};
+
+export const checkIfIsStoreEmpty = async (snapshot: firebase.database.DataSnapshot) => {
+  if ((await snapshot.val()) === 'EMPTY' || !(await snapshot.val())) return true;
+  return false;
+};

@@ -38,7 +38,7 @@ interface Props {
 
 const AddStoreForm = (props: Props) => {
   const { toggleModal, availableStores } = props;
-  const initialValues: storeType = { name: '', identifier: '' };
+  const initialValues: storeType = { name: '', identifier: '', defaultItemName: '' };
 
   const getProperties = (propName: string, stores: storeType[]): string[] => {
     const properties: string[] = [];
@@ -59,11 +59,13 @@ const AddStoreForm = (props: Props) => {
       .required('Pole jest wymagane')
       .uppercase()
       .notOneOf(usedIdentifiers, 'Typ już istnieje: '),
+
+    defaultItemName: yup.string(),
   });
 
   const createNewStore = (values: storeType) => {
-    const { name, identifier } = values;
-    const newStore = new StoreType(name, identifier);
+    const { name, identifier, defaultItemName } = values;
+    const newStore = new StoreType(name, identifier, defaultItemName);
     const updates = {};
     updates[`${baseBranches.storesBranch}${identifier}`] = 'EMPTY';
     updates[`${baseBranches.storeTypeBranch}${identifier}`] = newStore;
@@ -89,6 +91,7 @@ const AddStoreForm = (props: Props) => {
               name={'name'}
               type={'text'}
               label={'Nazwa'}
+              placeholder={'np: Śruby'}
               maxLength={25}
               error={errors.name && touched.name ? true : false}
               errorText={errors.name && touched.name ? errors.name : ''}
@@ -98,9 +101,20 @@ const AddStoreForm = (props: Props) => {
               name={'identifier'}
               type={'text'}
               label={'Etykieta'}
+              placeholder={'np: SRU'}
               maxLength={3}
               error={errors.identifier && touched.identifier ? true : false}
               errorText={errors.identifier && touched.identifier ? errors.identifier : ''}
+            />
+
+            <FormInput
+              name={'defaultItemName'}
+              type={'text'}
+              label={'Główny typ przedmiotu'}
+              placeholder={'np: Śruba'}
+              maxLength={25}
+              error={errors.defaultItemName && touched.defaultItemName ? true : false}
+              errorText={errors.defaultItemName && touched.defaultItemName ? errors.identifier : ''}
             />
           </StyledInputsWrapper>
           <StyledButtonsWrapper>

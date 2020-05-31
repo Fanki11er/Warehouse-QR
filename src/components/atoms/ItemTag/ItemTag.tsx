@@ -44,21 +44,24 @@ const StyledDimensionLabel = styled.label`
   font-weight: bolder;
   text-align: center;
   margin: 3px 0;
+  letter-spacing: 1px;
 `;
 
 interface Props {
   itemTag: Tag;
+  deleteTag: Function;
 }
 const ItemTag = (props: Props) => {
   const {
     itemTag: { id, description, dimension },
+    deleteTag,
   } = props;
   const createQr = (id: string): any => {
     return <QRCode value={id} renderAs={'svg'} size={60} />;
   };
 
   return (
-    <StyledWrapper onClick={() => console.log('Clicked')}>
+    <StyledWrapper onClick={() => deleteTag(id)}>
       <StyledFlexColumnWrapper>
         <StyledDescriptionLabel>{description}</StyledDescriptionLabel>
         <StyledDimensionLabel>{dimension}</StyledDimensionLabel>

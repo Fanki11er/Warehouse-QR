@@ -6,7 +6,7 @@ import { storeItem } from '../../../types/types';
 const StyledListElement = styled.li`
   display: flex;
   flex-flow: wrap row;
-  width: 720px;
+  width: 100%;
   min-height: 45px;
   border: 2px solid ${({ theme }) => theme.green};
   border-radius: 10px;
@@ -20,8 +20,8 @@ const StyledListElement = styled.li`
   }
 `;
 
-const StyledItem = styled.button`
-  width: 65%;
+const StyledItem = styled.div`
+  width: 55%;
   height: 100%;
   border: none;
   background-color: transparent;
@@ -30,26 +30,22 @@ const StyledItem = styled.button`
   text-align: start;
   padding-left: 10px;
 
-  &:hover {
-    color: ${({ theme }) => theme.green};
-    background-color: ${({ theme }) => theme.transparentGreen};
-    cursor: pointer;
-  }
-
   @media (max-width: 600px) {
     display: flex;
     font-size: ${({ theme }) => theme.fontSizeDesktop.normal};
     width: 100%;
     height: 45%;
+    justify-content: space-around;
   }
 `;
 
 const StyledButtonsWrapper = styled.div`
   display: flex;
-  width: 35%;
+  width: 45%;
   justify-content: space-between;
   @media (max-width: 600px) {
     justify-content: space-around;
+    width: 95%;
   }
 `;
 
@@ -60,6 +56,10 @@ const StyledButton = styled(MenuButton)`
   width: 100px;
   height: 30px;
   margin: 0 10px;
+  @media (max-width: 600px) {
+    width: 90px;
+    margin: 0 5px;
+  }
 `;
 
 interface Props {
@@ -68,19 +68,22 @@ interface Props {
   actions: {
     //order: Function,
     addNewTag: (item: storeItem) => void;
+    toggleEditItemModal: (item: storeItem) => void;
   };
 }
 
 const StoreItem = (props: Props) => {
   const { item, actions } = props;
   const { orderDescription } = item;
-  const { addNewTag } = actions;
+  const { addNewTag, toggleEditItemModal } = actions;
   return (
     <StyledListElement>
       <StyledItem>{orderDescription}</StyledItem>
       <StyledButtonsWrapper>
         <StyledButton>Zamów</StyledButton>
-        <StyledButton onClick={(e) => addNewTag(item)}>Etykieta</StyledButton>
+        <StyledButton onClick={() => addNewTag(item)}>Etykieta</StyledButton>
+        <StyledButton onClick={() => toggleEditItemModal(item)}>Edytuj</StyledButton>
+        <StyledButton>Usuń</StyledButton>
       </StyledButtonsWrapper>
     </StyledListElement>
   );

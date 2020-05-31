@@ -3,9 +3,11 @@ import { storeType, storeItem } from '../types/types';
 export class StoreType implements storeType {
   name: string;
   identifier: string;
-  constructor(name: string, identifier: string) {
+  defaultItemName: string;
+  constructor(name: string, identifier: string, defaultItemName: string) {
     this.name = name;
     this.identifier = identifier;
+    this.defaultItemName = defaultItemName;
   }
 }
 

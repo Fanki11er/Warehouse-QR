@@ -15,13 +15,14 @@ const MenuButton = styled.button`
   background-color: transparent;
   align-self: center;
   justify-content: center;
+  align-items: center;
   margin-bottom: 5px;
   font-size: ${({ theme }) => theme.fontSizeDesktop.normal};
-  transition: color 0.7s, border 0.7s;
+  transition: color 0.3s, border 0.3s;
 
   &:hover {
     color: ${({ theme }) => theme.orange};
-    border: 1px solid ${({ theme }) => theme.orange};
+    border: 2px solid ${({ theme }) => theme.orange};
     cursor: pointer;
   }
 

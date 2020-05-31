@@ -16,10 +16,10 @@ function App() {
       <GlobalStyle />
       <ThemeProvider theme={theme}>
         <Switch>
-          <Route exact path={main} component={MainPage} />
+          <Route exact path={scan} component={ScanItem} />
           <Route path={store} component={StoreType} />
           <Route path={tags} component={PrintPage} />
-          <Route path={scan} component={ScanItem} />
+          <Route path={main} component={MainPage} />
         </Switch>
       </ThemeProvider>
     </BrowserRouter>
