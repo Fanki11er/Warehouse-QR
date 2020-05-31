@@ -22,7 +22,7 @@ const MenuButton = styled.button`
 
   &:hover {
     color: ${({ theme }) => theme.orange};
-    border: 1px solid ${({ theme }) => theme.orange};
+    border: 2px solid ${({ theme }) => theme.orange};
     cursor: pointer;
   }
 

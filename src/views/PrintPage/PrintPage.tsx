@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { db } from '../../firebase/firebaseConfig';
 import { Tag } from '../../classes/classes';
-import { tagsPath } from '../../firebase/firebaseEndpoints';
+import { tagsPath, baseBranches } from '../../firebase/firebaseEndpoints';
+import { getTagKey } from '../../tools/tools';
 import ItemTag from '../../components/atoms/ItemTag/ItemTag';
 import ErrorInfo from '../../components/atoms/ErrorInfo/ErrorInfo';
 import LoadingImage from '../../components/atoms/LoadingImage/LoadingImage';
@@ -48,7 +49,19 @@ const StyledErrorInfo = styled(ErrorInfo)`
 `;
 
 const StyledMenuButton = styled(MenuButton)`
-  margin-top: 45px;
+  color: ${({ theme }) => theme.lightRed};
+  border: 2px solid ${({ theme }) => theme.lightRed};
+`;
+
+const StyledButtonsWrapper = styled.div`
+  display: flex;
+  margin: 45px 0 0 0;
+  width: 500px;
+  justify-content: space-around;
+
+  @media (max-width: 600px) {
+    width: 350px;
+  }
 `;
 
 const PrintPage = () => {
@@ -57,17 +70,22 @@ const PrintPage = () => {
   const [pagesList, setPagesList] = useState<Array<Tag>[]>([]);
   const [printer, setPrinter] = useState(true);
 
+  const checkIfIsStoreEmpty = async (snapshot: firebase.database.DataSnapshot) => {
+    if ((await snapshot.val()) === 'EMPTY' || !(await snapshot.val())) return true;
+    return false;
+  };
+
   useEffect(() => {
     //!! Info about useCallback
     const loadItemsList = (tagsPath: string) => {
       return db.ref(tagsPath).on('value', async (snapshot) => {
-        const isEmpty =
-          isStoreEmpty === undefined ? (await snapshot.val()) === 'EMPTY' : isStoreEmpty;
+        const isEmpty = await checkIfIsStoreEmpty(snapshot);
         setIsStoreEmpty(isEmpty);
+        console.log(isEmpty);
         if (!isEmpty) {
           const items = await snapshot.val();
 
-          setTagsList(Object.values(items));
+          items ? setTagsList(Object.values(items)) : setTagsList([]);
         }
       });
     };
@@ -91,12 +109,12 @@ const PrintPage = () => {
   };
 
   useEffect(() => {
-    tagsList.length && setPagesList(spliceForPages(tagsList));
+    tagsList.length ? setPagesList(spliceForPages(tagsList)) : setPagesList(spliceForPages([]));
   }, [tagsList]);
 
   const renderTags = (tagsList: Tag[]) => {
     return tagsList.map((itemTag, index) => {
-      return <ItemTag itemTag={itemTag} key={index} />;
+      return <ItemTag itemTag={itemTag} key={index} deleteTag={deleteTag} />;
     });
   };
 
@@ -115,16 +133,34 @@ const PrintPage = () => {
       </StyledLoading>
     );
   };
+
+  const deleteTag = async (id: string) => {
+    const tagKey = await getTagKey(id);
+    tagKey &&
+      db
+        .ref('QR/')
+        .child(`${baseBranches.tagsBranch}`)
+        .update({ [tagKey]: null });
+  };
+
+  const resetTagsList = () => {
+    db.ref('QR/').child(`${baseBranches.tagsBranch}`).set('EMPTY');
+  };
+
   return (
     <StyledWrapper>
       <Navigation />
-      <StyledMenuButton onClick={() => changePrinter()} className={'printHide'}>
-        {printer ? 'PRINTER' : 'PDF'}
-      </StyledMenuButton>
-      {isStoreEmpty === true ? (
-        <StyledErrorInfo>Brak elementów do wyświetlenia</StyledErrorInfo>
-      ) : (
+      <StyledButtonsWrapper className={'printHide'}>
+        <MenuButton onClick={() => changePrinter()}>{printer ? 'PRINTER' : 'PDF'}</MenuButton>
+        <StyledMenuButton onClick={() => resetTagsList()}>Resetuj</StyledMenuButton>
+      </StyledButtonsWrapper>
+
+      {!isStoreEmpty ? (
         renderPages(pagesList)
+      ) : (
+        <StyledPage>
+          <StyledErrorInfo>Brak elementów do wyświetlenia</StyledErrorInfo>
+        </StyledPage>
       )}
     </StyledWrapper>
   );

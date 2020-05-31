@@ -24,3 +24,17 @@ export const getStoreItemKey = async (storeType: string, identifier: string) => 
   const [key] = Object.keys(item.val());
   return key;
 };
+
+export const getTagKey = async (identifier: string) => {
+  const item = await db
+    .ref('QR')
+    .child(`${baseBranches.tagsBranch}`)
+    .orderByChild('id')
+    .equalTo(identifier)
+    .once('value');
+  if (item.val()) {
+    const [key] = Object.keys(item.val());
+    return key;
+  }
+  return null;
+};

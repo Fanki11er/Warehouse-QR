@@ -30,12 +30,6 @@ const StyledItem = styled.div`
   text-align: start;
   padding-left: 10px;
 
-  &:hover {
-    color: ${({ theme }) => theme.green};
-    background-color: ${({ theme }) => theme.transparentGreen};
-    cursor: pointer;
-  }
-
   @media (max-width: 600px) {
     display: flex;
     font-size: ${({ theme }) => theme.fontSizeDesktop.normal};

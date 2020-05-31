@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import routes from '../../../routes/routes';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 const StyledWrapper = styled.nav`
   display: flex;
@@ -29,19 +29,30 @@ const StyledNavLink = styled(MenuButton)`
   @media (max-width: 600px) {
     margin: 0 5px;
   }
+
+  &.activeLink {
+    color: ${({ theme }) => theme.primary};
+    background-color: ${({ theme }) => theme.primaryBlue};
+
+    &:hover {
+      color: ${({ theme }) => theme.primary};
+      border: 2px solid ${({ theme }) => theme.primaryBlue};
+      cursor: not-allowed;
+    }
+  }
 `;
 
 const Navigation = () => {
   const { scan, tags, main } = routes;
   return (
     <StyledWrapper className={'printHide'}>
-      <StyledNavLink as={Link} to={tags}>
+      <StyledNavLink as={NavLink} to={tags} activeClassName={'activeLink'}>
         Etykiety
       </StyledNavLink>
-      <StyledNavLink as={Link} to={scan}>
+      <StyledNavLink as={NavLink} exact to={scan} activeClassName={'activeLink'}>
         Skaner
       </StyledNavLink>
-      <StyledNavLink as={Link} to={main}>
+      <StyledNavLink as={NavLink} to={main} activeClassName={'activeLink'}>
         Główna
       </StyledNavLink>
     </StyledWrapper>
