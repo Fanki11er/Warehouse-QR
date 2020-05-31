@@ -18,7 +18,7 @@ const MenuButton = styled.button`
   align-items: center;
   margin-bottom: 5px;
   font-size: ${({ theme }) => theme.fontSizeDesktop.normal};
-  transition: color 0.7s, border 0.7s;
+  transition: color 0.3s, border 0.3s;
 
   &:hover {
     color: ${({ theme }) => theme.orange};

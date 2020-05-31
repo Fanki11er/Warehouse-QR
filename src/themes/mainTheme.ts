@@ -11,7 +11,7 @@ const theme = {
   transparentBlue: 'rgba(1,160, 226, 0.1)',
   transparentRed: 'rgba(217, 72, 99, 0.4)',
   gray: '#A1A1A1',
-  transparentGray: 'rgba(54, 53, 53, 0.7)',
+  darkGray: 'rgba(54, 53, 53, 1)',
   orange: '#FF8C00',
 
   fontSizeDesktop: {

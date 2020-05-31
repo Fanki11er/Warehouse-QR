@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import ReadQr from '../ReadQR/ReadQr';
 import TopWrapper from '../../molecules/TopWrapper/TopWrapper';
+import ScannedStoreItem from '../../molecules/ScannedStoreItem/ScannedStoreItem';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -20,7 +21,7 @@ const StyledScannerWrapper = styled.div`
   height: 200px;
   border: 3px solid ${({ theme }) => theme.green};
   border-radius: 5px;
-  margin-top: 40px;
+  margin-top: 20px;
 `;
 
 const StyledButton = styled.button`
@@ -108,6 +109,7 @@ const ScanItem = () => {
       </StyledIdLabel>
 
       <StyledError>{scanError ? 'Błąd skanowania' : ''}</StyledError>
+      <ScannedStoreItem scannedItemId={scannedItemId} />
     </StyledWrapper>
   );
 };

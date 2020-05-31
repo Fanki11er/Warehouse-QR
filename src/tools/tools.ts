@@ -38,3 +38,8 @@ export const getTagKey = async (identifier: string) => {
   }
   return null;
 };
+
+export const checkIfIsStoreEmpty = async (snapshot: firebase.database.DataSnapshot) => {
+  if ((await snapshot.val()) === 'EMPTY' || !(await snapshot.val())) return true;
+  return false;
+};

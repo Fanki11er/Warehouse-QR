@@ -53,7 +53,7 @@ const Navigation = () => {
         Skaner
       </StyledNavLink>
       <StyledNavLink as={NavLink} to={main} activeClassName={'activeLink'}>
-        Główna
+        Magazyny
       </StyledNavLink>
     </StyledWrapper>
   );

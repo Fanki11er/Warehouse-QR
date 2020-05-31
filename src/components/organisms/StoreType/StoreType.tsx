@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { storeItem } from '../../../types/types';
 import { db } from '../../../firebase/firebaseConfig';
 import { storesPath } from '../../../firebase/firebaseEndpoints';
+import { checkIfIsStoreEmpty } from '../../../tools/tools';
 import StoreMenu from '../../molecules/StoreMenu/StoreMenu';
 import StoreItemsView from '../StoreItemsView/StoreItemsView';
 import AddItemModal from '../AddItemModal/AddItemModal';
@@ -49,6 +50,7 @@ const StoreType = (props: Props) => {
     ? props.location.state.storeType
     : { name: '', identifier: '', defaultItemName: '' };
   const { name, identifier, defaultItemName } = storeType;
+  console.log(storeType.defaultItemName);
 
   const [isStoreEmpty, setIsStoreEmpty] = useState<boolean | undefined>(undefined);
   const [itemsList, setItemsList] = useState<storeItem[]>([]);
@@ -71,13 +73,13 @@ const StoreType = (props: Props) => {
     const loadItemsList = (identifier: string, storesPath: string) => {
       const ref = db.ref(storesPath);
       return ref.child(identifier).on('value', async (snapshot) => {
-        const isEmpty =
-          isStoreEmpty === undefined ? (await snapshot.val()) === 'EMPTY' : isStoreEmpty;
+        const isEmpty = await checkIfIsStoreEmpty(snapshot);
+
         setIsStoreEmpty(isEmpty);
         if (!isEmpty) {
           const items = await snapshot.val();
 
-          setItemsList(Object.values(items));
+          items ? setItemsList(Object.values(items)) : setItemsList([]);
         }
       });
     };

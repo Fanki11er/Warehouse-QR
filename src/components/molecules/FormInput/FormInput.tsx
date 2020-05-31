@@ -31,6 +31,11 @@ const StyledInput = styled(Field)`
   &::placeholder {
     color: ${({ theme }) => theme.placeholderGreen};
   }
+
+  &:focus {
+    box-shadow: 0px 0px 3px 1px ${({ theme }) => theme.green};
+    outline: none;
+  }
 `;
 
 const StyledLabel = styled.label`

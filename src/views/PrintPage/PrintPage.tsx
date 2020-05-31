@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { db } from '../../firebase/firebaseConfig';
 import { Tag } from '../../classes/classes';
 import { tagsPath, baseBranches } from '../../firebase/firebaseEndpoints';
-import { getTagKey } from '../../tools/tools';
+import { getTagKey, checkIfIsStoreEmpty } from '../../tools/tools';
 import ItemTag from '../../components/atoms/ItemTag/ItemTag';
 import ErrorInfo from '../../components/atoms/ErrorInfo/ErrorInfo';
 import LoadingImage from '../../components/atoms/LoadingImage/LoadingImage';
@@ -70,18 +70,12 @@ const PrintPage = () => {
   const [pagesList, setPagesList] = useState<Array<Tag>[]>([]);
   const [printer, setPrinter] = useState(true);
 
-  const checkIfIsStoreEmpty = async (snapshot: firebase.database.DataSnapshot) => {
-    if ((await snapshot.val()) === 'EMPTY' || !(await snapshot.val())) return true;
-    return false;
-  };
-
   useEffect(() => {
     //!! Info about useCallback
     const loadItemsList = (tagsPath: string) => {
       return db.ref(tagsPath).on('value', async (snapshot) => {
         const isEmpty = await checkIfIsStoreEmpty(snapshot);
         setIsStoreEmpty(isEmpty);
-        console.log(isEmpty);
         if (!isEmpty) {
           const items = await snapshot.val();
 
