@@ -118,8 +118,9 @@ const AddStoreForm = (props: Props) => {
             />
           </StyledInputsWrapper>
           <StyledButtonsWrapper>
-            <MenuButton type={'submit'}>Dodaj nowy</MenuButton>
+            <MenuButton type="submit">Dodaj nowy</MenuButton>
             <MenuButton
+              type="reset"
               onClick={() => {
                 toggleModal();
                 setSubmitting(false);

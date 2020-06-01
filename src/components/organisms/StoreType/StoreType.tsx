@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { storeItem } from '../../../types/types';
 import { db } from '../../../firebase/firebaseConfig';
@@ -10,6 +10,7 @@ import AddItemModal from '../AddItemModal/AddItemModal';
 import EditItemModal from '../EditItemModal/EditItemModal';
 
 import TopWrapper from '../../molecules/TopWrapper/TopWrapper';
+import SearchInput from '../../atoms/SearchInput/SearchInput';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -50,10 +51,10 @@ const StoreType = (props: Props) => {
     ? props.location.state.storeType
     : { name: '', identifier: '', defaultItemName: '' };
   const { name, identifier, defaultItemName } = storeType;
-  console.log(storeType.defaultItemName);
-
+  const filterInput = useRef<HTMLInputElement>(null);
   const [isStoreEmpty, setIsStoreEmpty] = useState<boolean | undefined>(undefined);
   const [itemsList, setItemsList] = useState<storeItem[]>([]);
+  const [filteredItemsList, setFilteredItemsList] = useState<storeItem[]>([]);
   const [isAddItemModalOpened, setIsAddItemModalOpened] = useState(false);
   const [isEditItemModalOpened, setIsEditItemModalOpened] = useState(false);
   const [itemToEdition, setItemToEdition] = useState<storeItem | null>(null);
@@ -87,16 +88,37 @@ const StoreType = (props: Props) => {
     return () => db.ref(storesPath).off('value', listener);
   }, [identifier, isStoreEmpty]);
 
+  const filterItems = (itemsList: storeItem[]) => {
+    if (filterInput.current) {
+      const filteredList = itemsList.length
+        ? itemsList.filter(({ orderDescription }) => {
+            return orderDescription
+              .toLowerCase()
+              .includes(filterInput.current!.value.toLowerCase());
+          })
+        : [];
+      setFilteredItemsList(filteredList);
+    }
+    return [];
+  };
+
   return (
     <StyledWrapper>
       <TopWrapper />
       <StyledStoreHeader>{`Magazyn: ${name}`}</StyledStoreHeader>
-
+      <SearchInput
+        type="text"
+        placeholder={'Filtruj'}
+        ref={filterInput}
+        onKeyUp={() => filterItems(itemsList)}
+      />
       <StyledFlexWrapper>
         <StoreMenu toggleModal={toggleAddItemsModal} />
         <StoreItemsView
           isStoreEmpty={isStoreEmpty!}
-          items={itemsList}
+          items={
+            filteredItemsList.length && filterInput.current?.value ? filteredItemsList : itemsList
+          }
           toggleEditItemModal={toggleEditItemModal}
         />
       </StyledFlexWrapper>
