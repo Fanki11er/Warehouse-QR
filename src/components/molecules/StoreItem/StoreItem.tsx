@@ -12,6 +12,7 @@ const StyledListElement = styled.li`
   border-radius: 10px;
   margin: 10px 10px 0 10px;
   justify-content: space-between;
+
   @media (max-width: 600px) {
     width: 100%;
     min-height: 75px;
@@ -21,6 +22,7 @@ const StyledListElement = styled.li`
 `;
 
 const StyledItem = styled.div`
+  display: flex;
   width: 55%;
   height: 100%;
   border: none;
@@ -29,6 +31,8 @@ const StyledItem = styled.div`
   color: ${({ theme }) => theme.primaryBlue};
   text-align: start;
   padding-left: 10px;
+  justify-content: center;
+  align-items: center;
 
   @media (max-width: 600px) {
     display: flex;

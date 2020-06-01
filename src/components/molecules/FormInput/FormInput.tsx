@@ -26,6 +26,10 @@ const StyledInput = styled(Field)`
   &.error {
     color: ${({ theme }) => theme.lightRed};
     border: 2px solid ${({ theme }) => theme.lightRed};
+    &:focus {
+      box-shadow: 0px 0px 3px 1px ${({ theme }) => theme.lightRed};
+      outline: none;
+    }
   }
 
   &::placeholder {

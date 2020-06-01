@@ -42,11 +42,16 @@ const StyledErrorInfo = styled(ErrorInfo)`
 const StoreItemsView = (props: Props) => {
   const { isStoreEmpty, items, toggleEditItemModal } = props;
   const actions = { addNewTag, toggleEditItemModal };
+
   const renderItems = (items: storeItem[]) => {
     return items.length ? (
-      items.reverse().map((item, index) => {
-        return <StoreItem item={item} key={index} actions={actions} />;
-      })
+      items
+        .sort((a, b) => {
+          return b.id - a.id;
+        })
+        .map((item, index) => {
+          return <StoreItem item={item} key={index} actions={actions} />;
+        })
     ) : (
       <StyledLoading>
         <LoadingImage customWidth={85} />
