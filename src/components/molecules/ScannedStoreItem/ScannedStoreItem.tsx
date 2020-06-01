@@ -5,14 +5,19 @@ import MenuButton from '../../atoms/MenuButton/MenuButton';
 import { db } from '../../../firebase/firebaseConfig';
 import { storesPath } from '../../../firebase/firebaseEndpoints';
 import { storeItem } from '../../../types/types';
+import LoadingImage from '../../atoms/LoadingImage/LoadingImage';
+
+interface ThemeProps {
+  scannedItemId: string;
+}
 
 interface Props {
-  scannedItemId: string;
+  isScanning: boolean;
 }
 
 const StyledWrapper = styled.div`
   border: 2px solid
-    ${(props: Props) => {
+    ${(props: ThemeProps) => {
       if (props.scannedItemId) return theme.green;
       return theme.darkGray;
     }};
@@ -20,24 +25,40 @@ const StyledWrapper = styled.div`
   flex-direction: column;
 
   width: 360px;
-  height: 120px;
+  height: 135px;
   border-radius: 10px;
   margin-top: 15px;
-  padding: 10px;
+  padding: 5px;
+  transition: border 0.5s;
+`;
+
+const StyledItemWrapper = styled.div`
+  width: 100%;
+  height: 60px;
 `;
 
 const StyledStoreItem = styled.div`
   width: 100%;
-  height: 50%;
+  height: 100%;
   color: ${({ theme }) => theme.primaryBlue};
   font-size: ${({ theme }) => theme.fontSizeDesktop.larger};
   text-align: center;
+  opacity: 0;
+  animation-name: showing;
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+
+  @keyframes showing {
+    to {
+      opacity: 1;
+    }
+  }
 `;
 
 const StyledErrorInfo = styled.div`
   text-align: center;
   width: 100%;
-  height: 50%;
+  height: 100%;
   color: ${({ theme }) => theme.lightRed};
   font-size: ${({ theme }) => theme.fontSizeDesktop.normal};
 `;
@@ -45,8 +66,9 @@ const StyledErrorInfo = styled.div`
 const StyledButtonsWrapper = styled.div`
   display: flex;
   width: 100%;
-  height: 50%;
+  height: 60px;
   justify-content: space-around;
+  align-self: flex-end;
 `;
 
 const StyledItemButton = styled(MenuButton)`
@@ -58,8 +80,20 @@ const StyledItemButton = styled(MenuButton)`
   }
 `;
 
-const ScannedStoreItem = (props: Props) => {
-  const { scannedItemId } = props;
+const StyledLoadingInfo = styled.div`
+  color: ${({ theme }) => theme.lightRed};
+  font-size: ${({ theme }) => theme.fontSizeDesktop.larger};
+  margin: 0 5px;
+`;
+const StyledInfoWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ScannedStoreItem = (props: Props & ThemeProps) => {
+  const { scannedItemId, isScanning } = props;
 
   const [error, setError] = useState('');
   const [item, setStoreItem] = useState<storeItem | undefined>(undefined);
@@ -92,17 +126,35 @@ const ScannedStoreItem = (props: Props) => {
       }
     }
   };
+  useEffect(() => {
+    if (isScanning) {
+      setError('');
+      setStoreItem(undefined);
+    }
+  }, [isScanning]);
 
   useEffect(() => {
     scannedItemId && fetchScannedItem(scannedItemId);
   }, [scannedItemId]);
+
+  const renderItem = (error: string, item: storeItem | undefined) => {
+    if (error) {
+      return <StyledErrorInfo>{error}</StyledErrorInfo>;
+    } else if (scannedItemId && !item) {
+      return (
+        <StyledInfoWrapper>
+          <LoadingImage customWidth={30} />
+          <StyledLoadingInfo>Ładuję</StyledLoadingInfo>
+        </StyledInfoWrapper>
+      );
+    } else if (!scannedItemId && !item) {
+      return <StyledStoreItem>{''}</StyledStoreItem>;
+    }
+    return <StyledStoreItem>{item!.orderDescription}</StyledStoreItem>;
+  };
   return (
     <StyledWrapper scannedItemId={scannedItemId}>
-      {error ? (
-        <StyledErrorInfo>{error}</StyledErrorInfo>
-      ) : (
-        <StyledStoreItem>{item ? item.orderDescription : ''}</StyledStoreItem>
-      )}
+      <StyledItemWrapper>{renderItem(error, item)}</StyledItemWrapper>
 
       <StyledButtonsWrapper>
         <StyledItemButton className={scannedItemId ? undefined : 'notActive'}>

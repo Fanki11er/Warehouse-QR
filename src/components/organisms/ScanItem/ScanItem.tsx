@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import ReadQr from '../ReadQR/ReadQr';
 import TopWrapper from '../../molecules/TopWrapper/TopWrapper';
 import ScannedStoreItem from '../../molecules/ScannedStoreItem/ScannedStoreItem';
+import MenuButton from '../../atoms/MenuButton/MenuButton';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -24,12 +25,11 @@ const StyledScannerWrapper = styled.div`
   margin-top: 20px;
 `;
 
-const StyledButton = styled.button`
+const StyledButton = styled(MenuButton)`
   width: 100px;
   height: 60px;
   color: ${({ theme }) => theme.primaryBlue};
   font-size: ${({ theme }) => theme.fontSizeDesktop.normal};
-  background-color: transparent;
   border: 2px solid ${({ theme }) => theme.primaryBlue};
   border-radius: 10%;
   margin: 20px;
@@ -109,7 +109,7 @@ const ScanItem = () => {
       </StyledIdLabel>
 
       <StyledError>{scanError ? 'Błąd skanowania' : ''}</StyledError>
-      <ScannedStoreItem scannedItemId={scannedItemId} />
+      <ScannedStoreItem scannedItemId={scannedItemId} isScanning={isScanning} />
     </StyledWrapper>
   );
 };

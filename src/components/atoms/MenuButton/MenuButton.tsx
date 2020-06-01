@@ -19,10 +19,12 @@ const MenuButton = styled.button`
   margin-bottom: 5px;
   font-size: ${({ theme }) => theme.fontSizeDesktop.normal};
   transition: color 0.3s, border 0.3s;
+  outline: none;
 
   &:hover {
     color: ${({ theme }) => theme.orange};
     border: 2px solid ${({ theme }) => theme.orange};
+    box-shadow: 0 0 5px 1px ${({ theme }) => theme.orange};
     cursor: pointer;
   }
 

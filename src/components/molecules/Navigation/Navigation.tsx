@@ -38,6 +38,7 @@ const StyledNavLink = styled(MenuButton)`
       color: ${({ theme }) => theme.primary};
       border: 2px solid ${({ theme }) => theme.primaryBlue};
       cursor: not-allowed;
+      box-shadow: none;
     }
   }
 `;
