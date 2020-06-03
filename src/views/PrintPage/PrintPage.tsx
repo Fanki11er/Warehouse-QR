@@ -7,7 +7,6 @@ import { getTagKey, checkIfIsStoreEmpty } from '../../tools/tools';
 import ItemTag from '../../components/atoms/ItemTag/ItemTag';
 import ErrorInfo from '../../components/atoms/ErrorInfo/ErrorInfo';
 import LoadingImage from '../../components/atoms/LoadingImage/LoadingImage';
-import Navigation from '../../components/molecules/Navigation/Navigation';
 import MenuButton from '../../components/atoms/MenuButton/MenuButton';
 
 const StyledWrapper = styled.div`
@@ -143,7 +142,6 @@ const PrintPage = () => {
 
   return (
     <StyledWrapper>
-      <Navigation />
       <StyledButtonsWrapper className={'printHide'}>
         <MenuButton onClick={() => changePrinter()}>{printer ? 'PRINTER' : 'PDF'}</MenuButton>
         <StyledMenuButton onClick={() => resetTagsList()}>Resetuj</StyledMenuButton>

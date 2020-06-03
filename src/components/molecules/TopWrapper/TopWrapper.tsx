@@ -16,7 +16,7 @@ const StyledTopWrapper = styled.div`
 
 const TopWrapper = () => {
   return (
-    <StyledTopWrapper>
+    <StyledTopWrapper className={'printHide'}>
       <AppLogo />
       <Navigation />
     </StyledTopWrapper>

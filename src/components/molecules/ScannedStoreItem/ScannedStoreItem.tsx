@@ -38,11 +38,14 @@ const StyledItemWrapper = styled.div`
 `;
 
 const StyledStoreItem = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 100%;
   color: ${({ theme }) => theme.primaryBlue};
   font-size: ${({ theme }) => theme.fontSizeDesktop.larger};
-  text-align: center;
+
   opacity: 0;
   animation-name: showing;
   animation-duration: 0.5s;

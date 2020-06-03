@@ -8,6 +8,7 @@ import MainPage from './views/mainPage/MainPage';
 import StoreType from './components/organisms/StoreType/StoreType';
 import PrintPage from './views/PrintPage/PrintPage';
 import ScanItem from './components/organisms/ScanItem/ScanItem';
+import MainTemplate from './Template/MainTemplate/MainTemplate';
 
 function App() {
   const { main, store, scan, tags } = routes;
@@ -16,10 +17,7 @@ function App() {
       <GlobalStyle />
       <ThemeProvider theme={theme}>
         <Switch>
-          <Route exact path={scan} component={ScanItem} />
-          <Route path={store} component={StoreType} />
-          <Route path={tags} component={PrintPage} />
-          <Route path={main} component={MainPage} />
+          <Route path={'/'} component={MainTemplate} />
         </Switch>
       </ThemeProvider>
     </BrowserRouter>
@@ -27,3 +25,8 @@ function App() {
 }
 
 export default App;
+
+/* <Route exact path={scan} component={ScanItem} />
+          <Route path={store} component={StoreType} />
+          <Route path={tags} component={PrintPage} />
+          <Route path={main} component={MainPage} /> */

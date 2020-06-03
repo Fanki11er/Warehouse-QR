@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import ReadQr from '../ReadQR/ReadQr';
-import TopWrapper from '../../molecules/TopWrapper/TopWrapper';
 import ScannedStoreItem from '../../molecules/ScannedStoreItem/ScannedStoreItem';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
 
@@ -11,7 +10,6 @@ const StyledWrapper = styled.div`
   width: 100%;
   min-height: 100vh;
   background-color: #010d26;
-  padding: 15px 50px 50px 50px;
   align-items: center;
 `;
 
@@ -90,7 +88,6 @@ const ScanItem = () => {
 
   return (
     <StyledWrapper>
-      <TopWrapper />
       <StyledScannerWrapper>
         {isScanning && (
           <ReadQr

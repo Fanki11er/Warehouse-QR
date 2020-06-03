@@ -8,8 +8,6 @@ import StoreMenu from '../../molecules/StoreMenu/StoreMenu';
 import StoreItemsView from '../StoreItemsView/StoreItemsView';
 import AddItemModal from '../AddItemModal/AddItemModal';
 import EditItemModal from '../EditItemModal/EditItemModal';
-
-import TopWrapper from '../../molecules/TopWrapper/TopWrapper';
 import SearchInput from '../../atoms/SearchInput/SearchInput';
 
 const StyledWrapper = styled.div`
@@ -18,7 +16,6 @@ const StyledWrapper = styled.div`
   background-color: ${({ theme }) => theme.primary};
   width: 100%;
   min-height: 100vh;
-  padding: 15px;
 `;
 const StyledFlexWrapper = styled.div`
   display: flex;
@@ -104,7 +101,6 @@ const StoreType = (props: Props) => {
 
   return (
     <StyledWrapper>
-      <TopWrapper />
       <StyledStoreHeader>{`Magazyn: ${name}`}</StyledStoreHeader>
       <SearchInput
         type="text"
