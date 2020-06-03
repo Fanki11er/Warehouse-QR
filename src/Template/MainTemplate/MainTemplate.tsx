@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { auth } from '../../firebase/firebaseConfig';
 import routes from '../../routes/routes';
 import TopWrapper from '../../components/molecules/TopWrapper/TopWrapper';
 import ScanItem from '../../components/organisms/ScanItem/ScanItem';
 import StoreType from '../../components/organisms/StoreType/StoreType';
 import PrintPage from '../../views/PrintPage/PrintPage';
 import MainPage from '../../views/mainPage/MainPage';
+import LoginModal from '../../components/organisms/LoginModal/LoginModal';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -25,15 +27,32 @@ const StyledWrapper = styled.div`
 const MainTemplate = ({ location }) => {
   const { pathname } = location;
   const { scan, store, main, tags } = routes;
-  console.log(pathname);
+  const [isLogInModalOpened, setIsLogInModalOpened] = useState(false);
+  const [user, setUser] = useState<firebase.User | null>(null);
+
+  const toggleLogInModal = () => {
+    setIsLogInModalOpened(!isLogInModalOpened);
+    console.log('Toogle');
+  };
+
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      setUser(user);
+    });
+  }, []);
+  console.log(user, 'USER');
+  const logOut = () => {
+    auth.signOut();
+  };
 
   return (
     <StyledWrapper>
-      <TopWrapper />
+      <TopWrapper user={user} logOut={logOut} logIn={toggleLogInModal} />
       {pathname === scan && <ScanItem />}
       {pathname === store && <StoreType location={location} />}
       {pathname === tags && <PrintPage />}
       {pathname === main && <MainPage />}
+      <LoginModal isModalOpened={isLogInModalOpened} toggleModal={toggleLogInModal} />
     </StyledWrapper>
   );
 };

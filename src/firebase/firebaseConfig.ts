@@ -29,3 +29,4 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 export const db = firebase.database();
 export const dbBackup = firebase.firestore();
+export const auth = firebase.auth();
