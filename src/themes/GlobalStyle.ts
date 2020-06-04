@@ -54,7 +54,7 @@ const GlobalStyle = createGlobalStyle`
       transform: scale(1);
       margin: 0;
       padding: 0;
-      margin-top: 2px;
+      margin-bottom: 45px;
       align-content: center;
       height: 265mm;
      
@@ -63,9 +63,10 @@ const GlobalStyle = createGlobalStyle`
    .pagePdf {
      transform: scale(1);
      margin: 0;
-     margin-top: 2px;
+     margin-bottom: 45px;
+     
      padding:0;
-     height: 275mm;
+     height: 255mm;
      align-content: center;
    }
  

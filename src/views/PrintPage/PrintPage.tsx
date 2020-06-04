@@ -151,7 +151,7 @@ const PrintPage = () => {
   return (
     <StyledWrapper>
       <StyledButtonsWrapper className={'printHide'}>
-        <MenuButton onClick={() => changePrinter()}>{printer ? 'PRINTER' : 'PDF'}</MenuButton>
+        <MenuButton onClick={() => changePrinter()}>{printer ? 'PDF' : 'DRUKARKA'}</MenuButton>
         <StyledMenuButton onClick={() => resetTagsList()}>Resetuj</StyledMenuButton>
       </StyledButtonsWrapper>
 
