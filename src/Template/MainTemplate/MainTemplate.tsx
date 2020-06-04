@@ -40,7 +40,6 @@ const MainTemplate = ({ location }) => {
       setUser(user);
     });
   }, []);
-  console.log(user, 'USER');
   const logOut = () => {
     auth.signOut();
   };
@@ -52,6 +51,9 @@ const MainTemplate = ({ location }) => {
       {pathname === store && <StoreType location={location} />}
       {pathname === tags && <PrintPage />}
       {pathname === main && <MainPage />}
+      {pathname !== scan && pathname !== store && pathname !== tags && pathname !== main && (
+        <ScanItem />
+      )}
       <LoginModal isModalOpened={isLogInModalOpened} toggleModal={toggleLogInModal} />
     </StyledWrapper>
   );

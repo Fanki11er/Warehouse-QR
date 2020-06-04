@@ -1,7 +1,37 @@
 {
-  /* Visit https://firebase.google.com/docs/database/security to learn more about security rules. */
   "rules": {
-    ".read": false,
-    ".write": false
+    "QR": {
+      "StoreTypes": {
+        ".read": true,
+        ".write": "auth !== null",
+        "$storeId": {
+          ".validate": "newData.hasChildren(['defaultItemName', 'identifier', 'name']) && newData.child('identifier').val().length === 3"
+        }
+      },
+      "Stores": {
+        ".read": true,
+        ".write": "auth !== null",
+        "$storeId": {
+          ".indexOn": ["identifier"]
+        }
+      },
+      "Tags": {
+        ".read": true,
+        ".write": "auth !== null",
+        "$tagId": {
+          ".validate": "newData.hasChildren(['description','dimension', 'id'])",
+          ".indexOn": ["id"]
+        }
+      },
+      "Orders": {
+        ".read": true,
+        "$uid": {
+          ".write": "auth.uid === $uid"
+        }
+      },
+      "$other": {
+        ".validate": false
+      }
+    }
   }
 }

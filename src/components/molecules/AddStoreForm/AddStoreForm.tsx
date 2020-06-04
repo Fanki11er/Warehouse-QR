@@ -69,7 +69,11 @@ const AddStoreForm = (props: Props) => {
     const updates = {};
     updates[`${baseBranches.storesBranch}${identifier}`] = 'EMPTY';
     updates[`${baseBranches.storeTypeBranch}${identifier}`] = newStore;
-    db.ref('QR').update(updates);
+    db.ref('QR')
+      .update(updates)
+      .catch((err) => {
+        console.log(err.message);
+      });
   };
 
   return (

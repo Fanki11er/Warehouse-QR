@@ -133,11 +133,19 @@ const PrintPage = () => {
       db
         .ref('QR/')
         .child(`${baseBranches.tagsBranch}`)
-        .update({ [tagKey]: null });
+        .update({ [tagKey]: null })
+        .catch((err) => {
+          console.log(err.message);
+        });
   };
 
   const resetTagsList = () => {
-    db.ref('QR/').child(`${baseBranches.tagsBranch}`).set('EMPTY');
+    db.ref('QR/')
+      .child(`${baseBranches.tagsBranch}`)
+      .set('EMPTY')
+      .catch((err) => {
+        console.log(err.message);
+      });
   };
 
   return (
