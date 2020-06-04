@@ -5,7 +5,6 @@ import { storeTypesPath } from '../../firebase/firebaseEndpoints';
 import { storeType } from '../../types/types';
 import StoreTypesMenu from '../../components/organisms/StoreTypesMenu/StoreTypesMenu';
 import AddStoreModal from '../../components/organisms/AddStoreModal/AddStoreModal';
-import TopWrapper from '../../components/molecules/TopWrapper/TopWrapper';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -14,7 +13,6 @@ const StyledWrapper = styled.div`
   width: 100%;
   min-height: 100vh;
   background-color: ${({ theme }) => theme.primary};
-  padding: 20px 20px 0 20px;
 
   @media (max-width: 600px) {
     flex-direction: column;
@@ -63,8 +61,6 @@ const MainPage = () => {
   };
   return (
     <StyledWrapper>
-      <TopWrapper />
-
       <StoreTypesMenu
         availableStores={availableStores}
         baseStatus={isBaseStatus}

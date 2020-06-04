@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import routes from '../../../routes/routes';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
 import { NavLink } from 'react-router-dom';
+import mainTheme from '../../../themes/mainTheme';
 
 const StyledWrapper = styled.nav`
   display: flex;
@@ -13,6 +14,7 @@ const StyledWrapper = styled.nav`
 
   @media (max-width: 600px) {
     padding: 0 5px;
+    flex-flow: wrap row;
   }
 `;
 
@@ -23,11 +25,13 @@ const StyledNavLink = styled(MenuButton)`
   width: 120px;
   min-width: 90px;
   text-decoration: none;
+
   color: ${({ theme }) => theme.primaryBlue};
   border: 2px solid ${({ theme }) => theme.primaryBlue};
-  margin: 0 30px;
+  margin: 0 30px 5px 30px;
+
   @media (max-width: 600px) {
-    margin: 0 5px;
+    margin: 0 5px 5px 5px;
   }
 
   &.activeLink {
@@ -43,8 +47,18 @@ const StyledNavLink = styled(MenuButton)`
   }
 `;
 
-const Navigation = () => {
+const StyledButton = styled(MenuButton)`
+  width: 130px;
+`;
+interface Props {
+  user: firebase.UserInfo | null;
+  logOut: Function;
+  logIn: Function;
+}
+
+const Navigation = (props: Props) => {
   const { scan, tags, main } = routes;
+  const { user, logOut, logIn } = props;
   return (
     <StyledWrapper className={'printHide'}>
       <StyledNavLink as={NavLink} to={tags} activeClassName={'activeLink'}>
@@ -56,6 +70,13 @@ const Navigation = () => {
       <StyledNavLink as={NavLink} to={main} activeClassName={'activeLink'}>
         Magazyny
       </StyledNavLink>
+      {!user ? (
+        <StyledButton onClick={() => logIn()}>Zaloguj</StyledButton>
+      ) : (
+        <StyledButton onClick={() => logOut()} color={mainTheme.lightRed}>
+          Wyloguj
+        </StyledButton>
+      )}
     </StyledWrapper>
   );
 };

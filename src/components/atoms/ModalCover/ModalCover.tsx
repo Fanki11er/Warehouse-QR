@@ -14,7 +14,7 @@ const ModalCover = styled.div`
   justify-content: center;
   align-items: center;
   transform: ${(props: Props) =>
-    props.isModalOpened === true ? 'translateY(0)' : 'translateY(115%)'};
+    props.isModalOpened === true ? 'translateY(0)' : 'translateY(130%)'};
   transition: transform 0.6s;
   z-index: 10;
 `;

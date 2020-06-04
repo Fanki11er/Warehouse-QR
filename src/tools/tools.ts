@@ -7,7 +7,11 @@ export const addNewTag = (newItem: StoreItem) => {
   const description = `${name} ${mainType} ${secondType}`;
   const newTag = new Tag(identifier, description, dimension);
 
-  db.ref(`QR/${baseBranches.tagsBranch}`).push(newTag);
+  db.ref(`QR/${baseBranches.tagsBranch}`)
+    .push(newTag)
+    .catch((err) => {
+      console.log(err.message);
+    });
 };
 
 export const createOrderDesc = (newItem: StoreItem) => {

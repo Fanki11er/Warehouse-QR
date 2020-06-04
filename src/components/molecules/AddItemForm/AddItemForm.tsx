@@ -65,7 +65,11 @@ const AddItemForm = (props: Props) => {
     const key = await db.ref('QR').child(`${baseBranches.storesBranch}${storeType}`).push().key;
     const updates = {};
     updates[`${baseBranches.storesBranch}${storeType}/${key}`] = newItem;
-    db.ref('QR/').update(updates);
+    db.ref('QR/')
+      .update(updates)
+      .catch((err) => {
+        console.log(err.message);
+      });
   };
 
   const createOrderDesc = (newItem: StoreItem) => {
