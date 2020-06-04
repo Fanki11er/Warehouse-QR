@@ -25,7 +25,7 @@ interface Props {
 const LoginModal = (props: Props) => {
   const { isModalOpened, toggleModal } = props;
   return (
-    <ModalCover isModalOpened={isModalOpened}>
+    <ModalCover isModalOpened={isModalOpened} className={'printHide'}>
       <StyledWrapper>
         <LoginForm toggleModal={toggleModal} />
       </StyledWrapper>
