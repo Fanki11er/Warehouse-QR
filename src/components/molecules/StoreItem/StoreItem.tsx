@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
-import MenuButton from '../../atoms/MenuButton/MenuButton';
 import { storeItem } from '../../../types/types';
+import UserContext from '../../../context/userContext';
+import MenuButton from '../../atoms/MenuButton/MenuButton';
+
+interface StyledProps {
+  end?: boolean;
+}
 
 const StyledListElement = styled.li`
   display: flex;
@@ -11,7 +16,6 @@ const StyledListElement = styled.li`
   border: 2px solid ${({ theme }) => theme.green};
   border-radius: 10px;
   margin: 10px 10px 0 10px;
-  justify-content: space-between;
 
   @media (max-width: 600px) {
     width: 100%;
@@ -47,8 +51,9 @@ const StyledButtonsWrapper = styled.div`
   display: flex;
   width: 45%;
   justify-content: space-between;
+  justify-content: ${(props: StyledProps) => (props.end ? 'flex-end' : 'space-between')};
   @media (max-width: 600px) {
-    justify-content: space-around;
+    justify-content: ${(props: StyledProps) => (props.end ? 'flex-end' : 'space-around')};
     width: 95%;
   }
 `;
@@ -70,7 +75,7 @@ interface Props {
   item: storeItem;
 
   actions: {
-    //order: Function,
+    orderItem: Function;
     addNewTag: (item: storeItem) => void;
     toggleEditItemModal: (item: storeItem) => void;
   };
@@ -79,16 +84,28 @@ interface Props {
 const StoreItem = (props: Props) => {
   const { item, actions } = props;
   const { orderDescription } = item;
-  const { addNewTag, toggleEditItemModal } = actions;
+  const { addNewTag, toggleEditItemModal, orderItem } = actions;
+  const user = useContext(UserContext);
+
+  const renderAuthenticatedWrapper = () => (
+    <StyledButtonsWrapper>
+      <StyledButton onClick={() => orderItem(item)}>Zamów</StyledButton>
+      <StyledButton onClick={() => addNewTag(item)}>Etykieta</StyledButton>
+      <StyledButton onClick={() => toggleEditItemModal(item)}>Edytuj</StyledButton>
+      <StyledButton>Usuń</StyledButton>
+    </StyledButtonsWrapper>
+  );
+
+  const renderUnAuthenticatedWrapper = () => (
+    <StyledButtonsWrapper end={true}>
+      <StyledButton>Zgłoś brak</StyledButton>
+    </StyledButtonsWrapper>
+  );
+
   return (
-    <StyledListElement>
+    <StyledListElement className={'animateShow'}>
       <StyledItem>{orderDescription}</StyledItem>
-      <StyledButtonsWrapper>
-        <StyledButton>Zamów</StyledButton>
-        <StyledButton onClick={() => addNewTag(item)}>Etykieta</StyledButton>
-        <StyledButton onClick={() => toggleEditItemModal(item)}>Edytuj</StyledButton>
-        <StyledButton>Usuń</StyledButton>
-      </StyledButtonsWrapper>
+      {user ? renderAuthenticatedWrapper() : renderUnAuthenticatedWrapper()}
     </StyledListElement>
   );
 };

@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import styled from 'styled-components';
+import { Redirect } from 'react-router-dom';
 import { db } from '../../firebase/firebaseConfig';
 import { Tag } from '../../classes/classes';
+import router from '../../routes/routes';
 import { tagsPath, baseBranches } from '../../firebase/firebaseEndpoints';
 import { getTagKey, checkIfIsStoreEmpty } from '../../tools/tools';
+import UserContext from '../../context/userContext';
 import ItemTag from '../../components/atoms/ItemTag/ItemTag';
 import ErrorInfo from '../../components/atoms/ErrorInfo/ErrorInfo';
 import LoadingImage from '../../components/atoms/LoadingImage/LoadingImage';
@@ -64,10 +67,12 @@ const StyledButtonsWrapper = styled.div`
 `;
 
 const PrintPage = () => {
+  const { scan } = router;
   const [isStoreEmpty, setIsStoreEmpty] = useState<boolean | undefined>(undefined);
   const [tagsList, setTagsList] = useState<Tag[]>([]);
   const [pagesList, setPagesList] = useState<Array<Tag>[]>([]);
   const [printer, setPrinter] = useState(true);
+  const user = useContext(UserContext);
 
   useEffect(() => {
     //!! Info about useCallback
@@ -82,9 +87,9 @@ const PrintPage = () => {
         }
       });
     };
-    const listener = loadItemsList(tagsPath);
+    const listener = user ? loadItemsList(tagsPath) : undefined;
     return () => db.ref(tagsPath).off('value', listener);
-  }, [isStoreEmpty]);
+  }, [user]);
 
   const spliceForPages = (tagsList: Tag[]): Array<Tag>[] => {
     const list = [...tagsList];
@@ -147,7 +152,7 @@ const PrintPage = () => {
         console.log(err.message);
       });
   };
-
+  if (!user?.uid) return <Redirect to={scan} />;
   return (
     <StyledWrapper>
       <StyledButtonsWrapper className={'printHide'}>
@@ -155,11 +160,15 @@ const PrintPage = () => {
         <StyledMenuButton onClick={() => resetTagsList()}>Resetuj</StyledMenuButton>
       </StyledButtonsWrapper>
 
-      {!isStoreEmpty ? (
+      {!isStoreEmpty && user ? (
         renderPages(pagesList)
       ) : (
         <StyledPage>
-          <StyledErrorInfo>Brak elementów do wyświetlenia</StyledErrorInfo>
+          {user ? (
+            <StyledErrorInfo>Brak elementów do wyświetlenia</StyledErrorInfo>
+          ) : (
+            <StyledErrorInfo>Brak uprawnień</StyledErrorInfo>
+          )}
         </StyledPage>
       )}
     </StyledWrapper>

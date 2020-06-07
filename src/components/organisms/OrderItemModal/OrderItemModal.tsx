@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import ModalCover from '../../atoms/ModalCover/ModalCover';
 import { storeItem } from '../../../types/types';
-import AddItemForm from '../../molecules/AddItemForm/AddItemForm';
+import OrderItemForm from '../../molecules/OrderItemForm/OrderItemForm';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -22,24 +22,17 @@ const StyledWrapper = styled.div`
 interface Props {
   isModalOpened: boolean;
   toggleModal: Function;
-  itemsList: storeItem[];
-  storeType: string;
-  defaultItemName: string;
+  item: storeItem | undefined;
 }
-const AddItemModal = (props: Props) => {
-  const { isModalOpened, toggleModal, itemsList, storeType, defaultItemName } = props;
+const OrderItemModal = (props: Props) => {
+  const { isModalOpened, toggleModal, item } = props;
   return (
     <ModalCover isModalOpened={isModalOpened}>
       <StyledWrapper className={'printHide'}>
-        <AddItemForm
-          toggleModal={toggleModal}
-          itemsList={itemsList}
-          storeType={storeType}
-          defaultItemName={defaultItemName}
-        />
+        {item && <OrderItemForm toggleModal={toggleModal} item={item} />}
       </StyledWrapper>
     </ModalCover>
   );
 };
 
-export default AddItemModal;
+export default OrderItemModal;

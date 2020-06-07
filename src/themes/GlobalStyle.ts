@@ -39,37 +39,50 @@ const GlobalStyle = createGlobalStyle`
     border-radius: 10px;
     min-height: 100px;
     border: 3px solid;
-    border: none;
-    
+    border: none; 
   }
 
     }
 
     @media print {
   .printHide {
-     display: none;
-     
+     display: none; 
    }
+
+   .printShow {
+     display: block;
+   }
+
    .pagePrinter {
       transform: scale(1);
       margin: 0;
       padding: 0;
-      margin-bottom: 45px;
-      align-content: center;
+      margin-bottom: 45px;  
       height: 265mm;
-     
    }
 
    .pagePdf {
      transform: scale(1);
      margin: 0;
      margin-bottom: 45px;
-     
      padding:0;
      height: 255mm;
-     align-content: center;
+     
+    
    }
- 
+}
+
+.animateShow {
+  opacity: 0;
+  animation-name: show;
+  animation-duration: 0.75s;
+  animation-fill-mode: forwards;
+
+  @keyframes show {
+    to {
+      opacity: 1;
+    }
+  }
 }
 `;
 

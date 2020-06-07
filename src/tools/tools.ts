@@ -43,6 +43,20 @@ export const getTagKey = async (identifier: string) => {
   return null;
 };
 
+export const getOrderKey = async (identifier: string, user: firebase.User) => {
+  const item = await db
+    .ref('QR')
+    .child(`${baseBranches.ordersBranch}${user.uid}`)
+    .orderByChild('itemIdentifier')
+    .equalTo(identifier)
+    .once('value');
+  if (item.val()) {
+    const [key] = Object.keys(item.val());
+    return key;
+  }
+  return null;
+};
+
 export const checkIfIsStoreEmpty = async (snapshot: firebase.database.DataSnapshot) => {
   if ((await snapshot.val()) === 'EMPTY' || !(await snapshot.val())) return true;
   return false;

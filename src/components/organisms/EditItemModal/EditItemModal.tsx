@@ -28,7 +28,7 @@ const EditItemModal = (props: Props) => {
   const { isModalOpened, toggleModal, item } = props;
   return (
     <ModalCover isModalOpened={isModalOpened}>
-      <StyledWrapper>
+      <StyledWrapper className={'printHide'}>
         <EditItemForm toggleModal={toggleModal} item={item} />
       </StyledWrapper>
     </ModalCover>

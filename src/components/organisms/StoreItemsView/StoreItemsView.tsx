@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
+import OrderContext from '../../../context/orderContext';
 import { storeItem } from '../../../types/types';
 import { addNewTag } from '../../../tools/tools';
 import StoreItem from '../../molecules/StoreItem/StoreItem';
@@ -41,7 +42,8 @@ const StyledErrorInfo = styled(ErrorInfo)`
 
 const StoreItemsView = (props: Props) => {
   const { isStoreEmpty, items, toggleEditItemModal } = props;
-  const actions = { addNewTag, toggleEditItemModal };
+  const orderItem = useContext(OrderContext);
+  const actions = { addNewTag, toggleEditItemModal, orderItem };
 
   const renderItems = (items: storeItem[]) => {
     return items.length ? (
