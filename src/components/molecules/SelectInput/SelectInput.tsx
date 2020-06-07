@@ -2,10 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { Field } from 'formik';
 
-interface InputProps {
-  width?: number;
-}
-
 const StyledWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -13,11 +9,11 @@ const StyledWrapper = styled.div`
   margin: 0 15px;
 `;
 
-const StyledInput = styled(Field)`
+const StyledSelectInput = styled.select`
   display: flex;
   justify-self: flex-end;
   padding-left: 10px;
-  width: ${(props: InputProps) => (props.width ? `${props.width}px` : '300px')};
+  width: 100px;
   height: 35px;
   border: 2px solid ${({ theme }) => theme.green};
   margin: 0 15px;
@@ -46,6 +42,14 @@ const StyledInput = styled(Field)`
   }
 `;
 
+const StyledOption = styled.option`
+  color: ${({ theme }) => theme.green};
+  background-color: ${({ theme }) => theme.primary};
+  font-size: ${({ theme }) => theme.fontSizeDesktop.normal};
+  outline: none;
+  border: none;
+`;
+
 const StyledLabel = styled.label`
   color: ${({ theme }) => theme.primaryBlue};
   min-width: 80px;
@@ -64,31 +68,45 @@ const StyledError = styled.div`
 
 interface Props {
   label: string;
-  type: string;
   name: string;
+  options: string[];
   errorText?: string;
-  maxLength?: number;
   error?: boolean;
-  placeholder?: string;
-  width?: number;
 }
 
-const FormInput = (props: Props) => {
-  const { label, type, errorText, name, maxLength, error, placeholder, width } = props;
+const SelectInput = (props: Props) => {
+  const { label, errorText, name, error, options } = props;
+
+  const renderOptions = (options: string[]) => {
+    return options.length
+      ? options.map((option, index) => {
+          return <StyledOption value={option} label={option} key={index} />;
+        })
+      : undefined;
+  };
   return (
     <StyledWrapper>
       <StyledLabel>{`${label}:`}</StyledLabel>
-      <StyledInput
-        type={type}
-        name={name}
-        maxLength={maxLength}
-        className={error ? 'error' : undefined}
-        placeholder={placeholder}
-        width={width}
-      />
+      <StyledSelectInput name={name} className={error ? 'error' : undefined}>
+        {renderOptions(options)}
+      </StyledSelectInput>
+
       <StyledError>{errorText}</StyledError>
     </StyledWrapper>
   );
 };
 
-export default FormInput;
+export default SelectInput;
+
+/* <select
+        name="color"
+        value={values.color}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        style={{ display: 'block' }}
+      >
+        <option value="" label="Select a color" />
+        <option value="red" label="red" />
+        <option value="blue" label="blue" />
+        <option value="green" label="green" />
+      </select> */

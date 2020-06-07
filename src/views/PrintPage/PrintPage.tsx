@@ -84,7 +84,7 @@ const PrintPage = () => {
     };
     const listener = loadItemsList(tagsPath);
     return () => db.ref(tagsPath).off('value', listener);
-  }, [isStoreEmpty]);
+  }, []);
 
   const spliceForPages = (tagsList: Tag[]): Array<Tag>[] => {
     const list = [...tagsList];

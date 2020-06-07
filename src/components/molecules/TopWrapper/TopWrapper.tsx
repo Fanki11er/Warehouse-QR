@@ -16,17 +16,16 @@ const StyledTopWrapper = styled.div`
 `;
 
 interface Props {
-  user: firebase.UserInfo | null;
   logOut: Function;
   logIn: Function;
 }
 
 const TopWrapper = (props: Props) => {
-  const { user, logOut, logIn } = props;
+  const { logOut, logIn } = props;
   return (
     <StyledTopWrapper className={'printHide'}>
       <AppLogo />
-      <Navigation user={user} logOut={logOut} logIn={logIn} />
+      <Navigation logOut={logOut} logIn={logIn} />
     </StyledTopWrapper>
   );
 };

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import styled from 'styled-components';
 import theme from '../../../themes/mainTheme';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
 import { db } from '../../../firebase/firebaseConfig';
 import { storesPath } from '../../../firebase/firebaseEndpoints';
 import { storeItem } from '../../../types/types';
+import OrderModalContext from '../../../context/orderContext';
 import LoadingImage from '../../atoms/LoadingImage/LoadingImage';
 
 interface ThemeProps {
@@ -97,12 +98,12 @@ const StyledInfoWrapper = styled.div`
 
 const ScannedStoreItem = (props: Props & ThemeProps) => {
   const { scannedItemId, isScanning } = props;
-
+  const toggleOrderModal = useContext(OrderModalContext);
   const [error, setError] = useState('');
   const [item, setStoreItem] = useState<storeItem | undefined>(undefined);
 
   const getStoreType = (scannedItemId: string) => {
-    const match = /\w{3}[\-]\d+/i.test(scannedItemId);
+    const match = /\w{3}[-]\d+/i.test(scannedItemId);
     if (!match) {
       setError('Nie właściwa forma kodu');
       return '';
@@ -137,7 +138,7 @@ const ScannedStoreItem = (props: Props & ThemeProps) => {
   }, [isScanning]);
 
   useEffect(() => {
-    scannedItemId && fetchScannedItem(scannedItemId);
+    if (scannedItemId) fetchScannedItem(scannedItemId);
   }, [scannedItemId]);
 
   const renderItem = (error: string, item: storeItem | undefined) => {
@@ -160,7 +161,10 @@ const ScannedStoreItem = (props: Props & ThemeProps) => {
       <StyledItemWrapper>{renderItem(error, item)}</StyledItemWrapper>
 
       <StyledButtonsWrapper>
-        <StyledItemButton className={scannedItemId ? undefined : 'notActive'}>
+        <StyledItemButton
+          className={scannedItemId ? undefined : 'notActive'}
+          onClick={() => toggleOrderModal(item)}
+        >
           Zamów
         </StyledItemButton>
         <StyledItemButton className={scannedItemId ? undefined : 'notActive'}>

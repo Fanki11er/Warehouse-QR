@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import routes from '../../../routes/routes';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
 import { NavLink } from 'react-router-dom';
 import mainTheme from '../../../themes/mainTheme';
+import UserContext from '../../../context/userContext';
 
 const StyledWrapper = styled.nav`
   display: flex;
@@ -51,14 +52,14 @@ const StyledButton = styled(MenuButton)`
   width: 130px;
 `;
 interface Props {
-  user: firebase.UserInfo | null;
   logOut: Function;
   logIn: Function;
 }
 
 const Navigation = (props: Props) => {
-  const { scan, tags, main } = routes;
-  const { user, logOut, logIn } = props;
+  const { scan, tags, main, orders } = routes;
+  const { logOut, logIn } = props;
+  const user = useContext(UserContext);
   return (
     <StyledWrapper className={'printHide'}>
       <StyledNavLink as={NavLink} to={tags} activeClassName={'activeLink'}>
@@ -69,6 +70,9 @@ const Navigation = (props: Props) => {
       </StyledNavLink>
       <StyledNavLink as={NavLink} to={main} activeClassName={'activeLink'}>
         Magazyny
+      </StyledNavLink>
+      <StyledNavLink as={NavLink} to={orders} activeClassName={'activeLink'}>
+        Zamówienia
       </StyledNavLink>
       {!user ? (
         <StyledButton onClick={() => logIn()}>Zaloguj</StyledButton>

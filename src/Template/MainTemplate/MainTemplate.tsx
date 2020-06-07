@@ -2,12 +2,17 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { auth } from '../../firebase/firebaseConfig';
 import routes from '../../routes/routes';
+import UserContext from '../../context/userContext';
+import OrderModalContext from '../../context/orderContext';
 import TopWrapper from '../../components/molecules/TopWrapper/TopWrapper';
 import ScanItem from '../../components/organisms/ScanItem/ScanItem';
 import StoreType from '../../components/organisms/StoreType/StoreType';
 import PrintPage from '../../views/PrintPage/PrintPage';
 import MainPage from '../../views/mainPage/MainPage';
 import LoginModal from '../../components/organisms/LoginModal/LoginModal';
+import OrdersPage from '../../views/OrdersPage/OrdersPage';
+import OrderItemModal from '../../components/organisms/OrderItemModal/OrderItemModal';
+import { storeItem } from '../../types/types';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -26,13 +31,19 @@ const StyledWrapper = styled.div`
 
 const MainTemplate = ({ location }) => {
   const { pathname } = location;
-  const { scan, store, main, tags } = routes;
+  const { scan, store, main, tags, orders } = routes;
   const [isLogInModalOpened, setIsLogInModalOpened] = useState(false);
+  const [isOrderModalOpened, setIsOrderModalOpened] = useState(false);
+  const [itemToOrder, setItemToOrder] = useState<storeItem | undefined>(undefined);
   const [user, setUser] = useState<firebase.User | null>(null);
 
   const toggleLogInModal = () => {
     setIsLogInModalOpened(!isLogInModalOpened);
-    console.log('Toogle');
+  };
+
+  const toggleOrderModal = (item: storeItem | undefined) => {
+    setItemToOrder(item);
+    setIsOrderModalOpened(!isOrderModalOpened);
   };
 
   useEffect(() => {
@@ -46,15 +57,27 @@ const MainTemplate = ({ location }) => {
 
   return (
     <StyledWrapper>
-      <TopWrapper user={user} logOut={logOut} logIn={toggleLogInModal} />
-      {pathname === scan && <ScanItem />}
-      {pathname === store && <StoreType location={location} />}
-      {pathname === tags && <PrintPage />}
-      {pathname === main && <MainPage />}
-      {pathname !== scan && pathname !== store && pathname !== tags && pathname !== main && (
-        <ScanItem />
-      )}
-      <LoginModal isModalOpened={isLogInModalOpened} toggleModal={toggleLogInModal} />
+      <UserContext.Provider value={user}>
+        <TopWrapper logOut={logOut} logIn={toggleLogInModal} />
+        <OrderModalContext.Provider value={toggleOrderModal}>
+          {pathname === scan && <ScanItem />}
+          {pathname === store && <StoreType location={location} />}
+          {pathname === tags && <PrintPage />}
+          {pathname === main && <MainPage />}
+          {pathname === orders && <OrdersPage />}
+          {pathname !== scan &&
+            pathname !== store &&
+            pathname !== tags &&
+            pathname !== main &&
+            pathname !== orders && <ScanItem />}
+        </OrderModalContext.Provider>
+        <LoginModal isModalOpened={isLogInModalOpened} toggleModal={toggleLogInModal} />
+        <OrderItemModal
+          isModalOpened={isOrderModalOpened}
+          toggleModal={toggleOrderModal}
+          item={itemToOrder}
+        />
+      </UserContext.Provider>
     </StyledWrapper>
   );
 };

@@ -28,3 +28,11 @@ export type storeItem = {
   additionalDescriptions: string; //? Uwagi
   orderDescription: string;
 };
+
+export type Order = {
+  itemIdentifier: string;
+  orderDescription: string;
+  quantity: number;
+  units: string;
+  extraInfo: string;
+};

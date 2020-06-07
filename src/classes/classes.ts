@@ -1,4 +1,4 @@
-import { storeType, storeItem } from '../types/types';
+import { storeType, storeItem, Order } from '../types/types';
 
 export class StoreType implements storeType {
   name: string;
@@ -54,4 +54,14 @@ export class Tag {
     this.description = description;
     this.dimension = dimension;
   }
+}
+
+export class ItemOrder implements Order {
+  constructor(
+    public itemIdentifier: string,
+    public orderDescription: string,
+    public quantity: number = 0,
+    public units: string,
+    public extraInfo: string = '',
+  ) {}
 }
