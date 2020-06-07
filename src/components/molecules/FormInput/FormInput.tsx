@@ -44,6 +44,10 @@ const StyledInput = styled(Field)`
     box-shadow: 0px 0px 3px 1px ${({ theme }) => theme.green};
     outline: none;
   }
+
+  @media (max-width: 600px) {
+    max-width: 98%;
+  }
 `;
 
 const StyledLabel = styled.label`

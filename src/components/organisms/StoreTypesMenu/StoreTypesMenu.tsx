@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { storeType } from '../../../types/types';
+import UserContext from '../../../context/userContext';
 import MenuHeader from '../../atoms/MenuHeader/MenuHeader';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
 import MenuLink from '../../atoms/MenuLink/MenuLink';
@@ -7,6 +8,7 @@ import routes from '../../../routes/routes';
 import MenuWrapper from '../../atoms/MenuWrapper/MenuWrapper';
 import LoadingImage from '../../atoms/LoadingImage/LoadingImage';
 import ErrorInfo from '../../atoms/ErrorInfo/ErrorInfo';
+import DummyButton from '../../atoms/DummyButton/DummyButton';
 
 interface Props {
   availableStores: storeType[];
@@ -15,6 +17,7 @@ interface Props {
   makeBackup: Function;
 }
 const StoreTypesMenu = (props: Props) => {
+  const user = useContext(UserContext);
   const { store } = routes;
   const { availableStores, baseStatus, toggleModal, makeBackup } = props;
 
@@ -27,14 +30,26 @@ const StoreTypesMenu = (props: Props) => {
       <ErrorInfo>Jeszcze pusto</ErrorInfo>
     );
   };
-  return (
-    <MenuWrapper>
-      <MenuHeader>Magazyny</MenuHeader>
-
+  const renderButtons = () => (
+    <>
       <MenuButton className={!baseStatus ? 'notActive' : undefined} onClick={() => toggleModal()}>
         Dodaj nowy
       </MenuButton>
       <MenuButton onClick={() => makeBackup()}>Kopia zapasowa</MenuButton>
+    </>
+  );
+
+  const renderDummyButtons = () => (
+    <>
+      <DummyButton>Dodaj nowy</DummyButton>
+      <DummyButton>Kopia Zapasowa</DummyButton>
+    </>
+  );
+  return (
+    <MenuWrapper>
+      <MenuHeader>Magazyny</MenuHeader>
+      {user ? renderButtons() : renderDummyButtons()}
+
       {!baseStatus ? (
         <ErrorInfo>
           Łączę

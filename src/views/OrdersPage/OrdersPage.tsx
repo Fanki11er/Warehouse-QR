@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react';
 import styled from 'styled-components';
+import { Redirect } from 'react-router-dom';
+import routes from '../../routes/routes';
 import { db } from '../../firebase/firebaseConfig';
-import { checkIfIsStoreEmpty } from '../../tools/tools';
-import { ordersPath } from '../../firebase/firebaseEndpoints';
+import { checkIfIsStoreEmpty, getOrderKey } from '../../tools/tools';
+import { ordersPath, baseBranches } from '../../firebase/firebaseEndpoints';
 import userContext from '../../context/userContext';
 import { Order } from '../../types/types';
 import ErrorInfo from '../../components/atoms/ErrorInfo/ErrorInfo';
-import LoadingImage from '../../components/atoms/LoadingImage/LoadingImage';
 import MenuButton from '../../components/atoms/MenuButton/MenuButton';
 import OrdersList from '../../components/molecules/OrdersList/OrdersList';
 
@@ -59,6 +60,7 @@ const StyledButtonsWrapper = styled.div`
 `;
 
 const OrdersPage = () => {
+  const { scan } = routes;
   const user = useContext(userContext);
   const [isStoreEmpty, setIsStoreEmpty] = useState<boolean | undefined>(undefined);
   const [ordersList, setOrdersList] = useState([]);
@@ -133,6 +135,27 @@ const OrdersPage = () => {
     return pages;
   };
 
+  const deleteOrderItem = async (identifier: string, user: firebase.User) => {
+    const tagKey = await getOrderKey(identifier, user);
+    tagKey &&
+      db
+        .ref('QR/')
+        .child(`${baseBranches.ordersBranch}${user.uid}`)
+        .update({ [tagKey]: null })
+        .catch((err) => {
+          console.log(err.message);
+        });
+  };
+
+  const resetOrdersList = (user: firebase.User) => {
+    db.ref('QR/')
+      .child(`${baseBranches.ordersBranch}/${user.uid}`)
+      .set('EMPTY')
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
+
   const renderPages = (pagesList: Array<Order>[]) => {
     return (
       pagesList.length &&
@@ -141,18 +164,23 @@ const OrdersPage = () => {
         if (index) startIndex = arr[index - 1].length;
         return (
           <StyledPage className={printer ? 'pagePrinter' : 'pagePdf'} key={index}>
-            <OrdersList ordersList={page} startIndex={startIndex} />
+            <OrdersList
+              ordersList={page}
+              startIndex={startIndex}
+              deleteOrderItem={deleteOrderItem}
+            />
           </StyledPage>
         );
       })
     );
   };
+  if (!user?.uid) return <Redirect to={scan} />;
 
   return (
     <StyledWrapper>
       <StyledButtonsWrapper className={'printHide'}>
         <MenuButton onClick={() => changePrinter()}>{printer ? 'PDF' : 'DRUKARKA'}</MenuButton>
-        <StyledMenuButton onClick={() => {}}>Resetuj</StyledMenuButton>
+        <StyledMenuButton onClick={() => user && resetOrdersList(user)}>Resetuj</StyledMenuButton>
       </StyledButtonsWrapper>
       {!isStoreEmpty && user ? (
         renderPages(pagesList)

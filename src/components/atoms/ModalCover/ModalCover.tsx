@@ -6,7 +6,7 @@ interface Props {
 const ModalCover = styled.div`
   display: flex;
   width: 100%;
-  height: 100%;
+  height: 105vh;
   position: fixed;
   left: 0;
   top: 0;

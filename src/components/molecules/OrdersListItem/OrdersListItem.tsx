@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
+import UserContext from '../../../context/userContext';
 import { Order } from '../../../types/types';
 
 const StyledListItem = styled.li`
@@ -11,6 +12,11 @@ const StyledListItem = styled.li`
   margin-bottom: 3px;
   padding: 10px;
   justify-content: space-between;
+  &:hover {
+    border: 2px solid ${({ theme }) => theme.lightRed};
+    background-color: ${({ theme }) => theme.transparentRed};
+    cursor: pointer;
+  }
 `;
 
 const StyledItem = styled.div`
@@ -42,16 +48,22 @@ const StyledCounter = styled.div`
 interface Props {
   item: Order;
   index: number;
+  deleteOrderItem: (identifier: string, user: firebase.User) => void;
 }
 
 const OrdersListItem = (props: Props) => {
   const {
-    item: { orderDescription, units, quantity, extraInfo },
+    item: { orderDescription, units, quantity, extraInfo, itemIdentifier },
     index,
+    deleteOrderItem,
   } = props;
+  const user = useContext(UserContext);
   return (
     <>
-      <StyledListItem>
+      <StyledListItem
+        onClick={() => user && deleteOrderItem(itemIdentifier, user)}
+        className={'animateShow'}
+      >
         <StyledCounter>{index + 1}.</StyledCounter>
         <StyledItem>{orderDescription}</StyledItem>
         <StyledQuantity>{`${quantity} ${units}`}</StyledQuantity>

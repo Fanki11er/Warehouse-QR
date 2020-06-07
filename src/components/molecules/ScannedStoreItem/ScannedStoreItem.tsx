@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useContext } from 'react';
 import styled from 'styled-components';
 import theme from '../../../themes/mainTheme';
+import UserContext from '../../../context/userContext';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
 import { db } from '../../../firebase/firebaseConfig';
 import { storesPath } from '../../../firebase/firebaseEndpoints';
 import { storeItem } from '../../../types/types';
 import OrderModalContext from '../../../context/orderContext';
 import LoadingImage from '../../atoms/LoadingImage/LoadingImage';
+import DummyButton from '../../atoms/DummyButton/DummyButton';
 
 interface ThemeProps {
   scannedItemId: string;
@@ -99,6 +101,7 @@ const StyledInfoWrapper = styled.div`
 const ScannedStoreItem = (props: Props & ThemeProps) => {
   const { scannedItemId, isScanning } = props;
   const toggleOrderModal = useContext(OrderModalContext);
+  const user = useContext(UserContext);
   const [error, setError] = useState('');
   const [item, setStoreItem] = useState<storeItem | undefined>(undefined);
 
@@ -161,12 +164,16 @@ const ScannedStoreItem = (props: Props & ThemeProps) => {
       <StyledItemWrapper>{renderItem(error, item)}</StyledItemWrapper>
 
       <StyledButtonsWrapper>
-        <StyledItemButton
-          className={scannedItemId ? undefined : 'notActive'}
-          onClick={() => toggleOrderModal(item)}
-        >
-          Zamów
-        </StyledItemButton>
+        {user ? (
+          <StyledItemButton
+            className={scannedItemId ? undefined : 'notActive'}
+            onClick={() => toggleOrderModal(item)}
+          >
+            Zamów
+          </StyledItemButton>
+        ) : (
+          <DummyButton>Zamów</DummyButton>
+        )}
         <StyledItemButton className={scannedItemId ? undefined : 'notActive'}>
           Zgłoś brak
         </StyledItemButton>

@@ -61,7 +61,7 @@ const ItemTag = (props: Props) => {
   };
 
   return (
-    <StyledWrapper onClick={() => deleteTag(id)}>
+    <StyledWrapper onClick={() => deleteTag(id)} className={'animateShow'}>
       <StyledFlexColumnWrapper>
         <StyledDescriptionLabel>{description}</StyledDescriptionLabel>
         <StyledDimensionLabel>{dimension}</StyledDimensionLabel>

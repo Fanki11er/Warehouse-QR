@@ -71,6 +71,19 @@ const GlobalStyle = createGlobalStyle`
     
    }
 }
+
+.animateShow {
+  opacity: 0;
+  animation-name: show;
+  animation-duration: 0.75s;
+  animation-fill-mode: forwards;
+
+  @keyframes show {
+    to {
+      opacity: 1;
+    }
+  }
+}
 `;
 
 export default GlobalStyle;

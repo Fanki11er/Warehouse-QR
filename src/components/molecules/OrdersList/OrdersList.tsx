@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
+import UserContext from '../../../context/userContext';
 import { Order } from '../../../types/types';
 import OrdersListItem from '../../molecules/OrdersListItem/OrdersListItem';
 import LoadingImage from '../../atoms/LoadingImage/LoadingImage';
@@ -8,6 +9,9 @@ const StyledWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  @media (max-width: 600px) {
+    width: 95%;
+  }
 `;
 
 const StyledHeaderSection = styled.div`
@@ -21,13 +25,6 @@ const StyledHeader = styled.h2`
   font-size: ${({ theme }) => theme.fontSizeDesktop.larger};
 `;
 
-const StyledInfo = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  margin: 5px 0;
-`;
-
 const StyledList = styled.ol`
   display: flex;
   flex-direction: column;
@@ -37,20 +34,34 @@ const StyledList = styled.ol`
 interface Props {
   ordersList: Order[];
   startIndex: number;
+  deleteOrderItem: (identifier: string, user: firebase.User) => void;
 }
 
 const OrdersList = (props: Props) => {
-  const { ordersList, startIndex } = props;
+  const user = useContext(UserContext);
+  const { ordersList, startIndex, deleteOrderItem } = props;
+
+  const makeUserInfo = (user: firebase.User | null) => {
+    const [userInfo] = user ? user.email!.split('@') : [''];
+    return userInfo;
+  };
 
   const renderList = (ordersList: Order[]) => {
     return ordersList.map((order: Order, index) => {
-      return <OrdersListItem item={order} key={index} index={startIndex + index} />;
+      return (
+        <OrdersListItem
+          item={order}
+          key={index}
+          index={startIndex + index}
+          deleteOrderItem={deleteOrderItem}
+        />
+      );
     });
   };
   return (
     <StyledWrapper>
       <StyledHeaderSection>
-        <StyledHeader>Zamówienie</StyledHeader>
+        <StyledHeader>{`Zamówienie: ${makeUserInfo(user)}`}</StyledHeader>
       </StyledHeaderSection>
       <StyledList>
         {ordersList.length ? renderList(ordersList) : <LoadingImage customWidth={85} />}
@@ -60,5 +71,3 @@ const OrdersList = (props: Props) => {
 };
 
 export default OrdersList;
-
-/*<StyledInfo>Autor: Krzysztof Dziedzic</StyledInfo> */
