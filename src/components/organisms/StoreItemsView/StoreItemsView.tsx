@@ -11,7 +11,7 @@ const StyledWrapper = styled.ol`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 830px;
+  width: 850px;
   height: 400px;
   border: 2px solid ${({ theme }) => theme.primaryBlue};
   border-radius: 25px;

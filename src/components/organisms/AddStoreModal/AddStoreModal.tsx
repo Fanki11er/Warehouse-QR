@@ -13,6 +13,7 @@ const StyledWrapper = styled.div`
   border-radius: 15px;
   justify-content: center;
   padding: 15px;
+  position: absolute;
 
   @media (max-width: 600px) {
     width: 350px;

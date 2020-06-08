@@ -35,7 +35,7 @@ const MainTemplate = ({ location }) => {
   const [isLogInModalOpened, setIsLogInModalOpened] = useState(false);
   const [isOrderModalOpened, setIsOrderModalOpened] = useState(false);
   const [itemToOrder, setItemToOrder] = useState<storeItem | undefined>(undefined);
-  const [user, setUser] = useState<firebase.User | null>(null);
+  const [user, setUser] = useState<firebase.User | null | undefined>(undefined);
 
   const toggleLogInModal = () => {
     setIsLogInModalOpened(!isLogInModalOpened);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import * as yup from 'yup';
 import { Formik } from 'formik';
@@ -6,7 +6,7 @@ import { storeItem } from '../../../types/types';
 import { db } from '../../../firebase/firebaseConfig';
 import { StoreItem } from '../../../classes/classes';
 import { baseBranches } from '../../../firebase/firebaseEndpoints';
-import { addNewTag } from '../../../tools/tools';
+import { addNewTag, getProperties, checkForRepeats } from '../../../tools/tools';
 import MenuHeader from '../../atoms/MenuHeader/MenuHeader';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
 import Form from '../../atoms/Form/Form';
@@ -25,6 +25,16 @@ const StyledButtonsWrapper = styled.div`
   justify-content: space-around;
 `;
 
+const StyledError = styled.div`
+  display: flex;
+  justify-content: center;
+  justify-self: center;
+  width: 100%;
+  height: 20px;
+  color: ${({ theme }) => theme.lightRed};
+  margin-top: -15px;
+`;
+
 interface Props {
   toggleModal: Function;
   itemsList: storeItem[];
@@ -34,6 +44,7 @@ interface Props {
 
 const AddItemForm = (props: Props) => {
   const { toggleModal, itemsList, storeType, defaultItemName } = props;
+  const [itemExists, setItemExists] = useState(false);
   const initialValues: Partial<storeItem> = {
     name: defaultItemName,
     dimension: '',
@@ -42,6 +53,8 @@ const AddItemForm = (props: Props) => {
     defaultOrderAmount: 0,
     additionalDescriptions: '',
   };
+
+  const usedItems = getProperties('orderDescription', itemsList);
 
   let validateSchema = yup.object().shape({
     name: yup.string().required('Pole jest wymagane'),
@@ -104,6 +117,10 @@ const AddItemForm = (props: Props) => {
         );
 
         createOrderDesc(newItem);
+        if (checkForRepeats(usedItems, newItem.orderDescription)) {
+          setItemExists(true);
+          return;
+        }
         addNewItem(newItem);
         addNewTag(newItem);
         toggleModal();
@@ -148,7 +165,7 @@ const AddItemForm = (props: Props) => {
               error={errors.secondType && touched.secondType ? true : false}
               errorText={errors.secondType && touched.secondType ? errors.secondType : ''}
             />
-
+            {console.log(errors, 'Errors')}
             <FormInput
               name={'defaultOrderAmount'}
               type={'text'}
@@ -157,6 +174,7 @@ const AddItemForm = (props: Props) => {
               error={errors.defaultOrderAmount && touched.defaultOrderAmount ? true : false}
               errorText={errors.defaultOrderAmount && touched.defaultOrderAmount ? errors.name : ''}
             />
+            <StyledError>{itemExists ? 'Taki przedmiot już istnieje' : ''}</StyledError>
           </StyledInputsWrapper>
           <StyledButtonsWrapper>
             <MenuButton type={'submit'}>Dodaj nowy</MenuButton>
