@@ -6,6 +6,7 @@ import { storeType } from '../../../types/types';
 import { db } from '../../../firebase/firebaseConfig';
 import { StoreType } from '../../../classes/classes';
 import { baseBranches } from '../../../firebase/firebaseEndpoints';
+import { getProperties } from '../../../tools/tools';
 import MenuHeader from '../../atoms/MenuHeader/MenuHeader';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
 import FormInput from '../FormInput/FormInput';
@@ -40,14 +41,6 @@ const AddStoreForm = (props: Props) => {
   const { toggleModal, availableStores } = props;
   const initialValues: storeType = { name: '', identifier: '', defaultItemName: '' };
 
-  const getProperties = (propName: string, stores: storeType[]): string[] => {
-    const properties: string[] = [];
-    stores.map((store) => {
-      properties.push(store[propName]);
-      return undefined;
-    });
-    return properties;
-  };
   const usedNames = getProperties('name', availableStores);
   const usedIdentifiers = getProperties('identifier', availableStores);
   let validateSchema = yup.object().shape({

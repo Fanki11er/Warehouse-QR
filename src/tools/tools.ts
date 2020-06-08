@@ -61,3 +61,16 @@ export const checkIfIsStoreEmpty = async (snapshot: firebase.database.DataSnapsh
   if ((await snapshot.val()) === 'EMPTY' || !(await snapshot.val())) return true;
   return false;
 };
+
+export const getProperties = <T>(propName: string, source: T[]): string[] => {
+  const properties: string[] = [];
+  source.map((item) => {
+    properties.push(item[propName]);
+    return undefined;
+  });
+  return properties;
+};
+
+export const checkForRepeats = <T>(usedItems: T[], orderDescription: T) => {
+  return usedItems.includes(orderDescription);
+};

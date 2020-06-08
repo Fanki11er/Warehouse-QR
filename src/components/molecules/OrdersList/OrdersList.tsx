@@ -41,7 +41,7 @@ const OrdersList = (props: Props) => {
   const user = useContext(UserContext);
   const { ordersList, startIndex, deleteOrderItem } = props;
 
-  const makeUserInfo = (user: firebase.User | null) => {
+  const makeUserInfo = (user: firebase.User | null | undefined) => {
     const [userInfo] = user ? user.email!.split('@') : [''];
     return userInfo;
   };

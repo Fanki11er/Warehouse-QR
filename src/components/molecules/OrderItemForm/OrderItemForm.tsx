@@ -48,7 +48,7 @@ const OrderItemForm = (props: Props) => {
     orderDescription: yup.string().required('Pole jest wymagane'),
   });
 
-  const addNewOrderItem = async (newOrderItem: Order, user: firebase.User | null) => {
+  const addNewOrderItem = async (newOrderItem: Order, user: firebase.User | null | undefined) => {
     if (user) {
       const { uid } = user;
 
