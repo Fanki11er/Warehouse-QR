@@ -7,6 +7,7 @@ const StyledLoadingImage = styled.img`
   align-self: center;
   width: ${(props: Props) => (props.customWidth ? `${props.customWidth}px` : '75px')};
   margin: 10px;
+  user-select: none;
 
   animation-name: rotation;
   animation-duration: 2s;

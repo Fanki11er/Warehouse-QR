@@ -13,6 +13,11 @@ const StyledWrapper = styled.div`
   border-radius: 15px;
   justify-content: center;
   padding: 15px;
+
+  @media (max-width: 1290px) {
+    transform: scale(0.9);
+  }
+
   @media (max-width: 600px) {
     width: 350px;
     padding: 5px;

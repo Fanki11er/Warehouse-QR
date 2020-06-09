@@ -23,7 +23,7 @@ const firebaseConfig = {
   storageBucket: 'qr-tests.appspot.com',
   messagingSenderId: '17601264140',
   appId: '1:17601264140:web:97ead5a5c671ab5c3a8c29',
-};*/
+}*/
 
 //? Initialize Firebase
 firebase.initializeApp(firebaseConfig);

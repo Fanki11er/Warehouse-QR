@@ -29,10 +29,13 @@ const GlobalStyle = createGlobalStyle`
 
     .withScroll {
         overflow-x: hidden;
+        scrollbar-width: thin;
   ::-webkit-scrollbar {
     width: 15px;
     background-color: transparent;
   }
+
+  
 
   ::-webkit-scrollbar-thumb {
     background-color: ${theme.green};

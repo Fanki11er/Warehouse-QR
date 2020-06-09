@@ -75,10 +75,24 @@ interface Props {
   error?: boolean;
   placeholder?: string;
   width?: number;
+  inputMode?: string;
+  pattern?: string;
+  autoFocus?: boolean;
 }
 
 const FormInput = (props: Props) => {
-  const { label, type, errorText, name, maxLength, error, placeholder, width } = props;
+  const {
+    label,
+    type,
+    errorText,
+    name,
+    maxLength,
+    error,
+    placeholder,
+    width,
+    inputMode,
+    pattern,
+  } = props;
   return (
     <StyledWrapper>
       <StyledLabel>{`${label}:`}</StyledLabel>
@@ -89,6 +103,8 @@ const FormInput = (props: Props) => {
         className={error ? 'error' : undefined}
         placeholder={placeholder}
         width={width}
+        inputmode={inputMode}
+        pattern={pattern}
       />
       <StyledError>{errorText}</StyledError>
     </StyledWrapper>
