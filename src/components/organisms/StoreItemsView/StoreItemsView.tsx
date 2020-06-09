@@ -11,14 +11,13 @@ const StyledWrapper = styled.ol`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 850px;
+  width: 870px;
   height: 400px;
   border: 2px solid ${({ theme }) => theme.primaryBlue};
   border-radius: 25px;
   border-bottom-right-radius: 10px;
   border-top-right-radius: 10px;
-  margin: 30px 160px;
-  color: red;
+  margin: 30px 120px;
   padding: 0 10px;
 
   @media (max-width: 600px) {

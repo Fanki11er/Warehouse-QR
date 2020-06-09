@@ -10,6 +10,7 @@ const StyledTopWrapper = styled.div`
   align-items: center;
 
   @media (max-width: 600px) {
+    width: 100%;
     flex-flow: wrap row;
     justify-content: center;
   }

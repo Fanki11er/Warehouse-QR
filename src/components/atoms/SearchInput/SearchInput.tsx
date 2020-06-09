@@ -24,8 +24,14 @@ const SearchInput = styled.input`
     box-shadow: 0px 0px 3px 1px ${({ theme }) => theme.green};
     outline: none;
   }
+
+  @media (max-width: 1290px) {
+    transform: translate(320px);
+  }
   @media (max-width: 600px) {
     transform: translateX(0);
+    width: 315px;
+    align-self: center;
   }
 `;
 

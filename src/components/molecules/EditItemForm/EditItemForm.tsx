@@ -140,6 +140,8 @@ const EditItemForm = (props: Props) => {
               name={'defaultOrderAmount'}
               type={'text'}
               label={'Do zamówienia'}
+              inputMode={'numeric'}
+              pattern={'[0-9]*'}
               maxLength={25}
               error={errors.defaultOrderAmount && touched.defaultOrderAmount ? true : false}
               errorText={errors.defaultOrderAmount && touched.defaultOrderAmount ? errors.name : ''}

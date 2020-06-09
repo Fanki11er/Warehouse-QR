@@ -137,6 +137,7 @@ const AddItemForm = (props: Props) => {
               type={'text'}
               label={'Nazwa'}
               maxLength={25}
+              inputMode={'text'}
               error={errors.name && touched.name ? true : false}
               errorText={errors.name && touched.name ? errors.name : ''}
             />
@@ -145,6 +146,7 @@ const AddItemForm = (props: Props) => {
               type={'text'}
               label={'Wymiar'}
               maxLength={12}
+              inputMode={'text'}
               error={errors.dimension && touched.dimension ? true : false}
               errorText={errors.dimension && touched.dimension ? errors.dimension : ''}
             />
@@ -153,6 +155,7 @@ const AddItemForm = (props: Props) => {
               type={'text'}
               label={'Typ1'}
               maxLength={12}
+              inputMode={'text'}
               error={errors.mainType && touched.mainType ? true : false}
               errorText={errors.mainType && touched.mainType ? errors.mainType : ''}
             />
@@ -162,15 +165,18 @@ const AddItemForm = (props: Props) => {
               type={'text'}
               label={'Typ2'}
               maxLength={12}
+              inputMode={'text'}
               error={errors.secondType && touched.secondType ? true : false}
               errorText={errors.secondType && touched.secondType ? errors.secondType : ''}
             />
-            {console.log(errors, 'Errors')}
+
             <FormInput
               name={'defaultOrderAmount'}
               type={'text'}
               label={'Do zamówienia'}
               maxLength={25}
+              inputMode={'numeric'}
+              pattern={'[0-9]*'}
               error={errors.defaultOrderAmount && touched.defaultOrderAmount ? true : false}
               errorText={errors.defaultOrderAmount && touched.defaultOrderAmount ? errors.name : ''}
             />

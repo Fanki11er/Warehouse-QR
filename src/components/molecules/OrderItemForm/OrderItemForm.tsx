@@ -100,6 +100,8 @@ const OrderItemForm = (props: Props) => {
               name={'quantity'}
               type={'text'}
               label={'Ilość'}
+              inputMode={'numeric'}
+              pattern={'[0-9]*'}
               maxLength={5}
               width={150}
               error={errors.quantity && touched.quantity ? true : false}

@@ -6,7 +6,7 @@ interface Props {
 const ModalCover = styled.div`
   display: flex;
   width: 100%;
-  height: 105vh;
+  height: 100vh;
   position: fixed;
   left: 0;
   top: 0;
@@ -14,7 +14,7 @@ const ModalCover = styled.div`
   justify-content: center;
   align-items: center;
   transform: ${(props: Props) =>
-    props.isModalOpened === true ? 'translateY(0)' : 'translateY(130%)'};
+    props.isModalOpened === true ? 'translateY(0)' : 'translateY(150%)'};
   transition: transform 0.6s;
   z-index: 10;
 `;

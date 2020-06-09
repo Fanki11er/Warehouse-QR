@@ -18,6 +18,8 @@ const StyledWrapper = styled.nav`
   @media (max-width: 600px) {
     padding: 0 5px;
     flex-flow: wrap row;
+    width: 100%;
+    height: 140px;
   }
 `;
 
@@ -70,7 +72,6 @@ const Navigation = (props: Props) => {
   const { scan, tags, main, orders } = routes;
   const { logOut, logIn } = props;
   const user = useContext(UserContext);
-  console.log(user);
   return (
     <StyledWrapper className={'printHide'}>
       <StyledNavLink as={NavLink} exact to={scan} activeClassName={'activeLink'}>
