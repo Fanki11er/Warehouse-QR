@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { storeItem } from '../../../types/types';
+import { storeItem, StatusInfo } from '../../../types/types';
 import UserContext from '../../../context/userContext';
+import StatusInfoContext from '../../../context/StatusInfoContext';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
 
 interface StyledProps {
@@ -76,7 +77,7 @@ interface Props {
 
   actions: {
     orderItem: Function;
-    addNewTag: (item: storeItem) => void;
+    addNewTag: (item: storeItem, callback: (x: StatusInfo) => void) => void;
     toggleEditItemModal: (item: storeItem) => void;
   };
 }
@@ -86,11 +87,12 @@ const StoreItem = (props: Props) => {
   const { orderDescription } = item;
   const { addNewTag, toggleEditItemModal, orderItem } = actions;
   const user = useContext(UserContext);
+  const sendStatusInfo = useContext(StatusInfoContext);
 
   const renderAuthenticatedWrapper = () => (
     <StyledButtonsWrapper>
       <StyledButton onClick={() => orderItem(item)}>Zamów</StyledButton>
-      <StyledButton onClick={() => addNewTag(item)}>Etykieta</StyledButton>
+      <StyledButton onClick={() => addNewTag(item, sendStatusInfo)}>Etykieta</StyledButton>
       <StyledButton onClick={() => toggleEditItemModal(item)}>Edytuj</StyledButton>
       <StyledButton>Usuń</StyledButton>
     </StyledButtonsWrapper>

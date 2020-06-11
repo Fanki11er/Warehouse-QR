@@ -8,6 +8,7 @@ import { StoreItem, ItemOrder } from '../../../classes/classes';
 import { baseBranches } from '../../../firebase/firebaseEndpoints';
 import { addNewTag, getProperties, checkForRepeats, addNewOrderItem } from '../../../tools/tools';
 import UserContext from '../../../context/userContext';
+import StatusInfoContext from '../../../context/StatusInfoContext';
 import MenuHeader from '../../atoms/MenuHeader/MenuHeader';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
 import Form from '../../atoms/Form/Form';
@@ -53,6 +54,7 @@ interface Props {
 const AddItemForm = (props: Props) => {
   const { toggleModal, itemsList, storeType, defaultItemName } = props;
   const user = useContext(UserContext);
+  const sendStatusInfo = useContext(StatusInfoContext);
   const [itemExists, setItemExists] = useState(false);
   const initialValues: Partial<storeItem> & AddFormSettings = {
     name: defaultItemName,
@@ -86,13 +88,22 @@ const AddItemForm = (props: Props) => {
     return `${storeType}-${id.toString().padStart(4, '0')}`;
   };
   const addNewItem = async (newItem: StoreItem) => {
-    const key = await db.ref('QR').child(`${baseBranches.storesBranch}${storeType}`).push().key;
+    const key = db.ref('QR').child(`${baseBranches.storesBranch}${storeType}`).push().key;
     const updates = {};
     updates[`${baseBranches.storesBranch}${storeType}/${key}`] = newItem;
     db.ref('QR/')
       .update(updates)
-      .catch((err) => {
-        console.log(err.message);
+      .then(() => {
+        sendStatusInfo({
+          status: 'ok',
+          message: 'Dodano',
+        });
+      })
+      .catch(() => {
+        sendStatusInfo({
+          status: 'error',
+          message: 'Nie dodano',
+        });
       });
   };
 
@@ -135,11 +146,13 @@ const AddItemForm = (props: Props) => {
           return;
         }
         addNewItem(newItem);
-        withTag && addNewTag(newItem);
+        withTag && addNewTag(newItem, sendStatusInfo);
         if (withOrder) {
           const { orderDescription, identifier, defaultOrderAmount } = newItem;
           const newOrder = new ItemOrder(identifier, orderDescription, defaultOrderAmount, 'szt');
-          addNewOrderItem(newOrder, user);
+          user?.uid
+            ? addNewOrderItem(newOrder, user, sendStatusInfo)
+            : sendStatusInfo({ status: 'error', message: 'Brak uprawnień' });
         }
         toggleModal();
         resetForm();

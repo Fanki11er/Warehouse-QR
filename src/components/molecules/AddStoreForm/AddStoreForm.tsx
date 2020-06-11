@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import * as yup from 'yup';
 import { Formik } from 'formik';
@@ -7,6 +7,7 @@ import { db } from '../../../firebase/firebaseConfig';
 import { StoreType } from '../../../classes/classes';
 import { baseBranches } from '../../../firebase/firebaseEndpoints';
 import { getProperties } from '../../../tools/tools';
+import StatusInfoContext from '../../../context/StatusInfoContext';
 import MenuHeader from '../../atoms/MenuHeader/MenuHeader';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
 import FormInput from '../FormInput/FormInput';
@@ -39,6 +40,7 @@ interface Props {
 
 const AddStoreForm = (props: Props) => {
   const { toggleModal, availableStores } = props;
+  const sendStatusInfo = useContext(StatusInfoContext);
   const initialValues: storeType = { name: '', identifier: '', defaultItemName: '' };
 
   const usedNames = getProperties('name', availableStores);
@@ -64,8 +66,17 @@ const AddStoreForm = (props: Props) => {
     updates[`${baseBranches.storeTypeBranch}${identifier}`] = newStore;
     db.ref('QR')
       .update(updates)
-      .catch((err) => {
-        console.log(err.message);
+      .then(() => {
+        sendStatusInfo({
+          status: 'ok',
+          message: 'Dodano',
+        });
+      })
+      .catch(() => {
+        sendStatusInfo({
+          status: 'error',
+          message: 'Nie dodano',
+        });
       });
   };
 

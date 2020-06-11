@@ -7,6 +7,7 @@ import router from '../../routes/routes';
 import { tagsPath, baseBranches } from '../../firebase/firebaseEndpoints';
 import { getTagKey, checkIfIsStoreEmpty } from '../../tools/tools';
 import UserContext from '../../context/userContext';
+import StatusInfoContext from '../../context/StatusInfoContext';
 import ItemTag from '../../components/atoms/ItemTag/ItemTag';
 import ErrorInfo from '../../components/atoms/ErrorInfo/ErrorInfo';
 import LoadingImage from '../../components/atoms/LoadingImage/LoadingImage';
@@ -73,6 +74,7 @@ const PrintPage = () => {
   const [pagesList, setPagesList] = useState<Array<Tag>[]>([]);
   const [printer, setPrinter] = useState(true);
   const user = useContext(UserContext);
+  const sendStatusInfo = useContext(StatusInfoContext);
 
   useEffect(() => {
     //!! Info about useCallback
@@ -139,8 +141,17 @@ const PrintPage = () => {
         .ref('QR/')
         .child(`${baseBranches.tagsBranch}`)
         .update({ [tagKey]: null })
-        .catch((err) => {
-          console.log(err.message);
+        .then(() => {
+          sendStatusInfo({
+            status: 'ok',
+            message: 'Usunięto',
+          });
+        })
+        .catch(() => {
+          sendStatusInfo({
+            status: 'error',
+            message: 'Nie usunięto',
+          });
         });
   };
 
@@ -148,8 +159,17 @@ const PrintPage = () => {
     db.ref('QR/')
       .child(`${baseBranches.tagsBranch}`)
       .set('EMPTY')
-      .catch((err) => {
-        console.log(err.message);
+      .then(() => {
+        sendStatusInfo({
+          status: 'ok',
+          message: 'Zresetoeano',
+        });
+      })
+      .catch(() => {
+        sendStatusInfo({
+          status: 'error',
+          message: 'Nie zresetowano',
+        });
       });
   };
   if (!user?.uid) return <Redirect to={scan} />;

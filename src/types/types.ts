@@ -41,3 +41,8 @@ export interface AddFormSettings {
   withTag: boolean;
   withOrder: boolean;
 }
+
+export interface StatusInfo {
+  status: '' | 'error' | 'ok';
+  message: string;
+}

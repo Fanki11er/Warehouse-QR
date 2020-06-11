@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import { storeItem, Order } from '../../../types/types';
-import { db } from '../../../firebase/firebaseConfig';
 import { ItemOrder } from '../../../classes/classes';
-import { baseBranches } from '../../../firebase/firebaseEndpoints';
+import { addNewOrderItem } from '../../../tools/tools';
 import userContext from '../../../context/userContext';
+import StatusInfoContext from '../../../context/StatusInfoContext';
 import MenuHeader from '../../atoms/MenuHeader/MenuHeader';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
 import Form from '../../atoms/Form/Form';
@@ -34,6 +34,7 @@ interface Props {
 const OrderItemForm = (props: Props) => {
   const { toggleModal, item } = props;
   const user = useContext(userContext);
+  const sendStatusInfo = useContext(StatusInfoContext);
 
   const initialValues: Order = {
     itemIdentifier: item ? item.identifier : '',
@@ -47,21 +48,6 @@ const OrderItemForm = (props: Props) => {
     quantity: yup.number().required('Pole jest wymagane').moreThan(0, 'Wartość większa od zera'),
     orderDescription: yup.string().required('Pole jest wymagane'),
   });
-
-  const addNewOrderItem = async (newOrderItem: Order, user: firebase.User | null | undefined) => {
-    if (user) {
-      const { uid } = user;
-
-      db.ref('QR')
-        .child(`${baseBranches.ordersBranch}${uid}`)
-        .push(newOrderItem)
-        .catch((err) => {
-          console.log(err);
-        });
-      return;
-    }
-    return console.log('Brak Uprawnień');
-  };
 
   return (
     <Formik
@@ -77,8 +63,13 @@ const OrderItemForm = (props: Props) => {
           units,
           extraInfo,
         );
+        user?.uid
+          ? addNewOrderItem(newOrderItem, user, sendStatusInfo)
+          : sendStatusInfo({
+              status: 'error',
+              message: 'Brak uprawnień',
+            });
 
-        addNewOrderItem(newOrderItem, user);
         toggleModal(undefined);
       }}
     >

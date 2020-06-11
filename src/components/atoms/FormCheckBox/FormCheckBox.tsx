@@ -56,7 +56,6 @@ interface Props {
 
 const FormCheckBox = (props: Props) => {
   const { name, label, checked } = props;
-  console.log(checked);
   return (
     <StyledWrapper>
       <CheckBox type={'checkbox'} checked={checked} name={name} />

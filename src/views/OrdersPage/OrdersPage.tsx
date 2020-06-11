@@ -6,6 +6,7 @@ import { db } from '../../firebase/firebaseConfig';
 import { checkIfIsStoreEmpty, getOrderKey } from '../../tools/tools';
 import { ordersPath, baseBranches } from '../../firebase/firebaseEndpoints';
 import userContext from '../../context/userContext';
+import StatusInfoContext from '../../context/StatusInfoContext';
 import { Order } from '../../types/types';
 import ErrorInfo from '../../components/atoms/ErrorInfo/ErrorInfo';
 import MenuButton from '../../components/atoms/MenuButton/MenuButton';
@@ -62,6 +63,7 @@ const StyledButtonsWrapper = styled.div`
 const OrdersPage = () => {
   const { scan } = routes;
   const user = useContext(userContext);
+  const sendStatusInfo = useContext(StatusInfoContext);
   const [isStoreEmpty, setIsStoreEmpty] = useState<boolean | undefined>(undefined);
   const [ordersList, setOrdersList] = useState([]);
   const [pagesList, setPagesList] = useState<Array<Order[]>>([]);
@@ -86,7 +88,7 @@ const OrdersPage = () => {
     };
 
     const listener = user ? loadItemsList(ordersPath, user) : undefined;
-    return () => listener && db.ref(ordersPath).off('value', listener);
+    return () => db.ref(ordersPath).off('value', listener);
   }, [user]);
 
   useEffect(() => {
@@ -142,8 +144,17 @@ const OrdersPage = () => {
         .ref('QR/')
         .child(`${baseBranches.ordersBranch}${user.uid}`)
         .update({ [tagKey]: null })
-        .catch((err) => {
-          console.log(err.message);
+        .then(() => {
+          sendStatusInfo({
+            status: 'ok',
+            message: 'Usunięto',
+          });
+        })
+        .catch(() => {
+          sendStatusInfo({
+            status: 'error',
+            message: 'Nie usunięto',
+          });
         });
   };
 
@@ -151,8 +162,17 @@ const OrdersPage = () => {
     db.ref('QR/')
       .child(`${baseBranches.ordersBranch}/${user.uid}`)
       .set('EMPTY')
-      .catch((err) => {
-        console.log(err.message);
+      .then(() => {
+        sendStatusInfo({
+          status: 'ok',
+          message: 'Zresetowano',
+        });
+      })
+      .catch(() => {
+        sendStatusInfo({
+          status: 'error',
+          message: 'Nie zresetowano',
+        });
       });
   };
 

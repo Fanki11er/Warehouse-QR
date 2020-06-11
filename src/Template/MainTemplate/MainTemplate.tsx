@@ -4,6 +4,7 @@ import { auth } from '../../firebase/firebaseConfig';
 import routes from '../../routes/routes';
 import UserContext from '../../context/userContext';
 import OrderModalContext from '../../context/orderContext';
+import StatusInfoContext from '../../context/StatusInfoContext';
 import TopWrapper from '../../components/molecules/TopWrapper/TopWrapper';
 import ScanItem from '../../components/organisms/ScanItem/ScanItem';
 import StoreType from '../../components/organisms/StoreType/StoreType';
@@ -13,7 +14,8 @@ import LoginModal from '../../components/organisms/LoginModal/LoginModal';
 import OrdersPage from '../../views/OrdersPage/OrdersPage';
 import OrderItemModal from '../../components/organisms/OrderItemModal/OrderItemModal';
 import Footer from '../../components/molecules/Footer/Footer';
-import { storeItem } from '../../types/types';
+import StatusInfoModal from '../../components/molecules/StatusInfoModal/StatusInfoModal';
+import { storeItem, StatusInfo } from '../../types/types';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -35,8 +37,13 @@ const MainTemplate = ({ location }) => {
   const { scan, store, main, tags, orders } = routes;
   const [isLogInModalOpened, setIsLogInModalOpened] = useState(false);
   const [isOrderModalOpened, setIsOrderModalOpened] = useState(false);
+  const [isStatusInfoModalOpened, setIsStatusInfoOpened] = useState(false);
   const [itemToOrder, setItemToOrder] = useState<storeItem | undefined>(undefined);
   const [user, setUser] = useState<firebase.User | null | undefined>(undefined);
+  const [statusInfo, setStatusInfo] = useState<StatusInfo>({
+    status: '',
+    message: '',
+  });
 
   const toggleLogInModal = () => {
     setIsLogInModalOpened(!isLogInModalOpened);
@@ -45,6 +52,17 @@ const MainTemplate = ({ location }) => {
   const toggleOrderModal = (item: storeItem | undefined) => {
     setItemToOrder(item);
     setIsOrderModalOpened(!isOrderModalOpened);
+  };
+
+  const getStatusInfo = (status: StatusInfo) => {
+    setStatusInfo(status);
+  };
+
+  const showStatusModal = () => {
+    setIsStatusInfoOpened(true);
+    return setTimeout(() => {
+      setIsStatusInfoOpened(false);
+    }, 1500);
   };
 
   useEffect(() => {
@@ -56,28 +74,36 @@ const MainTemplate = ({ location }) => {
     auth.signOut();
   };
 
+  useEffect(() => {
+    const listener = statusInfo.status ? showStatusModal() : undefined;
+    return () => clearTimeout(listener);
+  }, [statusInfo]);
+
   return (
     <StyledWrapper>
+      <StatusInfoModal statusInfo={statusInfo} isModalOpened={isStatusInfoModalOpened} />
       <UserContext.Provider value={user}>
-        <TopWrapper logOut={logOut} logIn={toggleLogInModal} />
-        <OrderModalContext.Provider value={toggleOrderModal}>
-          {pathname === scan && <ScanItem />}
-          {pathname === store && <StoreType location={location} />}
-          {pathname === tags && <PrintPage />}
-          {pathname === main && <MainPage />}
-          {pathname === orders && <OrdersPage />}
-          {pathname !== scan &&
-            pathname !== store &&
-            pathname !== tags &&
-            pathname !== main &&
-            pathname !== orders && <ScanItem />}
-        </OrderModalContext.Provider>
-        <LoginModal isModalOpened={isLogInModalOpened} toggleModal={toggleLogInModal} />
-        <OrderItemModal
-          isModalOpened={isOrderModalOpened}
-          toggleModal={toggleOrderModal}
-          item={itemToOrder}
-        />
+        <StatusInfoContext.Provider value={getStatusInfo}>
+          <TopWrapper logOut={logOut} logIn={toggleLogInModal} />
+          <OrderModalContext.Provider value={toggleOrderModal}>
+            {pathname === scan && <ScanItem />}
+            {pathname === store && <StoreType location={location} />}
+            {pathname === tags && <PrintPage />}
+            {pathname === main && <MainPage />}
+            {pathname === orders && <OrdersPage />}
+            {pathname !== scan &&
+              pathname !== store &&
+              pathname !== tags &&
+              pathname !== main &&
+              pathname !== orders && <ScanItem />}
+          </OrderModalContext.Provider>
+          <LoginModal isModalOpened={isLogInModalOpened} toggleModal={toggleLogInModal} />
+          <OrderItemModal
+            isModalOpened={isOrderModalOpened}
+            toggleModal={toggleOrderModal}
+            item={itemToOrder}
+          />
+        </StatusInfoContext.Provider>
       </UserContext.Provider>
       <Footer />
     </StyledWrapper>

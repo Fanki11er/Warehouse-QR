@@ -1,17 +1,25 @@
 import { StoreItem, Tag } from '../classes/classes';
 import { baseBranches } from '../firebase/firebaseEndpoints';
-import { Order } from '../types/types';
+import { Order, StatusInfo } from '../types/types';
 import { db } from '../firebase/firebaseConfig';
 
-export const addNewTag = (newItem: StoreItem) => {
+export const addNewTag = (newItem: StoreItem, callback: (x: StatusInfo) => void) => {
   const { name, identifier, mainType, secondType, dimension } = newItem;
   const description = `${name} ${mainType} ${secondType}`;
   const newTag = new Tag(identifier, description, dimension);
 
   db.ref(`QR/${baseBranches.tagsBranch}`)
-    .push(newTag)
-    .catch((err) => {
-      console.log(err.message);
+    .push(newTag, () => {
+      callback({
+        status: 'ok',
+        message: 'Dodano',
+      });
+    })
+    .catch(() => {
+      callback({
+        status: 'ok',
+        message: 'Nie dodano',
+      });
     });
 };
 
@@ -78,18 +86,25 @@ export const checkForRepeats = <T>(usedItems: T[], orderDescription: T) => {
 
 export const addNewOrderItem = async (
   newOrderItem: Order,
-  user: firebase.User | null | undefined,
+  user: firebase.User,
+  callback: Function,
 ) => {
-  if (user) {
-    const { uid } = user;
+  const { uid } = user;
 
-    db.ref('QR')
-      .child(`${baseBranches.ordersBranch}${uid}`)
-      .push(newOrderItem)
-      .catch((err) => {
-        console.log(err);
+  await db
+    .ref('QR')
+    .child(`${baseBranches.ordersBranch}${uid}`)
+    .push(
+      newOrderItem,
+      callback({
+        status: 'ok',
+        message: 'Dodano',
+      }),
+    )
+    .catch(() => {
+      callback({
+        status: 'error',
+        message: 'Nie dodano qq',
       });
-    return;
-  }
-  return console.log('Brak Uprawnień');
+    });
 };

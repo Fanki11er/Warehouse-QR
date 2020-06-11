@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import * as yup from 'yup';
 import { Formik } from 'formik';
@@ -6,6 +6,7 @@ import { storeItem } from '../../../types/types';
 import { db } from '../../../firebase/firebaseConfig';
 import { StoreItem } from '../../../classes/classes';
 import { baseBranches } from '../../../firebase/firebaseEndpoints';
+import StatusInfoContext from '../../../context/StatusInfoContext';
 import { createOrderDesc, getStoreItemKey } from '../../../tools/tools';
 import MenuHeader from '../../atoms/MenuHeader/MenuHeader';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
@@ -32,6 +33,7 @@ interface Props {
 
 const EditItemForm = (props: Props) => {
   const { toggleModal, item } = props;
+  const sendStatusInfo = useContext(StatusInfoContext);
   if (!item) return null;
 
   const {
@@ -65,7 +67,19 @@ const EditItemForm = (props: Props) => {
 
     db.ref('QR/')
       .child(`${baseBranches.storesBranch}${storeType}`)
-      .update({ [key]: editedItem });
+      .update({ [key]: editedItem })
+      .then(() => {
+        sendStatusInfo({
+          status: 'ok',
+          message: 'Dodano',
+        });
+      })
+      .catch(() => {
+        sendStatusInfo({
+          status: 'error',
+          message: 'Nie dodano',
+        });
+      });
   };
 
   return (
