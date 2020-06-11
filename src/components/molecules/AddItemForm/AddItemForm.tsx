@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import * as yup from 'yup';
 import { Formik } from 'formik';
-import { storeItem } from '../../../types/types';
+import { storeItem, AddFormSettings } from '../../../types/types';
 import { db } from '../../../firebase/firebaseConfig';
-import { StoreItem } from '../../../classes/classes';
+import { StoreItem, ItemOrder } from '../../../classes/classes';
 import { baseBranches } from '../../../firebase/firebaseEndpoints';
-import { addNewTag, getProperties, checkForRepeats } from '../../../tools/tools';
+import { addNewTag, getProperties, checkForRepeats, addNewOrderItem } from '../../../tools/tools';
+import UserContext from '../../../context/userContext';
 import MenuHeader from '../../atoms/MenuHeader/MenuHeader';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
 import Form from '../../atoms/Form/Form';
 import FormInput from '../FormInput/FormInput';
+import FormCheckBox from '../../atoms/FormCheckBox/FormCheckBox';
 
 const StyledInputsWrapper = styled.div`
   display: flex;
@@ -22,6 +24,12 @@ const StyledButtonsWrapper = styled.div`
   display: flex;
   width: 100%;
   padding: 0 15px;
+  justify-content: space-around;
+`;
+
+const StyledCheckBoxesWrapper = styled.div`
+  display: flex;
+  width: 100%;
   justify-content: space-around;
 `;
 
@@ -44,14 +52,17 @@ interface Props {
 
 const AddItemForm = (props: Props) => {
   const { toggleModal, itemsList, storeType, defaultItemName } = props;
+  const user = useContext(UserContext);
   const [itemExists, setItemExists] = useState(false);
-  const initialValues: Partial<storeItem> = {
+  const initialValues: Partial<storeItem> & AddFormSettings = {
     name: defaultItemName,
     dimension: '',
     mainType: '',
     secondType: '',
     defaultOrderAmount: 0,
     additionalDescriptions: '',
+    withTag: true,
+    withOrder: false,
   };
 
   const usedItems = getProperties('orderDescription', itemsList);
@@ -101,6 +112,8 @@ const AddItemForm = (props: Props) => {
           secondType,
           defaultOrderAmount,
           additionalDescriptions,
+          withTag,
+          withOrder,
         } = values;
         const id = getNextItemNumber(itemsList);
         const identifier = makeIdentifier(id, storeType);
@@ -122,7 +135,12 @@ const AddItemForm = (props: Props) => {
           return;
         }
         addNewItem(newItem);
-        addNewTag(newItem);
+        withTag && addNewTag(newItem);
+        if (withOrder) {
+          const { orderDescription, identifier, defaultOrderAmount } = newItem;
+          const newOrder = new ItemOrder(identifier, orderDescription, defaultOrderAmount, 'szt');
+          addNewOrderItem(newOrder, user);
+        }
         toggleModal();
         resetForm();
         setSubmitting(false);
@@ -132,6 +150,10 @@ const AddItemForm = (props: Props) => {
         <Form onSubmit={handleSubmit}>
           <MenuHeader>Dodaj do magazynu</MenuHeader>
           <StyledInputsWrapper>
+            <StyledCheckBoxesWrapper>
+              <FormCheckBox name={'withTag'} label={'Etykieta'} checked={values.withTag} />
+              <FormCheckBox name={'withOrder'} label={'Zamówienie'} checked={values.withOrder} />
+            </StyledCheckBoxesWrapper>
             <FormInput
               name={'name'}
               type={'text'}

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Field } from 'formik';
+import FormLabel from '../../atoms/FormLabel/FormLabel';
 
 interface InputProps {
   width?: number;
@@ -50,13 +51,6 @@ const StyledInput = styled(Field)`
   }
 `;
 
-const StyledLabel = styled.label`
-  color: ${({ theme }) => theme.primaryBlue};
-  min-width: 80px;
-  font-size: ${({ theme }) => theme.fontSizeDesktop.larger};
-  margin: 4px 0;
-`;
-
 const StyledError = styled.div`
   display: flex;
   justify-content: center;
@@ -95,7 +89,7 @@ const FormInput = (props: Props) => {
   } = props;
   return (
     <StyledWrapper>
-      <StyledLabel>{`${label}:`}</StyledLabel>
+      <FormLabel>{`${label}:`}</FormLabel>
       <StyledInput
         type={type}
         name={name}
@@ -103,7 +97,7 @@ const FormInput = (props: Props) => {
         className={error ? 'error' : undefined}
         placeholder={placeholder}
         width={width}
-        inputmode={inputMode}
+        inputMode={inputMode}
         pattern={pattern}
       />
       <StyledError>{errorText}</StyledError>

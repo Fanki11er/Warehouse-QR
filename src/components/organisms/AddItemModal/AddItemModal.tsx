@@ -7,7 +7,7 @@ import AddItemForm from '../../molecules/AddItemForm/AddItemForm';
 const StyledWrapper = styled.div`
   display: flex;
   width: 500px;
-  height: 600px;
+  height: 625px;
   background-color: ${({ theme }) => theme.primary};
   border: 2px solid ${({ theme }) => theme.green};
   border-radius: 15px;
@@ -22,6 +22,7 @@ const StyledWrapper = styled.div`
     width: 350px;
     padding: 5px;
     min-height: 620px;
+    transform: scale(1);
   }
 `;
 interface Props {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useRef, RefObject } from 'react';
 import styled from 'styled-components';
 import theme from '../../../themes/mainTheme';
 import UserContext from '../../../context/userContext';
@@ -12,10 +12,6 @@ import DummyButton from '../../atoms/DummyButton/DummyButton';
 
 interface ThemeProps {
   scannedItemId: string;
-}
-
-interface Props {
-  isScanning: boolean;
 }
 
 const StyledWrapper = styled.div`
@@ -98,8 +94,13 @@ const StyledInfoWrapper = styled.div`
   align-items: center;
 `;
 
+interface Props {
+  isScanning: boolean;
+  getPosition: (x: RefObject<any>) => void;
+}
+
 const ScannedStoreItem = (props: Props & ThemeProps) => {
-  const { scannedItemId, isScanning } = props;
+  const { scannedItemId, isScanning, getPosition } = props;
   const toggleOrderModal = useContext(OrderModalContext);
   const user = useContext(UserContext);
   const [error, setError] = useState('');
@@ -113,6 +114,11 @@ const ScannedStoreItem = (props: Props & ThemeProps) => {
     }
     return scannedItemId.slice(0, 3);
   };
+  const itemInfo = useRef<any>(null);
+
+  useEffect(() => {
+    getPosition(itemInfo);
+  }, [itemInfo]);
 
   const fetchScannedItem = async (scannedItemId: string) => {
     const storeType = getStoreType(scannedItemId);
@@ -160,7 +166,7 @@ const ScannedStoreItem = (props: Props & ThemeProps) => {
     return <StyledStoreItem>{item!.orderDescription}</StyledStoreItem>;
   };
   return (
-    <StyledWrapper scannedItemId={scannedItemId}>
+    <StyledWrapper scannedItemId={scannedItemId} ref={itemInfo}>
       <StyledItemWrapper>{renderItem(error, item)}</StyledItemWrapper>
 
       <StyledButtonsWrapper>

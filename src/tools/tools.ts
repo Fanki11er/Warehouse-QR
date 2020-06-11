@@ -1,5 +1,6 @@
 import { StoreItem, Tag } from '../classes/classes';
 import { baseBranches } from '../firebase/firebaseEndpoints';
+import { Order } from '../types/types';
 import { db } from '../firebase/firebaseConfig';
 
 export const addNewTag = (newItem: StoreItem) => {
@@ -73,4 +74,22 @@ export const getProperties = <T>(propName: string, source: T[]): string[] => {
 
 export const checkForRepeats = <T>(usedItems: T[], orderDescription: T) => {
   return usedItems.includes(orderDescription);
+};
+
+export const addNewOrderItem = async (
+  newOrderItem: Order,
+  user: firebase.User | null | undefined,
+) => {
+  if (user) {
+    const { uid } = user;
+
+    db.ref('QR')
+      .child(`${baseBranches.ordersBranch}${uid}`)
+      .push(newOrderItem)
+      .catch((err) => {
+        console.log(err);
+      });
+    return;
+  }
+  return console.log('Brak Uprawnień');
 };

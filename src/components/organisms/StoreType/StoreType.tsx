@@ -112,9 +112,7 @@ const StoreType = (props: Props) => {
         <StoreMenu toggleModal={toggleAddItemsModal} />
         <StoreItemsView
           isStoreEmpty={isStoreEmpty!}
-          items={
-            filteredItemsList.length && filterInput.current?.value ? filteredItemsList : itemsList
-          }
+          items={filterInput.current?.value ? filteredItemsList : itemsList}
           toggleEditItemModal={toggleEditItemModal}
         />
       </StyledFlexWrapper>

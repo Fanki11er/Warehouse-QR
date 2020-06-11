@@ -15,7 +15,7 @@ const StyledWrapper = styled.div`
   @media (max-width: 600px) {
     width: 350px;
     padding: 5px;
-    min-height: 620px;
+    height: 350px;
   }
 `;
 interface Props {

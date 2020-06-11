@@ -12,6 +12,7 @@ import MainPage from '../../views/mainPage/MainPage';
 import LoginModal from '../../components/organisms/LoginModal/LoginModal';
 import OrdersPage from '../../views/OrdersPage/OrdersPage';
 import OrderItemModal from '../../components/organisms/OrderItemModal/OrderItemModal';
+import Footer from '../../components/molecules/Footer/Footer';
 import { storeItem } from '../../types/types';
 
 const StyledWrapper = styled.div`
@@ -78,6 +79,7 @@ const MainTemplate = ({ location }) => {
           item={itemToOrder}
         />
       </UserContext.Provider>
+      <Footer />
     </StyledWrapper>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, RefObject, useEffect } from 'react';
 import styled from 'styled-components';
 import ReadQr from '../ReadQR/ReadQr';
 import ScannedStoreItem from '../../molecules/ScannedStoreItem/ScannedStoreItem';
@@ -73,6 +73,8 @@ const ScanItem = () => {
   const [isScanning, setIsScanning] = useState(false);
   const [scannedItemId, setScannedItemId] = useState<string>('');
   const [scanError, setScanError] = useState<string>('');
+  const [scrollToPosition, setScrollToPosition] = useState<number>(0);
+
   const toggleScanning = () => {
     !isScanning && setScannedItemId('');
     setIsScanning(!isScanning);
@@ -85,6 +87,26 @@ const ScanItem = () => {
   const handleErr = (err: string) => {
     setScanError(err);
   };
+  const getPosition = (element: RefObject<HTMLDivElement>) => {
+    if (element.current) {
+      setScrollToPosition(element.current.offsetTop);
+    }
+  };
+
+  useEffect(() => {
+    window.scrollTo({
+      top: scrollToPosition,
+      behavior: 'smooth',
+    });
+  }, [scannedItemId]);
+
+  useEffect(() => {
+    isScanning &&
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+  }, [isScanning]);
 
   return (
     <StyledWrapper>
@@ -106,7 +128,11 @@ const ScanItem = () => {
       </StyledIdLabel>
 
       <StyledError>{scanError ? 'Błąd skanowania' : ''}</StyledError>
-      <ScannedStoreItem scannedItemId={scannedItemId} isScanning={isScanning} />
+      <ScannedStoreItem
+        scannedItemId={scannedItemId}
+        isScanning={isScanning}
+        getPosition={getPosition}
+      />
     </StyledWrapper>
   );
 };

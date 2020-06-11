@@ -6,14 +6,12 @@ const StyledWrapper = styled.div`
   display: flex;
   width: 130px;
   height: 40px;
-  border: 2px solid ${({ theme }) => theme.darkGray};
-  border-radius: 10px;
   background-color: transparent;
   justify-content: center;
   align-items: center;
 `;
 const StyledPadlock = styled.img`
-  width: 15px;
+  width: 20px;
   transform-origin: 50% 50%;
   animation-name: goRotate;
   animation-duration: 2s;

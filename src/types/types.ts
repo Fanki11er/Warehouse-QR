@@ -36,3 +36,8 @@ export type Order = {
   units: string;
   extraInfo: string;
 };
+
+export interface AddFormSettings {
+  withTag: boolean;
+  withOrder: boolean;
+}
