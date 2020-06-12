@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import routes from '../../../routes/routes';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
 import { NavLink } from 'react-router-dom';
-import mainTheme from '../../../themes/mainTheme';
+//import mainTheme from '../../../themes/mainTheme';
 import UserContext from '../../../context/userContext';
 import DummyButton from '../../atoms/DummyButton/DummyButton';
-import AuthIcon from '../../atoms/AuthIcon/AuthIcon';
+//import AuthIcon from '../../atoms/AuthIcon/AuthIcon';
 
 const StyledWrapper = styled.nav`
   display: flex;
@@ -63,14 +63,9 @@ const StyledDummyButton = styled(DummyButton)`
 const StyledButton = styled(MenuButton)`
   width: 130px;
 `;
-interface Props {
-  logOut: Function;
-  logIn: Function;
-}
 
-const Navigation = (props: Props) => {
+const Navigation = () => {
   const { scan, tags, main, orders } = routes;
-  const { logOut, logIn } = props;
   const user = useContext(UserContext);
   return (
     <StyledWrapper className={'printHide'}>
@@ -94,14 +89,7 @@ const Navigation = (props: Props) => {
       ) : (
         <StyledDummyButton>Etykiety</StyledDummyButton>
       )}
-      {user === undefined && <AuthIcon />}
-      {user === null && <StyledButton onClick={() => logIn()}>Zaloguj</StyledButton>}
-      {user && (
-        <StyledButton onClick={() => logOut()} color={mainTheme.lightRed}>
-          Wyloguj
-        </StyledButton>
-      )}
-      )}
+      )
     </StyledWrapper>
   );
 };

@@ -22,7 +22,6 @@ const StyledWrapper = styled.div`
     }};
   display: flex;
   flex-direction: column;
-
   width: 360px;
   height: 135px;
   border-radius: 10px;
@@ -44,7 +43,6 @@ const StyledStoreItem = styled.div`
   height: 100%;
   color: ${({ theme }) => theme.primaryBlue};
   font-size: ${({ theme }) => theme.fontSizeDesktop.larger};
-
   opacity: 0;
   animation-name: showing;
   animation-duration: 0.5s;

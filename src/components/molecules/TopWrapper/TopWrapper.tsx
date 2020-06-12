@@ -16,17 +16,11 @@ const StyledTopWrapper = styled.div`
   }
 `;
 
-interface Props {
-  logOut: Function;
-  logIn: Function;
-}
-
-const TopWrapper = (props: Props) => {
-  const { logOut, logIn } = props;
+const TopWrapper = () => {
   return (
     <StyledTopWrapper className={'printHide'}>
       <AppLogo />
-      <Navigation logOut={logOut} logIn={logIn} />
+      <Navigation />
     </StyledTopWrapper>
   );
 };

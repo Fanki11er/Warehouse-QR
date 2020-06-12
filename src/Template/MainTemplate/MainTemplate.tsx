@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { auth } from '../../firebase/firebaseConfig';
+import { storeItem, StatusInfo } from '../../types/types';
 import routes from '../../routes/routes';
 import UserContext from '../../context/userContext';
 import OrderModalContext from '../../context/orderContext';
@@ -15,7 +16,8 @@ import OrdersPage from '../../views/OrdersPage/OrdersPage';
 import OrderItemModal from '../../components/organisms/OrderItemModal/OrderItemModal';
 import Footer from '../../components/molecules/Footer/Footer';
 import StatusInfoModal from '../../components/molecules/StatusInfoModal/StatusInfoModal';
-import { storeItem, StatusInfo } from '../../types/types';
+import UserMenu from '../../components/molecules/UserMenu/UserMenu';
+import UserMenuModal from '../../components/molecules/UserMenuModal/UserMenuModal';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -38,6 +40,7 @@ const MainTemplate = ({ location }) => {
   const [isLogInModalOpened, setIsLogInModalOpened] = useState(false);
   const [isOrderModalOpened, setIsOrderModalOpened] = useState(false);
   const [isStatusInfoModalOpened, setIsStatusInfoOpened] = useState(false);
+  const [isMenuModalOpened, setIsMenuModalOpened] = useState(false);
   const [itemToOrder, setItemToOrder] = useState<storeItem | undefined>(undefined);
   const [user, setUser] = useState<firebase.User | null | undefined>(undefined);
   const [statusInfo, setStatusInfo] = useState<StatusInfo>({
@@ -45,8 +48,19 @@ const MainTemplate = ({ location }) => {
     message: '',
   });
 
+  const isPathNotExist = (routes: Object, pathName: string): boolean => {
+    const notExist = Object.values(routes).findIndex((route) => {
+      return route === pathName;
+    });
+    return notExist < 0 ? true : false;
+  };
+
   const toggleLogInModal = () => {
     setIsLogInModalOpened(!isLogInModalOpened);
+  };
+
+  const toggleMenuModal = () => {
+    setIsMenuModalOpened(!isMenuModalOpened);
   };
 
   const toggleOrderModal = (item: storeItem | undefined) => {
@@ -83,19 +97,22 @@ const MainTemplate = ({ location }) => {
     <StyledWrapper>
       <StatusInfoModal statusInfo={statusInfo} isModalOpened={isStatusInfoModalOpened} />
       <UserContext.Provider value={user}>
+        <UserMenu isModalOpened={isMenuModalOpened} toggleModal={toggleMenuModal} />
+        <UserMenuModal
+          isModalOpened={isMenuModalOpened}
+          logOut={logOut}
+          logIn={toggleLogInModal}
+          toggleModal={toggleMenuModal}
+        />
         <StatusInfoContext.Provider value={getStatusInfo}>
-          <TopWrapper logOut={logOut} logIn={toggleLogInModal} />
+          <TopWrapper />
           <OrderModalContext.Provider value={toggleOrderModal}>
             {pathname === scan && <ScanItem />}
             {pathname === store && <StoreType location={location} />}
             {pathname === tags && <PrintPage />}
             {pathname === main && <MainPage />}
             {pathname === orders && <OrdersPage />}
-            {pathname !== scan &&
-              pathname !== store &&
-              pathname !== tags &&
-              pathname !== main &&
-              pathname !== orders && <ScanItem />}
+            {isPathNotExist(routes, pathname) && <ScanItem />}
           </OrderModalContext.Provider>
           <LoginModal isModalOpened={isLogInModalOpened} toggleModal={toggleLogInModal} />
           <OrderItemModal

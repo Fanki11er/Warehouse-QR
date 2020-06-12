@@ -2,16 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import Padlock from '../../../assets/image/Padlock.svg';
 
-const StyledWrapper = styled.div`
-  display: flex;
-  width: 130px;
-  height: 40px;
-  background-color: transparent;
-  justify-content: center;
-  align-items: center;
-`;
 const StyledPadlock = styled.img`
-  width: 20px;
+  width: 25px;
+  height: 25px;
   transform-origin: 50% 50%;
   animation-name: goRotate;
   animation-duration: 2s;
@@ -24,10 +17,6 @@ const StyledPadlock = styled.img`
   }
 `;
 
-const AuthIcon = () => (
-  <StyledWrapper>
-    <StyledPadlock src={Padlock} alt={'Padlock'}></StyledPadlock>
-  </StyledWrapper>
-);
+const AuthIcon = () => <StyledPadlock src={Padlock} alt={'Padlock'}></StyledPadlock>;
 
 export default AuthIcon;
