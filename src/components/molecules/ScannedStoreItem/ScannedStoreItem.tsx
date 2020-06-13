@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useRef, RefObject } from 'react';
+import React, { useEffect, useState, useContext, useRef, useCallback, RefObject } from 'react';
 import styled from 'styled-components';
 import theme from '../../../themes/mainTheme';
 import UserContext from '../../../context/userContext';
@@ -6,7 +6,9 @@ import MenuButton from '../../atoms/MenuButton/MenuButton';
 import { db } from '../../../firebase/firebaseConfig';
 import { storesPath } from '../../../firebase/firebaseEndpoints';
 import { storeItem } from '../../../types/types';
+import { addShortage } from '../../../tools/tools';
 import OrderModalContext from '../../../context/orderContext';
+import StatusInfoContext from '../../../context/StatusInfoContext';
 import LoadingImage from '../../atoms/LoadingImage/LoadingImage';
 import DummyButton from '../../atoms/DummyButton/DummyButton';
 
@@ -99,10 +101,11 @@ interface Props {
 
 const ScannedStoreItem = (props: Props & ThemeProps) => {
   const { scannedItemId, isScanning, getPosition } = props;
-  const toggleOrderModal = useContext(OrderModalContext);
-  const user = useContext(UserContext);
   const [error, setError] = useState('');
   const [item, setStoreItem] = useState<storeItem | undefined>(undefined);
+  const toggleOrderModal = useContext(OrderModalContext);
+  const user = useContext(UserContext);
+  const sendStatsInfo = useContext(StatusInfoContext);
 
   const getStoreType = (scannedItemId: string) => {
     const match = /\w{3}[-]\d+/i.test(scannedItemId);
@@ -116,9 +119,9 @@ const ScannedStoreItem = (props: Props & ThemeProps) => {
 
   useEffect(() => {
     getPosition(itemInfo);
-  }, [itemInfo]);
+  }, [itemInfo, getPosition]);
 
-  const fetchScannedItem = async (scannedItemId: string) => {
+  const fetchScannedItem = useCallback(async (scannedItemId: string) => {
     const storeType = getStoreType(scannedItemId);
     if (storeType) {
       const item = await db
@@ -136,7 +139,8 @@ const ScannedStoreItem = (props: Props & ThemeProps) => {
         setStoreItem(undefined);
       }
     }
-  };
+  }, []);
+
   useEffect(() => {
     if (isScanning) {
       setError('');
@@ -146,7 +150,7 @@ const ScannedStoreItem = (props: Props & ThemeProps) => {
 
   useEffect(() => {
     if (scannedItemId) fetchScannedItem(scannedItemId);
-  }, [scannedItemId]);
+  }, [scannedItemId, fetchScannedItem]);
 
   const renderItem = (error: string, item: storeItem | undefined) => {
     if (error) {
@@ -178,7 +182,10 @@ const ScannedStoreItem = (props: Props & ThemeProps) => {
         ) : (
           <DummyButton>Zamów</DummyButton>
         )}
-        <StyledItemButton className={scannedItemId ? undefined : 'notActive'}>
+        <StyledItemButton
+          className={scannedItemId ? undefined : 'notActive'}
+          onClick={() => item && addShortage(item.identifier, item.orderDescription, sendStatsInfo)}
+        >
           Zgłoś brak
         </StyledItemButton>
       </StyledButtonsWrapper>

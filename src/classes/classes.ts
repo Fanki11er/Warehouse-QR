@@ -1,4 +1,4 @@
-import { storeType, storeItem, Order } from '../types/types';
+import { storeType, storeItem, Order, Shortage } from '../types/types';
 
 export class StoreType implements storeType {
   name: string;
@@ -64,4 +64,8 @@ export class ItemOrder implements Order {
     public units: string,
     public extraInfo: string = '',
   ) {}
+}
+
+export class ItemShortage implements Shortage {
+  constructor(public itemIdentifier: string, public orderDescription: string) {}
 }

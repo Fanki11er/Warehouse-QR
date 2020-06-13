@@ -18,6 +18,7 @@ import Footer from '../../components/molecules/Footer/Footer';
 import StatusInfoModal from '../../components/molecules/StatusInfoModal/StatusInfoModal';
 import UserMenu from '../../components/molecules/UserMenu/UserMenu';
 import UserMenuModal from '../../components/molecules/UserMenuModal/UserMenuModal';
+import Shortages from '../../views/Shortages/Shortages';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -123,7 +124,7 @@ const MainTemplate = ({ location }) => {
             {pathname === tags && <PrintPage />}
             {pathname === main && <MainPage />}
             {pathname === orders && <OrdersPage />}
-            {pathname === shortages && <ScanItem />}
+            {pathname === shortages && <Shortages />}
             {isPathNotExist(routes, pathname) && <ScanItem />}
           </OrderModalContext.Provider>
           <LoginModal isModalOpened={isLogInModalOpened} toggleModal={toggleLogInModal} />

@@ -58,10 +58,6 @@ const StyledDummyButton = styled(DummyButton)`
   }
 `;
 
-const StyledButton = styled(MenuButton)`
-  width: 130px;
-`;
-
 const Navigation = () => {
   const { scan, tags, main, orders, shortages } = routes;
   const user = useContext(UserContext);

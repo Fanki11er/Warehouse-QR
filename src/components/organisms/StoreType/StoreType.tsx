@@ -67,7 +67,6 @@ const StoreType = (props: Props) => {
 
   useEffect(() => {
     if (!identifier) return;
-    //!! Info about useCallback
     const loadItemsList = (identifier: string, storesPath: string) => {
       const ref = db.ref(storesPath);
       return ref.child(identifier).on('value', async (snapshot) => {

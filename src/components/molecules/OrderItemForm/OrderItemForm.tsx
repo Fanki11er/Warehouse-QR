@@ -53,7 +53,7 @@ const OrderItemForm = (props: Props) => {
     <Formik
       initialValues={initialValues}
       validationSchema={validateSchema}
-      onSubmit={(values, { setSubmitting, resetForm }) => {
+      onSubmit={(values) => {
         const { itemIdentifier, quantity, extraInfo, units, orderDescription } = values;
 
         const newOrderItem = new ItemOrder(

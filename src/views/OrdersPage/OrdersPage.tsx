@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
 import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
 import routes from '../../routes/routes';
@@ -71,7 +71,6 @@ const OrdersPage = () => {
   const [printer, setPrinter] = useState(true);
 
   useEffect(() => {
-    //!! Info about useCallback
     const loadItemsList = (ordersPath: string, user: firebase.User) => {
       return db
         .ref(ordersPath)
@@ -91,10 +90,6 @@ const OrdersPage = () => {
     const listener = user ? loadItemsList(ordersPath, user) : undefined;
     return () => db.ref(ordersPath).off('value', listener);
   }, [user]);
-
-  useEffect(() => {
-    ordersList.length ? setPagesList(spliceForPages(ordersList)) : setPagesList(spliceForPages([]));
-  }, [ordersList]);
 
   const changePrinter = () => {
     setPrinter(!printer);
@@ -117,7 +112,7 @@ const OrdersPage = () => {
     });
   };
 
-  const spliceForPages = (ordersList: Order[]): Array<Order>[] => {
+  const spliceForPages = useCallback((ordersList: Order[]): Array<Order>[] => {
     const list = sortOrdersList([...ordersList]);
 
     const check = (list: Order[]) => {
@@ -136,7 +131,11 @@ const OrdersPage = () => {
       pages.push(page);
     } while (list.length > 0);
     return pages;
-  };
+  }, []);
+
+  useEffect(() => {
+    ordersList.length ? setPagesList(spliceForPages(ordersList)) : setPagesList(spliceForPages([]));
+  }, [ordersList, spliceForPages]);
 
   const deleteOrderItem = async (identifier: string, user: firebase.User) => {
     const tagKey = await getOrderKey(identifier, user);

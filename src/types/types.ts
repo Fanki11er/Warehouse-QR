@@ -46,3 +46,8 @@ export interface StatusInfo {
   status: '' | 'error' | 'ok';
   message: string;
 }
+
+export interface Shortage {
+  itemIdentifier: string;
+  orderDescription: string;
+}

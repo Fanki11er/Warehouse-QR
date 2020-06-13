@@ -1,6 +1,7 @@
 import { StoreItem, Tag } from '../classes/classes';
-import { baseBranches } from '../firebase/firebaseEndpoints';
+import { baseBranches, storesPath } from '../firebase/firebaseEndpoints';
 import { Order, StatusInfo } from '../types/types';
+import { ItemShortage } from '../classes/classes';
 import { db } from '../firebase/firebaseConfig';
 
 export const addNewTag = (newItem: StoreItem, callback: (x: StatusInfo) => void) => {
@@ -104,7 +105,72 @@ export const addNewOrderItem = async (
     .catch(() => {
       callback({
         status: 'error',
-        message: 'Nie dodano qq',
+        message: 'Nie dodano',
       });
     });
+};
+
+export const getData = (mainPath: string, setIsEmpty: Function, setItemsList: Function) => {
+  return db.ref(mainPath).on('value', async (snapshot) => {
+    const isEmpty = await checkIfIsStoreEmpty(snapshot);
+
+    setIsEmpty(isEmpty);
+    if (!isEmpty) {
+      const items = await snapshot.val();
+
+      items ? setItemsList(Object.values(items)) : setItemsList([]);
+    }
+  });
+};
+
+export const addShortage = async (
+  itemIdentifier: string,
+  orderDescription: string,
+  callback: Function,
+) => {
+  const shortage = new ItemShortage(itemIdentifier, orderDescription);
+
+  await db
+    .ref('QR')
+    .child(baseBranches.shortagesBranch)
+    .push(
+      shortage,
+      callback({
+        status: 'ok',
+        message: 'Zgłoszono',
+      }),
+    )
+    .catch(() => {
+      callback({
+        status: 'error',
+        message: 'Błąd',
+      });
+    });
+};
+
+const getStoreType = (scannedItemId: string, setErr?: Function) => {
+  const match = /\w{3}[-]\d+/i.test(scannedItemId);
+  if (!match) {
+    setErr && setErr('Nie właściwa forma kodu');
+    return '';
+  }
+  return scannedItemId.slice(0, 3);
+};
+
+export const fetchItem = async (itemId: string) => {
+  const storeType = getStoreType(itemId);
+  if (storeType) {
+    const item = await db
+      .ref(storesPath)
+      .child(storeType)
+      .orderByChild('identifier')
+      .equalTo(itemId)
+      .once('value');
+    const [value]: any = item.val() ? Object.values(item.val()) : [undefined];
+    if (value) {
+      return value;
+    } else {
+      return;
+    }
+  }
 };

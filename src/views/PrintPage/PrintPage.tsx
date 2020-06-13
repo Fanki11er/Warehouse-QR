@@ -5,7 +5,7 @@ import { db } from '../../firebase/firebaseConfig';
 import { Tag } from '../../classes/classes';
 import router from '../../routes/routes';
 import { tagsPath, baseBranches } from '../../firebase/firebaseEndpoints';
-import { getTagKey, checkIfIsStoreEmpty } from '../../tools/tools';
+import { getTagKey, getData } from '../../tools/tools';
 import UserContext from '../../context/userContext';
 import StatusInfoContext from '../../context/StatusInfoContext';
 import ItemTag from '../../components/atoms/ItemTag/ItemTag';
@@ -78,19 +78,7 @@ const PrintPage = () => {
   const sendStatusInfo = useContext(StatusInfoContext);
 
   useEffect(() => {
-    //!! Info about useCallback
-    const loadItemsList = (tagsPath: string) => {
-      return db.ref(tagsPath).on('value', async (snapshot) => {
-        const isEmpty = await checkIfIsStoreEmpty(snapshot);
-        setIsStoreEmpty(isEmpty);
-        if (!isEmpty) {
-          const items = await snapshot.val();
-
-          items ? setTagsList(Object.values(items)) : setTagsList([]);
-        }
-      });
-    };
-    const listener = user ? loadItemsList(tagsPath) : undefined;
+    const listener = user ? getData(tagsPath, setIsStoreEmpty, setTagsList) : undefined;
     return () => db.ref(tagsPath).off('value', listener);
   }, [user]);
 

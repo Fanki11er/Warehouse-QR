@@ -1,4 +1,4 @@
-import React, { useState, RefObject, useEffect } from 'react';
+import React, { useState, RefObject, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import ReadQr from '../ReadQR/ReadQr';
 import ScannedStoreItem from '../../molecules/ScannedStoreItem/ScannedStoreItem';
@@ -87,11 +87,11 @@ const ScanItem = () => {
   const handleErr = (err: string) => {
     setScanError(err);
   };
-  const getPosition = (element: RefObject<HTMLDivElement>) => {
+  const getPosition = useCallback((element: RefObject<HTMLDivElement>) => {
     if (element.current) {
       setScrollToPosition(element.current.offsetTop);
     }
-  };
+  }, []);
 
   useEffect(() => {
     window.scrollTo({
