@@ -12,6 +12,11 @@ const StyledWrapper = styled.div`
 
   @media (max-width: 600px) {
     margin-bottom: 15px;
+    width: 170px;
+    height: 90px;
+    position: sticky;
+    top: 0;
+    left: 0;
   }
 `;
 

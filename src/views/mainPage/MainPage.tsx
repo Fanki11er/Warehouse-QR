@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { db, dbBackup } from '../../firebase/firebaseConfig';
+import { db } from '../../firebase/firebaseConfig';
 import { storeTypesPath } from '../../firebase/firebaseEndpoints';
 import { storeType } from '../../types/types';
 import StoreTypesMenu from '../../components/organisms/StoreTypesMenu/StoreTypesMenu';
@@ -50,22 +50,12 @@ const MainPage = () => {
     };
   }, []);
 
-  const makeBackup = async () => {
-    const originalBase = await (await db.ref().once('value')).val();
-    const stringified: any = JSON.stringify(originalBase);
-    const timestamp = new Date().toLocaleString();
-    dbBackup
-      .collection('BACKUP')
-      .doc()
-      .set({ [timestamp]: stringified });
-  };
   return (
     <StyledWrapper>
       <StoreTypesMenu
         availableStores={availableStores}
         baseStatus={isBaseStatus}
         toggleModal={toggleAddStoreModal}
-        makeBackup={makeBackup}
       />
       <AddStoreModal
         isModalOpened={isAddStoreModalOpened}

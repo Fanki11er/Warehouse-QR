@@ -18,6 +18,7 @@ const StyledWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
+  min-height: 100vh;
   height: 100%;
   background-color: ${({ theme }) => theme.primary};
 `;
@@ -202,7 +203,7 @@ const OrdersPage = () => {
         <MenuButton onClick={() => changePrinter()}>{printer ? 'PDF' : 'DRUKARKA'}</MenuButton>
         <StyledMenuButton onClick={() => user && resetOrdersList(user)}>Resetuj</StyledMenuButton>
       </StyledButtonsWrapper>
-      {!isStoreEmpty && user ? (
+      {user && !isStoreEmpty ? (
         renderPages(pagesList)
       ) : (
         <StyledPage>
@@ -217,3 +218,15 @@ const OrdersPage = () => {
   );
 };
 export default OrdersPage;
+
+/* {user && !isStoreEmpty ? (
+        renderPages(pagesList)
+      ) : (
+        <StyledPage>
+          {user ? (
+            <StyledErrorInfo>Brak elementów do wyświetlenia</StyledErrorInfo>
+          ) : (
+            <StyledErrorInfo>Brak uprawnień</StyledErrorInfo>
+          )}
+        </StyledPage>
+      )} */

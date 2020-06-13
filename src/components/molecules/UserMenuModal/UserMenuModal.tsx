@@ -4,6 +4,7 @@ import { Close } from '@styled-icons/evaicons-solid/';
 import UserContext from '../../../context/userContext';
 import mainTheme from '../../../themes/mainTheme';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
+import DummyButton from '../../atoms/DummyButton/DummyButton';
 
 interface ModalProps {
   isModalOpened: boolean;
@@ -35,7 +36,7 @@ const StyledCloseIcon = styled(Close)`
 `;
 
 const StyledWrapper = styled.div`
-  padding: 20px 0;
+  padding: 0;
   justify-content: flex-end;
   position: fixed;
   top: 15px;
@@ -53,32 +54,60 @@ const StyledWrapper = styled.div`
   background-color: ${({ theme }) => theme.primary};
 `;
 
+const StyledMenuButton = styled(MenuButton)`
+  margin-bottom: 15px;
+`;
+
+const StyledDummyButton = styled(DummyButton)`
+  margin-bottom: 15px;
+`;
+
 interface Props {
   logIn: Function;
   logOut: Function;
   toggleModal: Function;
+  makeBackup: Function;
 }
 
 const UserMenuModal = (props: Props & ModalProps) => {
-  const { isModalOpened, logIn, logOut, toggleModal } = props;
+  const { isModalOpened, logIn, logOut, toggleModal, makeBackup } = props;
   const user = useContext(UserContext);
+
   return (
     <StyledWrapper isModalOpened={isModalOpened} className={'printHide'}>
       <StyledCloseButton onClick={() => toggleModal()}>
         <StyledCloseIcon />
       </StyledCloseButton>
+
+      {user && false ? (
+        <StyledMenuButton>Aktualizacja</StyledMenuButton>
+      ) : (
+        <StyledDummyButton>Aktualizacja</StyledDummyButton>
+      )}
+
+      {user ? (
+        <StyledMenuButton onClick={() => makeBackup()}>Kopia zapasowa</StyledMenuButton>
+      ) : (
+        <StyledDummyButton>Kopia Zapasowa</StyledDummyButton>
+      )}
+
+      {user ? (
+        <StyledMenuButton>QR Link</StyledMenuButton>
+      ) : (
+        <StyledDummyButton>QR Link</StyledDummyButton>
+      )}
       {user === null && (
-        <MenuButton
+        <StyledMenuButton
           onClick={() => {
             toggleModal();
             logIn();
           }}
         >
           Zaloguj
-        </MenuButton>
+        </StyledMenuButton>
       )}
       {user && (
-        <MenuButton
+        <StyledMenuButton
           onClick={() => {
             toggleModal();
             logOut();
@@ -86,7 +115,7 @@ const UserMenuModal = (props: Props & ModalProps) => {
           color={mainTheme.lightRed}
         >
           Wyloguj
-        </MenuButton>
+        </StyledMenuButton>
       )}
     </StyledWrapper>
   );

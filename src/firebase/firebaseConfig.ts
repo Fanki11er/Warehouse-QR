@@ -3,7 +3,7 @@ import 'firebase/database';
 import 'firebase/auth';
 import 'firebase/firestore';
 
-export const appVersion = '0.5 Beta';
+export const appVersion = '0.33.0 (Beta)';
 
 //! Real settings
 /*const firebaseConfig = {

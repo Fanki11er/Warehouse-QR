@@ -63,6 +63,12 @@ const StyledButton = styled.button`
     box-shadow: 0 0 5px 1px ${({ theme }) => theme.orange};
     cursor: pointer;
   }
+
+  @media (max-width: 600px) {
+    transform: scale(0.85)
+      ${(props: MenuButtonProps) =>
+        props.isModalOpened === true ? 'translateX(-25px)' : 'translateX(20px)'};
+  }
 `;
 interface Props {
   toggleModal: Function;

@@ -3,10 +3,8 @@ import styled from 'styled-components';
 import routes from '../../../routes/routes';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
 import { NavLink } from 'react-router-dom';
-//import mainTheme from '../../../themes/mainTheme';
 import UserContext from '../../../context/userContext';
 import DummyButton from '../../atoms/DummyButton/DummyButton';
-//import AuthIcon from '../../atoms/AuthIcon/AuthIcon';
 
 const StyledWrapper = styled.nav`
   display: flex;
@@ -65,7 +63,7 @@ const StyledButton = styled(MenuButton)`
 `;
 
 const Navigation = () => {
-  const { scan, tags, main, orders } = routes;
+  const { scan, tags, main, orders, shortages } = routes;
   const user = useContext(UserContext);
   return (
     <StyledWrapper className={'printHide'}>
@@ -75,6 +73,13 @@ const Navigation = () => {
       <StyledNavLink as={NavLink} to={main} activeClassName={'activeLink'}>
         Magazyny
       </StyledNavLink>
+      {user ? (
+        <StyledNavLink as={NavLink} to={shortages} activeClassName={'activeLink'}>
+          Braki
+        </StyledNavLink>
+      ) : (
+        <StyledDummyButton>Braki</StyledDummyButton>
+      )}
       {user ? (
         <StyledNavLink as={NavLink} to={orders} activeClassName={'activeLink'}>
           Zamówienia

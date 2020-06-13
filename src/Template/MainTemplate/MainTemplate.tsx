@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { auth } from '../../firebase/firebaseConfig';
+import { auth, db, dbBackup } from '../../firebase/firebaseConfig';
 import { storeItem, StatusInfo } from '../../types/types';
 import routes from '../../routes/routes';
 import UserContext from '../../context/userContext';
@@ -36,7 +36,7 @@ const StyledWrapper = styled.div`
 
 const MainTemplate = ({ location }) => {
   const { pathname } = location;
-  const { scan, store, main, tags, orders } = routes;
+  const { scan, store, main, tags, orders, shortages } = routes;
   const [isLogInModalOpened, setIsLogInModalOpened] = useState(false);
   const [isOrderModalOpened, setIsOrderModalOpened] = useState(false);
   const [isStatusInfoModalOpened, setIsStatusInfoOpened] = useState(false);
@@ -79,6 +79,16 @@ const MainTemplate = ({ location }) => {
     }, 1500);
   };
 
+  const makeBackup = async () => {
+    const originalBase = await (await db.ref().once('value')).val();
+    const stringified: any = JSON.stringify(originalBase);
+    const timestamp = new Date().toLocaleString();
+    dbBackup
+      .collection('BACKUP')
+      .doc()
+      .set({ [timestamp]: stringified });
+  };
+
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       setUser(user);
@@ -103,6 +113,7 @@ const MainTemplate = ({ location }) => {
           logOut={logOut}
           logIn={toggleLogInModal}
           toggleModal={toggleMenuModal}
+          makeBackup={makeBackup}
         />
         <StatusInfoContext.Provider value={getStatusInfo}>
           <TopWrapper />
@@ -112,6 +123,7 @@ const MainTemplate = ({ location }) => {
             {pathname === tags && <PrintPage />}
             {pathname === main && <MainPage />}
             {pathname === orders && <OrdersPage />}
+            {pathname === shortages && <ScanItem />}
             {isPathNotExist(routes, pathname) && <ScanItem />}
           </OrderModalContext.Provider>
           <LoginModal isModalOpened={isLogInModalOpened} toggleModal={toggleLogInModal} />
