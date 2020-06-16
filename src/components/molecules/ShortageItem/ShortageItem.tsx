@@ -8,12 +8,13 @@ import MenuButton from '../../atoms/MenuButton/MenuButton';
 
 const StyledListElement = styled.li`
   display: flex;
-  flex-flow: wrap row;
+  flex-direction: column;
   width: 100%;
-  min-height: 45px;
+  min-height: 85px;
   border: 2px solid ${({ theme }) => theme.green};
   border-radius: 10px;
   margin: 10px 10px 0 10px;
+  padding: 5px;
 
   @media (max-width: 600px) {
     width: 100%;
@@ -25,8 +26,8 @@ const StyledListElement = styled.li`
 
 const StyledItem = styled.div`
   display: flex;
-  width: 55%;
-  height: 100%;
+  width: 100%;
+  height: 50%;
   border: none;
   background-color: transparent;
   font-size: ${({ theme }) => theme.fontSizeDesktop.larger};
@@ -47,8 +48,8 @@ const StyledItem = styled.div`
 
 const StyledButtonsWrapper = styled.div`
   display: flex;
-  width: 45%;
-  justify-content: flex-end;
+  width: 100%;
+  justify-content: center;
   @media (max-width: 600px) {
     justify-content: center;
     width: 95%;
@@ -68,13 +69,18 @@ const StyledButton = styled(MenuButton)`
   }
 `;
 
+const StyledDate = styled.div`
+  color: ${({ theme }) => theme.green};
+  margin-left: 5px;
+`;
+
 interface Props {
   item: Shortage;
 }
 
 const ShortageItem = (props: Props) => {
   const { item } = props;
-  const { orderDescription, itemIdentifier } = item;
+  const { orderDescription, itemIdentifier, date } = item;
   const user = useContext(UserContext);
   const orderItem = useContext(OrderContext);
 
@@ -82,11 +88,9 @@ const ShortageItem = (props: Props) => {
     <StyledButtonsWrapper>
       <StyledButton
         onClick={() => {
-          fetchItem(itemIdentifier)
-            .then((item) => {
-              orderItem(item);
-            })
-            .catch(() => {});
+          fetchItem(itemIdentifier).then((item) => {
+            orderItem(item);
+          });
         }}
       >
         Zamów
@@ -96,15 +100,15 @@ const ShortageItem = (props: Props) => {
     </StyledButtonsWrapper>
   );
 
-  const renderUnAuthenticatedWrapper = () => <p></p>;
-
   return (
     <StyledListElement className={'animateShow'}>
-      <StyledItem>{orderDescription}</StyledItem>
-      {user ? renderAuthenticatedWrapper() : renderUnAuthenticatedWrapper()}
+      <StyledItem>
+        {orderDescription}
+        <StyledDate>{date}</StyledDate>
+      </StyledItem>
+      {user && renderAuthenticatedWrapper()}
     </StyledListElement>
   );
 };
 
 export default ShortageItem;
-//   }

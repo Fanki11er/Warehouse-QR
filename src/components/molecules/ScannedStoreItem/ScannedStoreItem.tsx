@@ -1,12 +1,10 @@
-import React, { useEffect, useState, useContext, useRef, useCallback, RefObject } from 'react';
+import React, { useEffect, useState, useContext, useRef, RefObject } from 'react';
 import styled from 'styled-components';
 import theme from '../../../themes/mainTheme';
 import UserContext from '../../../context/userContext';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
-import { db } from '../../../firebase/firebaseConfig';
-import { storesPath } from '../../../firebase/firebaseEndpoints';
 import { storeItem } from '../../../types/types';
-import { addShortage } from '../../../tools/tools';
+import { addShortage, fetchItem } from '../../../tools/tools';
 import OrderModalContext from '../../../context/orderContext';
 import StatusInfoContext from '../../../context/StatusInfoContext';
 import LoadingImage from '../../atoms/LoadingImage/LoadingImage';
@@ -107,39 +105,11 @@ const ScannedStoreItem = (props: Props & ThemeProps) => {
   const user = useContext(UserContext);
   const sendStatsInfo = useContext(StatusInfoContext);
 
-  const getStoreType = (scannedItemId: string) => {
-    const match = /\w{3}[-]\d+/i.test(scannedItemId);
-    if (!match) {
-      setError('Nie właściwa forma kodu');
-      return '';
-    }
-    return scannedItemId.slice(0, 3);
-  };
   const itemInfo = useRef<any>(null);
 
   useEffect(() => {
     getPosition(itemInfo);
   }, [itemInfo, getPosition]);
-
-  const fetchScannedItem = useCallback(async (scannedItemId: string) => {
-    const storeType = getStoreType(scannedItemId);
-    if (storeType) {
-      const item = await db
-        .ref(storesPath)
-        .child(storeType)
-        .orderByChild('identifier')
-        .equalTo(scannedItemId)
-        .once('value');
-      const [value]: any = item.val() ? Object.values(item.val()) : [undefined];
-      if (value) {
-        setStoreItem(value);
-        setError('');
-      } else {
-        setError('Nie znaleziono elementu');
-        setStoreItem(undefined);
-      }
-    }
-  }, []);
 
   useEffect(() => {
     if (isScanning) {
@@ -149,8 +119,11 @@ const ScannedStoreItem = (props: Props & ThemeProps) => {
   }, [isScanning]);
 
   useEffect(() => {
-    if (scannedItemId) fetchScannedItem(scannedItemId);
-  }, [scannedItemId, fetchScannedItem]);
+    if (scannedItemId)
+      fetchItem(scannedItemId).then((item) => {
+        setStoreItem(item);
+      });
+  }, [scannedItemId]);
 
   const renderItem = (error: string, item: storeItem | undefined) => {
     if (error) {

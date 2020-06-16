@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import OrderContext from '../../../context/orderContext';
-import { storeItem, Shortage } from '../../../types/types';
+import { Shortage } from '../../../types/types';
 import ShortageItem from '../../molecules/ShortageItem/ShortageItem';
 import LoadingImage from '../../atoms/LoadingImage/LoadingImage';
 import ErrorInfo from '../../atoms/ErrorInfo/ErrorInfo';

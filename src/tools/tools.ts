@@ -128,7 +128,8 @@ export const addShortage = async (
   orderDescription: string,
   callback: Function,
 ) => {
-  const shortage = new ItemShortage(itemIdentifier, orderDescription);
+  const date = new Date();
+  const shortage = new ItemShortage(itemIdentifier, orderDescription, date.toLocaleString());
 
   await db
     .ref('QR')

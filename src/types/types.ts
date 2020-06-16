@@ -50,4 +50,5 @@ export interface StatusInfo {
 export interface Shortage {
   itemIdentifier: string;
   orderDescription: string;
+  date: string;
 }

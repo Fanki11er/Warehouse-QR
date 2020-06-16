@@ -67,5 +67,9 @@ export class ItemOrder implements Order {
 }
 
 export class ItemShortage implements Shortage {
-  constructor(public itemIdentifier: string, public orderDescription: string) {}
+  constructor(
+    public itemIdentifier: string,
+    public orderDescription: string,
+    public date: string,
+  ) {}
 }

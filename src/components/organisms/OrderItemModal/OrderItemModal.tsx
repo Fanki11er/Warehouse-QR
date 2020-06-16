@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import ModalCover from '../../atoms/ModalCover/ModalCover';
 import { storeItem } from '../../../types/types';
 import OrderItemForm from '../../molecules/OrderItemForm/OrderItemForm';
+import MenuButton from '../../atoms/MenuButton/MenuButton';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -19,6 +20,22 @@ const StyledWrapper = styled.div`
     min-height: 620px;
   }
 `;
+
+const StyledErrorInfo = styled.div`
+  color: ${({ theme }) => theme.lightRed};
+  font-size: ${({ theme }) => theme.fontSizeDesktop.large};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const StyledFlexWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+`;
+
 interface Props {
   isModalOpened: boolean;
   toggleModal: Function;
@@ -30,6 +47,12 @@ const OrderItemModal = (props: Props) => {
     <ModalCover isModalOpened={isModalOpened}>
       <StyledWrapper className={'printHide'}>
         {item && <OrderItemForm toggleModal={toggleModal} item={item} />}
+        {!item && (
+          <StyledFlexWrapper>
+            <StyledErrorInfo>Nie znaleziono elementu</StyledErrorInfo>
+            <MenuButton onClick={() => toggleModal()}>Close</MenuButton>
+          </StyledFlexWrapper>
+        )}
       </StyledWrapper>
     </ModalCover>
   );

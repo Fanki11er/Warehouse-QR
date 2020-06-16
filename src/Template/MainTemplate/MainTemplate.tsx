@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { auth, db, dbBackup } from '../../firebase/firebaseConfig';
-import { storeItem, StatusInfo } from '../../types/types';
+import { storeItem, StatusInfo, Shortage } from '../../types/types';
 import routes from '../../routes/routes';
+import { shortagesPath } from '../../firebase/firebaseEndpoints';
+import { getData } from '../../tools/tools';
 import UserContext from '../../context/userContext';
 import OrderModalContext from '../../context/orderContext';
 import StatusInfoContext from '../../context/StatusInfoContext';
@@ -19,6 +21,7 @@ import StatusInfoModal from '../../components/molecules/StatusInfoModal/StatusIn
 import UserMenu from '../../components/molecules/UserMenu/UserMenu';
 import UserMenuModal from '../../components/molecules/UserMenuModal/UserMenuModal';
 import Shortages from '../../views/Shortages/Shortages';
+import ShortagesModal from '../../components/organisms/ShortagesModal/ShortagesModal';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -42,6 +45,9 @@ const MainTemplate = ({ location }) => {
   const [isOrderModalOpened, setIsOrderModalOpened] = useState(false);
   const [isStatusInfoModalOpened, setIsStatusInfoOpened] = useState(false);
   const [isMenuModalOpened, setIsMenuModalOpened] = useState(false);
+  const [isShortagesModalOpened, setIsShortagesModalOpened] = useState(false);
+  const [areThereShortages, setAreThereShortages] = useState<boolean | undefined>(undefined);
+  const [shortagesList, setShortagesList] = useState<Shortage[]>([]);
   const [itemToOrder, setItemToOrder] = useState<storeItem | undefined>(undefined);
   const [user, setUser] = useState<firebase.User | null | undefined>(undefined);
   const [statusInfo, setStatusInfo] = useState<StatusInfo>({
@@ -91,6 +97,15 @@ const MainTemplate = ({ location }) => {
   };
 
   useEffect(() => {
+    const listener = getData(shortagesPath, setAreThereShortages, setShortagesList);
+    return () => db.ref(shortagesPath).off('value', listener);
+  }, [user]);
+
+  useEffect(() => {
+    shortagesList.length ? setIsShortagesModalOpened(true) : setIsShortagesModalOpened(false);
+  }, [shortagesList]);
+
+  useEffect(() => {
     auth.onAuthStateChanged((user) => {
       setUser(user);
     });
@@ -124,7 +139,9 @@ const MainTemplate = ({ location }) => {
             {pathname === tags && <PrintPage />}
             {pathname === main && <MainPage />}
             {pathname === orders && <OrdersPage />}
-            {pathname === shortages && <Shortages />}
+            {pathname === shortages && (
+              <Shortages shortagesList={shortagesList} isStoreEmpty={areThereShortages} />
+            )}
             {isPathNotExist(routes, pathname) && <ScanItem />}
           </OrderModalContext.Provider>
           <LoginModal isModalOpened={isLogInModalOpened} toggleModal={toggleLogInModal} />
@@ -135,6 +152,12 @@ const MainTemplate = ({ location }) => {
           />
         </StatusInfoContext.Provider>
       </UserContext.Provider>
+      {user && (
+        <ShortagesModal
+          isModalOpened={isShortagesModalOpened}
+          shortagesNumber={shortagesList.length}
+        />
+      )}
       <Footer />
     </StyledWrapper>
   );

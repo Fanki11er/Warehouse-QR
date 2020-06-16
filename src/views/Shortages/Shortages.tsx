@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { storeItem, Shortage } from '../../types/types';
-import { db } from '../../firebase/firebaseConfig';
-import { shortagesPath } from '../../firebase/firebaseEndpoints';
-import { getData } from '../../tools/tools';
+import { Redirect } from 'react-router-dom';
+import routes from '../../routes/routes';
+import { Shortage } from '../../types/types';
 import UserContext from '../../context/userContext';
 import ItemShortages from '../../components/organisms/ItemShortages/ItemShortages';
 
@@ -36,23 +35,20 @@ const StyledStoreHeader = styled.div`
     margin: 20px;
   }
 `;
-
-interface Props {}
-
+interface Props {
+  shortagesList: Shortage[];
+  isStoreEmpty: boolean | undefined;
+}
 const Shortages = (props: Props) => {
-  const [isStoreEmpty, setIsStoreEmpty] = useState<boolean | undefined>(undefined);
-  const [itemsList, setItemsList] = useState<Shortage[]>([]);
+  const { scan } = routes;
+  const { shortagesList, isStoreEmpty } = props;
+
   const user = useContext(UserContext);
-
-  useEffect(() => {
-    const listener = getData(shortagesPath, setIsStoreEmpty, setItemsList);
-    return () => db.ref(shortagesPath).off('value', listener);
-  }, [user]);
-
+  if (!user?.uid) return <Redirect to={scan} />;
   return (
     <StyledWrapper>
       <StyledStoreHeader>Braki</StyledStoreHeader>
-      <ItemShortages items={itemsList} isStoreEmpty={isStoreEmpty} />
+      <ItemShortages items={shortagesList} isStoreEmpty={isStoreEmpty} />
       <StyledFlexWrapper></StyledFlexWrapper>
     </StyledWrapper>
   );
