@@ -46,6 +46,7 @@ const MainTemplate = ({ location }) => {
   const [isStatusInfoModalOpened, setIsStatusInfoOpened] = useState(false);
   const [isMenuModalOpened, setIsMenuModalOpened] = useState(false);
   const [isShortagesModalOpened, setIsShortagesModalOpened] = useState(false);
+  const [isShortage, setIsShortage] = useState(false);
   const [areThereShortages, setAreThereShortages] = useState<boolean | undefined>(undefined);
   const [shortagesList, setShortagesList] = useState<Shortage[]>([]);
   const [itemToOrder, setItemToOrder] = useState<storeItem | undefined>(undefined);
@@ -70,7 +71,8 @@ const MainTemplate = ({ location }) => {
     setIsMenuModalOpened(!isMenuModalOpened);
   };
 
-  const toggleOrderModal = (item: storeItem | undefined) => {
+  const toggleOrderModal = (item: storeItem | undefined, shortage?: boolean) => {
+    shortage ? setIsShortage(true) : setIsShortage(false);
     setItemToOrder(item);
     setIsOrderModalOpened(!isOrderModalOpened);
   };
@@ -102,8 +104,10 @@ const MainTemplate = ({ location }) => {
   }, [user]);
 
   useEffect(() => {
-    shortagesList.length ? setIsShortagesModalOpened(true) : setIsShortagesModalOpened(false);
-  }, [shortagesList]);
+    shortagesList.length && !areThereShortages
+      ? setIsShortagesModalOpened(true)
+      : setIsShortagesModalOpened(false);
+  }, [shortagesList, areThereShortages]);
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -149,10 +153,11 @@ const MainTemplate = ({ location }) => {
             isModalOpened={isOrderModalOpened}
             toggleModal={toggleOrderModal}
             item={itemToOrder}
+            isShortage={isShortage}
           />
         </StatusInfoContext.Provider>
       </UserContext.Provider>
-      {user && (
+      {user && shortagesList.length && (
         <ShortagesModal
           isModalOpened={isShortagesModalOpened}
           shortagesNumber={shortagesList.length}

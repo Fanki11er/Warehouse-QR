@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { Shortage } from '../../../types/types';
-import { fetchItem } from '../../../tools/tools';
+import { fetchItem, deleteShortage } from '../../../tools/tools';
 import UserContext from '../../../context/userContext';
 import OrderContext from '../../../context/orderContext';
+import StatusInfoContext from '../../../context/StatusInfoContext';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
 
 const StyledListElement = styled.li`
@@ -83,20 +84,23 @@ const ShortageItem = (props: Props) => {
   const { orderDescription, itemIdentifier, date } = item;
   const user = useContext(UserContext);
   const orderItem = useContext(OrderContext);
+  const sendStatusInfo = useContext(StatusInfoContext);
 
   const renderAuthenticatedWrapper = () => (
     <StyledButtonsWrapper>
       <StyledButton
         onClick={() => {
           fetchItem(itemIdentifier).then((item) => {
-            orderItem(item);
+            orderItem(item, true);
           });
         }}
       >
         Zamów
       </StyledButton>
 
-      <StyledButton>Usuń</StyledButton>
+      <StyledButton onClick={() => deleteShortage(itemIdentifier, sendStatusInfo)}>
+        Usuń
+      </StyledButton>
     </StyledButtonsWrapper>
   );
 

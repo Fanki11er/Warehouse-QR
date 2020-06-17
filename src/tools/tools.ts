@@ -175,3 +175,41 @@ export const fetchItem = async (itemId: string) => {
     }
   }
 };
+
+export const getShortageKey = async (identifier: string) => {
+  const shortage = await db
+    .ref('QR')
+    .child(baseBranches.shortagesBranch)
+    .orderByChild('itemIdentifier')
+    .equalTo(identifier)
+    .once('value');
+  if (shortage.val()) {
+    const [key] = Object.keys(shortage.val());
+    return key;
+  }
+  return null;
+};
+
+export const deleteShortage = async (
+  identifier: string,
+  sendStatusInfo: (x: StatusInfo) => void,
+) => {
+  const shortageKey = await getShortageKey(identifier);
+  shortageKey &&
+    db
+      .ref('QR/')
+      .child(`${baseBranches.shortagesBranch}`)
+      .update({ [shortageKey]: null })
+      .then(() => {
+        sendStatusInfo({
+          status: 'ok',
+          message: 'Usunięto',
+        });
+      })
+      .catch(() => {
+        sendStatusInfo({
+          status: 'error',
+          message: 'Nie usunięto',
+        });
+      });
+};

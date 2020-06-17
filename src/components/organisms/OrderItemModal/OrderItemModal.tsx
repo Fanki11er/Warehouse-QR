@@ -40,13 +40,14 @@ interface Props {
   isModalOpened: boolean;
   toggleModal: Function;
   item: storeItem | undefined;
+  isShortage?: boolean;
 }
 const OrderItemModal = (props: Props) => {
-  const { isModalOpened, toggleModal, item } = props;
+  const { isModalOpened, toggleModal, item, isShortage } = props;
   return (
     <ModalCover isModalOpened={isModalOpened}>
       <StyledWrapper className={'printHide'}>
-        {item && <OrderItemForm toggleModal={toggleModal} item={item} />}
+        {item && <OrderItemForm toggleModal={toggleModal} item={item} isShortage={isShortage} />}
         {!item && (
           <StyledFlexWrapper>
             <StyledErrorInfo>Nie znaleziono elementu</StyledErrorInfo>

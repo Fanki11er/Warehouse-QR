@@ -4,7 +4,7 @@ import * as yup from 'yup';
 import { Formik } from 'formik';
 import { storeItem, Order } from '../../../types/types';
 import { ItemOrder } from '../../../classes/classes';
-import { addNewOrderItem } from '../../../tools/tools';
+import { addNewOrderItem, deleteShortage } from '../../../tools/tools';
 import userContext from '../../../context/userContext';
 import StatusInfoContext from '../../../context/StatusInfoContext';
 import MenuHeader from '../../atoms/MenuHeader/MenuHeader';
@@ -29,10 +29,11 @@ const StyledButtonsWrapper = styled.div`
 interface Props {
   toggleModal: Function;
   item: storeItem | undefined;
+  isShortage?: boolean;
 }
 
 const OrderItemForm = (props: Props) => {
-  const { toggleModal, item } = props;
+  const { toggleModal, item, isShortage } = props;
   const user = useContext(userContext);
   const sendStatusInfo = useContext(StatusInfoContext);
 
@@ -64,7 +65,9 @@ const OrderItemForm = (props: Props) => {
           extraInfo,
         );
         user?.uid
-          ? addNewOrderItem(newOrderItem, user, sendStatusInfo)
+          ? addNewOrderItem(newOrderItem, user, sendStatusInfo).then(() => {
+              if (isShortage) deleteShortage(itemIdentifier, sendStatusInfo);
+            })
           : sendStatusInfo({
               status: 'error',
               message: 'Brak uprawnień',
