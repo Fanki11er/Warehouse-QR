@@ -6,12 +6,17 @@ const StyledWrapper = styled.div`
   display: flex;
   width: 220px;
   height: 120px;
-
   border-radius: 15px;
   justify-content: center;
+  user-select: none;
 
   @media (max-width: 600px) {
     margin-bottom: 15px;
+    width: 170px;
+    height: 90px;
+    position: sticky;
+    top: 0;
+    left: 0;
   }
 `;
 

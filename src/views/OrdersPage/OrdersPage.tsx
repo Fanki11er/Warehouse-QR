@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
 import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
 import routes from '../../routes/routes';
@@ -6,6 +6,7 @@ import { db } from '../../firebase/firebaseConfig';
 import { checkIfIsStoreEmpty, getOrderKey } from '../../tools/tools';
 import { ordersPath, baseBranches } from '../../firebase/firebaseEndpoints';
 import userContext from '../../context/userContext';
+import StatusInfoContext from '../../context/StatusInfoContext';
 import { Order } from '../../types/types';
 import ErrorInfo from '../../components/atoms/ErrorInfo/ErrorInfo';
 import MenuButton from '../../components/atoms/MenuButton/MenuButton';
@@ -17,6 +18,7 @@ const StyledWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
+  min-height: 100vh;
   height: 100%;
   background-color: ${({ theme }) => theme.primary};
 `;
@@ -62,13 +64,13 @@ const StyledButtonsWrapper = styled.div`
 const OrdersPage = () => {
   const { scan } = routes;
   const user = useContext(userContext);
+  const sendStatusInfo = useContext(StatusInfoContext);
   const [isStoreEmpty, setIsStoreEmpty] = useState<boolean | undefined>(undefined);
   const [ordersList, setOrdersList] = useState([]);
   const [pagesList, setPagesList] = useState<Array<Order[]>>([]);
   const [printer, setPrinter] = useState(true);
 
   useEffect(() => {
-    //!! Info about useCallback
     const loadItemsList = (ordersPath: string, user: firebase.User) => {
       return db
         .ref(ordersPath)
@@ -86,12 +88,8 @@ const OrdersPage = () => {
     };
 
     const listener = user ? loadItemsList(ordersPath, user) : undefined;
-    return () => listener && db.ref(ordersPath).off('value', listener);
+    return () => db.ref(ordersPath).off('value', listener);
   }, [user]);
-
-  useEffect(() => {
-    ordersList.length ? setPagesList(spliceForPages(ordersList)) : setPagesList(spliceForPages([]));
-  }, [ordersList]);
 
   const changePrinter = () => {
     setPrinter(!printer);
@@ -114,7 +112,7 @@ const OrdersPage = () => {
     });
   };
 
-  const spliceForPages = (ordersList: Order[]): Array<Order>[] => {
+  const spliceForPages = useCallback((ordersList: Order[]): Array<Order>[] => {
     const list = sortOrdersList([...ordersList]);
 
     const check = (list: Order[]) => {
@@ -133,7 +131,11 @@ const OrdersPage = () => {
       pages.push(page);
     } while (list.length > 0);
     return pages;
-  };
+  }, []);
+
+  useEffect(() => {
+    ordersList.length ? setPagesList(spliceForPages(ordersList)) : setPagesList(spliceForPages([]));
+  }, [ordersList, spliceForPages]);
 
   const deleteOrderItem = async (identifier: string, user: firebase.User) => {
     const tagKey = await getOrderKey(identifier, user);
@@ -142,8 +144,17 @@ const OrdersPage = () => {
         .ref('QR/')
         .child(`${baseBranches.ordersBranch}${user.uid}`)
         .update({ [tagKey]: null })
-        .catch((err) => {
-          console.log(err.message);
+        .then(() => {
+          sendStatusInfo({
+            status: 'ok',
+            message: 'Usunięto',
+          });
+        })
+        .catch(() => {
+          sendStatusInfo({
+            status: 'error',
+            message: 'Nie usunięto',
+          });
         });
   };
 
@@ -151,8 +162,17 @@ const OrdersPage = () => {
     db.ref('QR/')
       .child(`${baseBranches.ordersBranch}/${user.uid}`)
       .set('EMPTY')
-      .catch((err) => {
-        console.log(err.message);
+      .then(() => {
+        sendStatusInfo({
+          status: 'ok',
+          message: 'Zresetowano',
+        });
+      })
+      .catch(() => {
+        sendStatusInfo({
+          status: 'error',
+          message: 'Nie zresetowano',
+        });
       });
   };
 
@@ -182,7 +202,7 @@ const OrdersPage = () => {
         <MenuButton onClick={() => changePrinter()}>{printer ? 'PDF' : 'DRUKARKA'}</MenuButton>
         <StyledMenuButton onClick={() => user && resetOrdersList(user)}>Resetuj</StyledMenuButton>
       </StyledButtonsWrapper>
-      {!isStoreEmpty && user ? (
+      {user && !isStoreEmpty ? (
         renderPages(pagesList)
       ) : (
         <StyledPage>
@@ -197,3 +217,15 @@ const OrdersPage = () => {
   );
 };
 export default OrdersPage;
+
+/* {user && !isStoreEmpty ? (
+        renderPages(pagesList)
+      ) : (
+        <StyledPage>
+          {user ? (
+            <StyledErrorInfo>Brak elementów do wyświetlenia</StyledErrorInfo>
+          ) : (
+            <StyledErrorInfo>Brak uprawnień</StyledErrorInfo>
+          )}
+        </StyledPage>
+      )} */

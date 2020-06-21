@@ -5,8 +5,9 @@ import { db } from '../../firebase/firebaseConfig';
 import { Tag } from '../../classes/classes';
 import router from '../../routes/routes';
 import { tagsPath, baseBranches } from '../../firebase/firebaseEndpoints';
-import { getTagKey, checkIfIsStoreEmpty } from '../../tools/tools';
+import { getTagKey, getData } from '../../tools/tools';
 import UserContext from '../../context/userContext';
+import StatusInfoContext from '../../context/StatusInfoContext';
 import ItemTag from '../../components/atoms/ItemTag/ItemTag';
 import ErrorInfo from '../../components/atoms/ErrorInfo/ErrorInfo';
 import LoadingImage from '../../components/atoms/LoadingImage/LoadingImage';
@@ -18,6 +19,7 @@ const StyledWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
+  min-height: 100vh;
   height: 100%;
   background-color: ${({ theme }) => theme.primary};
 `;
@@ -73,21 +75,10 @@ const PrintPage = () => {
   const [pagesList, setPagesList] = useState<Array<Tag>[]>([]);
   const [printer, setPrinter] = useState(true);
   const user = useContext(UserContext);
+  const sendStatusInfo = useContext(StatusInfoContext);
 
   useEffect(() => {
-    //!! Info about useCallback
-    const loadItemsList = (tagsPath: string) => {
-      return db.ref(tagsPath).on('value', async (snapshot) => {
-        const isEmpty = await checkIfIsStoreEmpty(snapshot);
-        setIsStoreEmpty(isEmpty);
-        if (!isEmpty) {
-          const items = await snapshot.val();
-
-          items ? setTagsList(Object.values(items)) : setTagsList([]);
-        }
-      });
-    };
-    const listener = user ? loadItemsList(tagsPath) : undefined;
+    const listener = user ? getData(tagsPath, setIsStoreEmpty, setTagsList) : undefined;
     return () => db.ref(tagsPath).off('value', listener);
   }, [user]);
 
@@ -139,8 +130,17 @@ const PrintPage = () => {
         .ref('QR/')
         .child(`${baseBranches.tagsBranch}`)
         .update({ [tagKey]: null })
-        .catch((err) => {
-          console.log(err.message);
+        .then(() => {
+          sendStatusInfo({
+            status: 'ok',
+            message: 'Usunięto',
+          });
+        })
+        .catch(() => {
+          sendStatusInfo({
+            status: 'error',
+            message: 'Nie usunięto',
+          });
         });
   };
 
@@ -148,8 +148,17 @@ const PrintPage = () => {
     db.ref('QR/')
       .child(`${baseBranches.tagsBranch}`)
       .set('EMPTY')
-      .catch((err) => {
-        console.log(err.message);
+      .then(() => {
+        sendStatusInfo({
+          status: 'ok',
+          message: 'Zresetoeano',
+        });
+      })
+      .catch(() => {
+        sendStatusInfo({
+          status: 'error',
+          message: 'Nie zresetowano',
+        });
       });
   };
   if (!user?.uid) return <Redirect to={scan} />;

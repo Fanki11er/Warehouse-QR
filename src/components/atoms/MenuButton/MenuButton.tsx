@@ -20,6 +20,16 @@ const MenuButton = styled.button`
   font-size: ${({ theme }) => theme.fontSizeDesktop.normal};
   transition: color 0.3s, border 0.3s;
   outline: none;
+  user-select: none;
+  animation-name: show;
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+  opacity: 0;
+  @keyframes show {
+    to {
+      opacity: 1;
+    }
+  }
 
   &:hover {
     color: ${({ theme }) => theme.orange};

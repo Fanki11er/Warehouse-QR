@@ -1,16 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import * as yup from 'yup';
 import { Formik } from 'formik';
-import { storeItem } from '../../../types/types';
+import { storeItem, AddFormSettings } from '../../../types/types';
 import { db } from '../../../firebase/firebaseConfig';
-import { StoreItem } from '../../../classes/classes';
+import { StoreItem, ItemOrder } from '../../../classes/classes';
 import { baseBranches } from '../../../firebase/firebaseEndpoints';
-import { addNewTag, getProperties, checkForRepeats } from '../../../tools/tools';
+import {
+  addNewTag,
+  createItemTag,
+  getProperties,
+  checkForRepeats,
+  addNewOrderItem,
+} from '../../../tools/tools';
+import UserContext from '../../../context/userContext';
+import StatusInfoContext from '../../../context/StatusInfoContext';
 import MenuHeader from '../../atoms/MenuHeader/MenuHeader';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
 import Form from '../../atoms/Form/Form';
 import FormInput from '../FormInput/FormInput';
+import FormCheckBox from '../../atoms/FormCheckBox/FormCheckBox';
 
 const StyledInputsWrapper = styled.div`
   display: flex;
@@ -22,6 +31,12 @@ const StyledButtonsWrapper = styled.div`
   display: flex;
   width: 100%;
   padding: 0 15px;
+  justify-content: space-around;
+`;
+
+const StyledCheckBoxesWrapper = styled.div`
+  display: flex;
+  width: 100%;
   justify-content: space-around;
 `;
 
@@ -44,14 +59,18 @@ interface Props {
 
 const AddItemForm = (props: Props) => {
   const { toggleModal, itemsList, storeType, defaultItemName } = props;
+  const user = useContext(UserContext);
+  const sendStatusInfo = useContext(StatusInfoContext);
   const [itemExists, setItemExists] = useState(false);
-  const initialValues: Partial<storeItem> = {
+  const initialValues: Partial<storeItem> & AddFormSettings = {
     name: defaultItemName,
     dimension: '',
     mainType: '',
     secondType: '',
     defaultOrderAmount: 0,
     additionalDescriptions: '',
+    withTag: true,
+    withOrder: false,
   };
 
   const usedItems = getProperties('orderDescription', itemsList);
@@ -75,13 +94,22 @@ const AddItemForm = (props: Props) => {
     return `${storeType}-${id.toString().padStart(4, '0')}`;
   };
   const addNewItem = async (newItem: StoreItem) => {
-    const key = await db.ref('QR').child(`${baseBranches.storesBranch}${storeType}`).push().key;
+    const key = db.ref('QR').child(`${baseBranches.storesBranch}${storeType}`).push().key;
     const updates = {};
     updates[`${baseBranches.storesBranch}${storeType}/${key}`] = newItem;
     db.ref('QR/')
       .update(updates)
-      .catch((err) => {
-        console.log(err.message);
+      .then(() => {
+        sendStatusInfo({
+          status: 'ok',
+          message: 'Dodano',
+        });
+      })
+      .catch(() => {
+        sendStatusInfo({
+          status: 'error',
+          message: 'Nie dodano',
+        });
       });
   };
 
@@ -101,6 +129,8 @@ const AddItemForm = (props: Props) => {
           secondType,
           defaultOrderAmount,
           additionalDescriptions,
+          withTag,
+          withOrder,
         } = values;
         const id = getNextItemNumber(itemsList);
         const identifier = makeIdentifier(id, storeType);
@@ -122,7 +152,17 @@ const AddItemForm = (props: Props) => {
           return;
         }
         addNewItem(newItem);
-        addNewTag(newItem);
+        if (withTag) {
+          const newTag = createItemTag(newItem);
+          addNewTag(newTag, sendStatusInfo);
+        }
+        if (withOrder) {
+          const { orderDescription, identifier, defaultOrderAmount } = newItem;
+          const newOrder = new ItemOrder(identifier, orderDescription, defaultOrderAmount, 'szt');
+          user?.uid
+            ? addNewOrderItem(newOrder, user, sendStatusInfo)
+            : sendStatusInfo({ status: 'error', message: 'Brak uprawnień' });
+        }
         toggleModal();
         resetForm();
         setSubmitting(false);
@@ -132,6 +172,10 @@ const AddItemForm = (props: Props) => {
         <Form onSubmit={handleSubmit}>
           <MenuHeader>Dodaj do magazynu</MenuHeader>
           <StyledInputsWrapper>
+            <StyledCheckBoxesWrapper>
+              <FormCheckBox name={'withTag'} label={'Etykieta'} checked={values.withTag} />
+              <FormCheckBox name={'withOrder'} label={'Zamówienie'} checked={values.withOrder} />
+            </StyledCheckBoxesWrapper>
             <FormInput
               name={'name'}
               type={'text'}

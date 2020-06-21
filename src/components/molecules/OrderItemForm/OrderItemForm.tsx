@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import { storeItem, Order } from '../../../types/types';
-import { db } from '../../../firebase/firebaseConfig';
 import { ItemOrder } from '../../../classes/classes';
-import { baseBranches } from '../../../firebase/firebaseEndpoints';
+import { addNewOrderItem, deleteShortage } from '../../../tools/tools';
 import userContext from '../../../context/userContext';
+import StatusInfoContext from '../../../context/StatusInfoContext';
 import MenuHeader from '../../atoms/MenuHeader/MenuHeader';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
 import Form from '../../atoms/Form/Form';
@@ -29,11 +29,13 @@ const StyledButtonsWrapper = styled.div`
 interface Props {
   toggleModal: Function;
   item: storeItem | undefined;
+  isShortage?: boolean;
 }
 
 const OrderItemForm = (props: Props) => {
-  const { toggleModal, item } = props;
+  const { toggleModal, item, isShortage } = props;
   const user = useContext(userContext);
+  const sendStatusInfo = useContext(StatusInfoContext);
 
   const initialValues: Order = {
     itemIdentifier: item ? item.identifier : '',
@@ -48,26 +50,11 @@ const OrderItemForm = (props: Props) => {
     orderDescription: yup.string().required('Pole jest wymagane'),
   });
 
-  const addNewOrderItem = async (newOrderItem: Order, user: firebase.User | null | undefined) => {
-    if (user) {
-      const { uid } = user;
-
-      db.ref('QR')
-        .child(`${baseBranches.ordersBranch}${uid}`)
-        .push(newOrderItem)
-        .catch((err) => {
-          console.log(err);
-        });
-      return;
-    }
-    return console.log('Brak Uprawnień');
-  };
-
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validateSchema}
-      onSubmit={(values, { setSubmitting, resetForm }) => {
+      onSubmit={(values) => {
         const { itemIdentifier, quantity, extraInfo, units, orderDescription } = values;
 
         const newOrderItem = new ItemOrder(
@@ -77,8 +64,15 @@ const OrderItemForm = (props: Props) => {
           units,
           extraInfo,
         );
+        user?.uid
+          ? addNewOrderItem(newOrderItem, user, sendStatusInfo).then(() => {
+              if (isShortage) deleteShortage(itemIdentifier, sendStatusInfo);
+            })
+          : sendStatusInfo({
+              status: 'error',
+              message: 'Brak uprawnień',
+            });
 
-        addNewOrderItem(newOrderItem, user);
         toggleModal(undefined);
       }}
     >

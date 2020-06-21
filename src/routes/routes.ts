@@ -4,6 +4,7 @@ const routes = {
   tags: '/tags',
   orders: '/orders',
   scan: '/',
+  shortages: '/shortages',
 };
 
 export default routes;

@@ -59,11 +59,13 @@ const LoginForm = (props: Props) => {
               label={'E-mail'}
               error={errors.email && touched.email ? true : false}
               errorText={errors.email && touched.email ? errors.email : ''}
+              inputMode={'text'}
             />
             <FormInput
               name={'password'}
               type={'password'}
               label={'Hasło'}
+              inputMode={'password'}
               error={errors.password && touched.password ? true : false}
               errorText={errors.password && touched.password ? errors.password : ''}
             />

@@ -67,7 +67,6 @@ const StoreType = (props: Props) => {
 
   useEffect(() => {
     if (!identifier) return;
-    //!! Info about useCallback
     const loadItemsList = (identifier: string, storesPath: string) => {
       const ref = db.ref(storesPath);
       return ref.child(identifier).on('value', async (snapshot) => {
@@ -112,9 +111,7 @@ const StoreType = (props: Props) => {
         <StoreMenu toggleModal={toggleAddItemsModal} />
         <StoreItemsView
           isStoreEmpty={isStoreEmpty!}
-          items={
-            filteredItemsList.length && filterInput.current?.value ? filteredItemsList : itemsList
-          }
+          items={filterInput.current?.value ? filteredItemsList : itemsList}
           toggleEditItemModal={toggleEditItemModal}
         />
       </StyledFlexWrapper>

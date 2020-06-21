@@ -36,3 +36,26 @@ export type Order = {
   units: string;
   extraInfo: string;
 };
+
+export interface AddFormSettings {
+  withTag: boolean;
+  withOrder: boolean;
+}
+
+export interface StatusInfo {
+  status: '' | 'error' | 'ok';
+  message: string;
+}
+
+export interface Shortage {
+  itemIdentifier: string;
+  orderDescription: string;
+  date: string;
+}
+
+export interface DeleTeModalInterface {
+  isDeleteModalOpened: boolean;
+  itemToDelete: storeItem | null;
+  toggleDeleteModal: (item: storeItem | null) => void;
+  deleteStoreItem: Function;
+}

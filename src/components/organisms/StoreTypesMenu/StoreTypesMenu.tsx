@@ -14,12 +14,11 @@ interface Props {
   availableStores: storeType[];
   baseStatus: boolean;
   toggleModal: Function;
-  makeBackup: Function;
 }
 const StoreTypesMenu = (props: Props) => {
   const user = useContext(UserContext);
   const { store } = routes;
-  const { availableStores, baseStatus, toggleModal, makeBackup } = props;
+  const { availableStores, baseStatus, toggleModal } = props;
 
   const renderAvailableStores = (availableStores: storeType[]) => {
     return availableStores.length ? (
@@ -31,20 +30,12 @@ const StoreTypesMenu = (props: Props) => {
     );
   };
   const renderButtons = () => (
-    <>
-      <MenuButton className={!baseStatus ? 'notActive' : undefined} onClick={() => toggleModal()}>
-        Dodaj nowy
-      </MenuButton>
-      <MenuButton onClick={() => makeBackup()}>Kopia zapasowa</MenuButton>
-    </>
+    <MenuButton className={!baseStatus ? 'notActive' : undefined} onClick={() => toggleModal()}>
+      Dodaj nowy
+    </MenuButton>
   );
 
-  const renderDummyButtons = () => (
-    <>
-      <DummyButton>Dodaj nowy</DummyButton>
-      <DummyButton>Kopia Zapasowa</DummyButton>
-    </>
-  );
+  const renderDummyButtons = () => <DummyButton>Dodaj nowy</DummyButton>;
   return (
     <MenuWrapper>
       <MenuHeader>Magazyny</MenuHeader>

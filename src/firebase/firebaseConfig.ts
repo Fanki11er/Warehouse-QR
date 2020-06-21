@@ -3,6 +3,8 @@ import 'firebase/database';
 import 'firebase/auth';
 import 'firebase/firestore';
 
+export const appVersion = '0.8.0 (Beta)';
+
 //! Real settings
 const firebaseConfig = {
   apiKey: 'AIzaSyAE92J5Y9779J2ZOD8wvNQ-04Sa14DHvzo',
@@ -23,7 +25,7 @@ const firebaseConfig = {
   storageBucket: 'qr-tests.appspot.com',
   messagingSenderId: '17601264140',
   appId: '1:17601264140:web:97ead5a5c671ab5c3a8c29',
-}*/
+};*/
 
 //? Initialize Firebase
 firebase.initializeApp(firebaseConfig);
