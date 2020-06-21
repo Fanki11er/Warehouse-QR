@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import { auth, db, dbBackup } from '../../firebase/firebaseConfig';
 import { storeItem, StatusInfo, Shortage } from '../../types/types';
@@ -91,13 +91,30 @@ const MainTemplate = ({ location }) => {
   };
 
   const makeBackup = async () => {
-    const originalBase = await (await db.ref().once('value')).val();
-    const stringified: any = JSON.stringify(originalBase);
+    const originalBaseStoreTypes = await (await db.ref('QR/StoreTypes').once('value')).val();
+    const originalBaseStores = await (await db.ref('QR/Stores').once('value')).val();
+    const backup = {
+      originalBaseStoreTypes,
+      originalBaseStores,
+    };
+    const stringified: any = JSON.stringify(backup);
     const timestamp = new Date().toLocaleString();
     dbBackup
       .collection('BACKUP')
       .doc()
-      .set({ [timestamp]: stringified });
+      .set({ [timestamp]: stringified })
+      .then(() => {
+        setStatusInfo({
+          status: 'ok',
+          message: 'KOPIA OK',
+        });
+      })
+      .catch(() => {
+        setStatusInfo({
+          status: 'error',
+          message: 'Błąd',
+        });
+      });
   };
 
   useEffect(() => {
