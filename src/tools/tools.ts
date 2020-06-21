@@ -4,13 +4,19 @@ import { Order, StatusInfo } from '../types/types';
 import { ItemShortage } from '../classes/classes';
 import { db } from '../firebase/firebaseConfig';
 
-export const addNewTag = (newItem: StoreItem, callback: (x: StatusInfo) => void) => {
+export const createItemTag = (newItem: StoreItem) => {
   const { name, identifier, mainType, secondType, dimension } = newItem;
   const description = `${name} ${mainType} ${secondType}`;
-  const newTag = new Tag(identifier, description, dimension);
+  return new Tag(identifier, description, dimension);
+};
 
+export const createLinkTag = (link: string) => {
+  return new Tag(link, '', link);
+};
+
+export const addNewTag = (tag: Tag, callback: (x: StatusInfo) => void) => {
   db.ref(`QR/${baseBranches.tagsBranch}`)
-    .push(newTag, () => {
+    .push(tag, () => {
       callback({
         status: 'ok',
         message: 'Dodano',

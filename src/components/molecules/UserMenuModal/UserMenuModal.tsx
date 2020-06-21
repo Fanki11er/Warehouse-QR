@@ -1,7 +1,9 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { Close } from '@styled-icons/evaicons-solid/';
+import { createLinkTag, addNewTag } from '../../../tools/tools';
 import UserContext from '../../../context/userContext';
+import StatusInfoContext from '../../../context/StatusInfoContext';
 import mainTheme from '../../../themes/mainTheme';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
 import DummyButton from '../../atoms/DummyButton/DummyButton';
@@ -72,6 +74,8 @@ interface Props {
 const UserMenuModal = (props: Props & ModalProps) => {
   const { isModalOpened, logIn, logOut, toggleModal, makeBackup } = props;
   const user = useContext(UserContext);
+  const sendStatusInfo = useContext(StatusInfoContext);
+  const APP_LINK = 'kdz-qr.firebaseapp.com/';
 
   return (
     <StyledWrapper isModalOpened={isModalOpened} className={'printHide'}>
@@ -92,7 +96,14 @@ const UserMenuModal = (props: Props & ModalProps) => {
       )}
 
       {user ? (
-        <StyledMenuButton>QR Link</StyledMenuButton>
+        <StyledMenuButton
+          onClick={() => {
+            const linkTag = createLinkTag(APP_LINK);
+            addNewTag(linkTag, sendStatusInfo);
+          }}
+        >
+          QR Link
+        </StyledMenuButton>
       ) : (
         <StyledDummyButton>QR Link</StyledDummyButton>
       )}

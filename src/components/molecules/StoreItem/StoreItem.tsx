@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { storeItem, StatusInfo } from '../../../types/types';
+import { Tag } from '../../../classes/classes';
 import { DeleteModalContext } from '../../../providers/DeleteModalProvider';
 import UserContext from '../../../context/userContext';
 import StatusInfoContext from '../../../context/StatusInfoContext';
@@ -78,15 +79,16 @@ interface Props {
 
   actions: {
     orderItem: Function;
-    addNewTag: (item: storeItem, callback: (x: StatusInfo) => void) => void;
+    addNewTag: (item: Tag, callback: (x: StatusInfo) => void) => void;
     toggleEditItemModal: (item: storeItem) => void;
+    createItemTag: (item: storeItem) => Tag;
   };
 }
 
 const StoreItem = (props: Props) => {
   const { item, actions } = props;
   const { orderDescription } = item;
-  const { addNewTag, toggleEditItemModal, orderItem } = actions;
+  const { addNewTag, toggleEditItemModal, orderItem, createItemTag } = actions;
   const user = useContext(UserContext);
   const sendStatusInfo = useContext(StatusInfoContext);
   const { toggleDeleteModal } = useContext(DeleteModalContext);
@@ -94,7 +96,14 @@ const StoreItem = (props: Props) => {
   const renderAuthenticatedWrapper = () => (
     <StyledButtonsWrapper>
       <StyledButton onClick={() => orderItem(item)}>Zamów</StyledButton>
-      <StyledButton onClick={() => addNewTag(item, sendStatusInfo)}>Etykieta</StyledButton>
+      <StyledButton
+        onClick={() => {
+          const newTag = createItemTag(item);
+          addNewTag(newTag, sendStatusInfo);
+        }}
+      >
+        Etykieta
+      </StyledButton>
       <StyledButton onClick={() => toggleEditItemModal(item)}>Edytuj</StyledButton>
       <StyledButton onClick={() => toggleDeleteModal(item)}>Usuń</StyledButton>
     </StyledButtonsWrapper>

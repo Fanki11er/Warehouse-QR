@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import OrderContext from '../../../context/orderContext';
 import { storeItem } from '../../../types/types';
-import { addNewTag } from '../../../tools/tools';
+import { addNewTag, createItemTag } from '../../../tools/tools';
 import StoreItem from '../../molecules/StoreItem/StoreItem';
 import LoadingImage from '../../atoms/LoadingImage/LoadingImage';
 import ErrorInfo from '../../atoms/ErrorInfo/ErrorInfo';
@@ -42,7 +42,7 @@ const StyledErrorInfo = styled(ErrorInfo)`
 const StoreItemsView = (props: Props) => {
   const { isStoreEmpty, items, toggleEditItemModal } = props;
   const orderItem = useContext(OrderContext);
-  const actions = { addNewTag, toggleEditItemModal, orderItem };
+  const actions = { addNewTag, toggleEditItemModal, orderItem, createItemTag };
 
   const renderItems = (items: storeItem[]) => {
     return items.length ? (

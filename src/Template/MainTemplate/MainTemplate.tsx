@@ -130,14 +130,15 @@ const MainTemplate = ({ location }) => {
       <StatusInfoModal statusInfo={statusInfo} isModalOpened={isStatusInfoModalOpened} />
       <UserContext.Provider value={user}>
         <UserMenu isModalOpened={isMenuModalOpened} toggleModal={toggleMenuModal} />
-        <UserMenuModal
-          isModalOpened={isMenuModalOpened}
-          logOut={logOut}
-          logIn={toggleLogInModal}
-          toggleModal={toggleMenuModal}
-          makeBackup={makeBackup}
-        />
+
         <StatusInfoContext.Provider value={getStatusInfo}>
+          <UserMenuModal
+            isModalOpened={isMenuModalOpened}
+            logOut={logOut}
+            logIn={toggleLogInModal}
+            toggleModal={toggleMenuModal}
+            makeBackup={makeBackup}
+          />
           <DeleteModalProvider>
             <TopWrapper />
             <OrderModalContext.Provider value={toggleOrderModal}>

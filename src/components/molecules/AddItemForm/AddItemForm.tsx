@@ -6,7 +6,13 @@ import { storeItem, AddFormSettings } from '../../../types/types';
 import { db } from '../../../firebase/firebaseConfig';
 import { StoreItem, ItemOrder } from '../../../classes/classes';
 import { baseBranches } from '../../../firebase/firebaseEndpoints';
-import { addNewTag, getProperties, checkForRepeats, addNewOrderItem } from '../../../tools/tools';
+import {
+  addNewTag,
+  createItemTag,
+  getProperties,
+  checkForRepeats,
+  addNewOrderItem,
+} from '../../../tools/tools';
 import UserContext from '../../../context/userContext';
 import StatusInfoContext from '../../../context/StatusInfoContext';
 import MenuHeader from '../../atoms/MenuHeader/MenuHeader';
@@ -146,7 +152,10 @@ const AddItemForm = (props: Props) => {
           return;
         }
         addNewItem(newItem);
-        withTag && addNewTag(newItem, sendStatusInfo);
+        if (withTag) {
+          const newTag = createItemTag(newItem);
+          addNewTag(newTag, sendStatusInfo);
+        }
         if (withOrder) {
           const { orderDescription, identifier, defaultOrderAmount } = newItem;
           const newOrder = new ItemOrder(identifier, orderDescription, defaultOrderAmount, 'szt');
