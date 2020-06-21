@@ -52,3 +52,10 @@ export interface Shortage {
   orderDescription: string;
   date: string;
 }
+
+export interface DeleTeModalInterface {
+  isDeleteModalOpened: boolean;
+  itemToDelete: storeItem | null;
+  toggleDeleteModal: (item: storeItem | null) => void;
+  deleteStoreItem: Function;
+}

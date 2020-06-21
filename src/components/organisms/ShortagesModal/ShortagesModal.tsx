@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import { Redirect } from 'react-router-dom';
+import routes from '../../../routes/routes';
 import InfoModalWrapper from '../../atoms/InfoModalWrapper/InfoModalWrapper';
 
 const StyledInfo = styled.div`
@@ -30,10 +32,20 @@ interface Props {
 }
 
 const ShortagesModal = (props: Props) => {
+  const { shortages } = routes;
   const { isModalOpened, shortagesNumber } = props;
+  const [isModalClicked, setIsModalClicked] = useState(false);
 
+  if (isModalClicked) return <Redirect to={shortages} />;
   return (
-    <InfoModalWrapper isModalOpened={isModalOpened}>
+    <InfoModalWrapper
+      isModalOpened={isModalOpened}
+      onClick={() => {
+        setIsModalClicked(true);
+        setTimeout(() => setIsModalClicked(false), 30);
+      }}
+      className={'printHide'}
+    >
       <StyledInfo>{`Braki: ${shortagesNumber}`}</StyledInfo>
     </InfoModalWrapper>
   );

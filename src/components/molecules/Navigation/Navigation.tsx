@@ -90,7 +90,6 @@ const Navigation = () => {
       ) : (
         <StyledDummyButton>Etykiety</StyledDummyButton>
       )}
-      )
     </StyledWrapper>
   );
 };

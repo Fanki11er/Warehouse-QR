@@ -54,7 +54,7 @@ interface Props {
 const StatusInfoModal = (props: Props & StyledProps) => {
   const { statusInfo, isModalOpened } = props;
   return (
-    <StyledWrapper isModalOpened={isModalOpened}>
+    <StyledWrapper isModalOpened={isModalOpened} className={'printHide'}>
       <StyledBackground>
         <StyledInfo status={statusInfo.status}>{statusInfo.message}</StyledInfo>
       </StyledBackground>

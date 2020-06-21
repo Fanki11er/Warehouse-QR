@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { storeItem, StatusInfo } from '../../../types/types';
+import { DeleteModalContext } from '../../../providers/DeleteModalProvider';
 import UserContext from '../../../context/userContext';
 import StatusInfoContext from '../../../context/StatusInfoContext';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
@@ -88,13 +89,14 @@ const StoreItem = (props: Props) => {
   const { addNewTag, toggleEditItemModal, orderItem } = actions;
   const user = useContext(UserContext);
   const sendStatusInfo = useContext(StatusInfoContext);
+  const { toggleDeleteModal } = useContext(DeleteModalContext);
 
   const renderAuthenticatedWrapper = () => (
     <StyledButtonsWrapper>
       <StyledButton onClick={() => orderItem(item)}>Zamów</StyledButton>
       <StyledButton onClick={() => addNewTag(item, sendStatusInfo)}>Etykieta</StyledButton>
       <StyledButton onClick={() => toggleEditItemModal(item)}>Edytuj</StyledButton>
-      <StyledButton>Usuń</StyledButton>
+      <StyledButton onClick={() => toggleDeleteModal(item)}>Usuń</StyledButton>
     </StyledButtonsWrapper>
   );
 

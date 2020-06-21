@@ -40,6 +40,7 @@ interface Props {
 const OrdersList = (props: Props) => {
   const user = useContext(UserContext);
   const { ordersList, startIndex, deleteOrderItem } = props;
+  const date = new Date().toLocaleDateString();
 
   const makeUserInfo = (user: firebase.User | null | undefined) => {
     const [userInfo] = user ? user.email!.split('@') : [''];
@@ -61,7 +62,7 @@ const OrdersList = (props: Props) => {
   return (
     <StyledWrapper>
       <StyledHeaderSection>
-        <StyledHeader>{`Zamówienie: ${makeUserInfo(user)}`}</StyledHeader>
+        <StyledHeader>{`Zamówienie: ${makeUserInfo(user)} ${date}`}</StyledHeader>
       </StyledHeaderSection>
       <StyledList>
         {ordersList.length ? renderList(ordersList) : <LoadingImage customWidth={85} />}

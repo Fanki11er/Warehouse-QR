@@ -15,6 +15,7 @@ const SearchInput = styled.input`
   caret-color: ${({ theme }) => theme.orange};
   transform: translateX(380px);
   text-align: center;
+  user-select: none;
   &::placeholder {
     color: ${({ theme }) => theme.placeholderGreen};
     text-align: center;

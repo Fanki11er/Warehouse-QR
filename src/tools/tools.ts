@@ -213,3 +213,28 @@ export const deleteShortage = async (
         });
       });
 };
+
+export const deleteStoreItem = async (
+  identifier: string,
+  sendStatusInfo: (x: StatusInfo) => void,
+) => {
+  const storeType = getStoreType(identifier);
+  const itemKey = await getStoreItemKey(storeType, identifier);
+  itemKey &&
+    db
+      .ref('QR/')
+      .child(`${baseBranches.storesBranch}${storeType}`)
+      .update({ [itemKey]: null })
+      .then(() => {
+        sendStatusInfo({
+          status: 'ok',
+          message: 'Usunięto',
+        });
+      })
+      .catch(() => {
+        sendStatusInfo({
+          status: 'error',
+          message: 'Nie usunięto',
+        });
+      });
+};

@@ -6,6 +6,7 @@ import routes from '../../routes/routes';
 import { shortagesPath } from '../../firebase/firebaseEndpoints';
 import { getData } from '../../tools/tools';
 import UserContext from '../../context/userContext';
+import DeleteModalProvider from '../../providers/DeleteModalProvider';
 import OrderModalContext from '../../context/orderContext';
 import StatusInfoContext from '../../context/StatusInfoContext';
 import TopWrapper from '../../components/molecules/TopWrapper/TopWrapper';
@@ -22,6 +23,7 @@ import UserMenu from '../../components/molecules/UserMenu/UserMenu';
 import UserMenuModal from '../../components/molecules/UserMenuModal/UserMenuModal';
 import Shortages from '../../views/Shortages/Shortages';
 import ShortagesModal from '../../components/organisms/ShortagesModal/ShortagesModal';
+import DeleteItemModal from '../../components/organisms/DeleteItemModal/DeleteItemModal';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -136,28 +138,31 @@ const MainTemplate = ({ location }) => {
           makeBackup={makeBackup}
         />
         <StatusInfoContext.Provider value={getStatusInfo}>
-          <TopWrapper />
-          <OrderModalContext.Provider value={toggleOrderModal}>
-            {pathname === scan && <ScanItem />}
-            {pathname === store && <StoreType location={location} />}
-            {pathname === tags && <PrintPage />}
-            {pathname === main && <MainPage />}
-            {pathname === orders && <OrdersPage />}
-            {pathname === shortages && (
-              <Shortages shortagesList={shortagesList} isStoreEmpty={areThereShortages} />
-            )}
-            {isPathNotExist(routes, pathname) && <ScanItem />}
-          </OrderModalContext.Provider>
-          <LoginModal isModalOpened={isLogInModalOpened} toggleModal={toggleLogInModal} />
-          <OrderItemModal
-            isModalOpened={isOrderModalOpened}
-            toggleModal={toggleOrderModal}
-            item={itemToOrder}
-            isShortage={isShortage}
-          />
+          <DeleteModalProvider>
+            <TopWrapper />
+            <OrderModalContext.Provider value={toggleOrderModal}>
+              {pathname === scan && <ScanItem />}
+              {pathname === store && <StoreType location={location} />}
+              {pathname === tags && <PrintPage />}
+              {pathname === main && <MainPage />}
+              {pathname === orders && <OrdersPage />}
+              {pathname === shortages && (
+                <Shortages shortagesList={shortagesList} isStoreEmpty={areThereShortages} />
+              )}
+              {isPathNotExist(routes, pathname) && <ScanItem />}
+            </OrderModalContext.Provider>
+            <LoginModal isModalOpened={isLogInModalOpened} toggleModal={toggleLogInModal} />
+            <OrderItemModal
+              isModalOpened={isOrderModalOpened}
+              toggleModal={toggleOrderModal}
+              item={itemToOrder}
+              isShortage={isShortage}
+            />
+            <DeleteItemModal />
+          </DeleteModalProvider>
         </StatusInfoContext.Provider>
       </UserContext.Provider>
-      {user && shortagesList.length && (
+      {user && shortagesList?.length > 0 && (
         <ShortagesModal
           isModalOpened={isShortagesModalOpened}
           shortagesNumber={shortagesList.length}
