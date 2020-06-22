@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { auth, db, dbBackup } from '../../firebase/firebaseConfig';
 import { storeItem, StatusInfo, Shortage } from '../../types/types';

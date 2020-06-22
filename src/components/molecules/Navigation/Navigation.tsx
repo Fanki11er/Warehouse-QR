@@ -13,11 +13,23 @@ const StyledWrapper = styled.nav`
   justify-content: center;
   width: 100%;
 
-  @media (max-width: 600px) {
-    padding: 0 5px;
+  @media (max-width: 1024px) {
+    width: 55%;
     flex-flow: wrap row;
+    height: 140px;
+    margin-top: 20px;
+  }
+
+  @media (max-width: 800px) {
+    padding: 0 5px;
+    width: 60%;
+  }
+
+  @media (max-width: 560px) {
+    padding: 0 5px;
     width: 100%;
     height: 140px;
+    margin-top: 0;
   }
 `;
 
@@ -32,6 +44,10 @@ const StyledNavLink = styled(MenuButton)`
   color: ${({ theme }) => theme.primaryBlue};
   border: 2px solid ${({ theme }) => theme.primaryBlue};
   margin: 0 30px 5px 30px;
+
+  @media (max-width: 1024px) {
+    margin: 0 10px 10px 10px;
+  }
 
   @media (max-width: 600px) {
     margin: 0 5px 5px 5px;

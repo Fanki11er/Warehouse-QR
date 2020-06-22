@@ -29,6 +29,10 @@ const SearchInput = styled.input`
   @media (max-width: 1290px) {
     transform: translate(320px);
   }
+
+  @media (max-width: 896px) {
+    transform: translate(290px);
+  }
   @media (max-width: 600px) {
     transform: translateX(0);
     width: 315px;

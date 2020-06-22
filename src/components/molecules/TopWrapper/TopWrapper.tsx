@@ -14,10 +14,20 @@ const StyledTopWrapper = styled.div`
   z-index: 5;
   box-shadow: 0px 10px 20px ${({ theme }) => theme.primary};
 
-  @media (max-width: 600px) {
+  @media (max-width: 1024px) {
+    justify-content: center;
+    height: 160px;
+  }
+
+  @media (max-width: 800px) {
+    justify-content: flex-start;
+    height: 160px;
+  }
+
+  @media (max-width: 560px) {
     top: 0;
     height: 240px;
-    width: 100%;
+    width: 100vw;
     flex-flow: wrap row;
     justify-content: center;
     align-items: flex-end;

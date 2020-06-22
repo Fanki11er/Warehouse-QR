@@ -11,7 +11,7 @@ const StyledListElement = styled.li`
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: 85px;
+  min-height: 120px;
   border: 2px solid ${({ theme }) => theme.green};
   border-radius: 10px;
   margin: 10px 10px 0 10px;
@@ -27,8 +27,9 @@ const StyledListElement = styled.li`
 
 const StyledItem = styled.div`
   display: flex;
+  flex-direction: column;
   width: 100%;
-  height: 50%;
+  height: 65%;
   border: none;
   background-color: transparent;
   font-size: ${({ theme }) => theme.fontSizeDesktop.larger};
@@ -42,7 +43,7 @@ const StyledItem = styled.div`
     display: flex;
     font-size: ${({ theme }) => theme.fontSizeDesktop.normal};
     width: 100%;
-    height: 45%;
+    height: 65%;
     justify-content: space-around;
   }
 `;
