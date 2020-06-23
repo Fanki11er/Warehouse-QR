@@ -56,14 +56,15 @@ const OrderItemForm = (props: Props) => {
       validationSchema={validateSchema}
       onSubmit={(values) => {
         const { itemIdentifier, quantity, extraInfo, units, orderDescription } = values;
-
+        const extendedExtraInfo = item?.catalogNumber;
         const newOrderItem = new ItemOrder(
           itemIdentifier,
           orderDescription,
           quantity,
           units,
-          extraInfo,
+          extendedExtraInfo ? `Kat: ${extendedExtraInfo}  ${extraInfo}` : extraInfo,
         );
+
         user?.uid
           ? addNewOrderItem(newOrderItem, user, sendStatusInfo).then(() => {
               if (isShortage) deleteShortage(itemIdentifier, sendStatusInfo);

@@ -18,7 +18,7 @@ const StyledWrapper = styled.div`
   transform: ${(props: StyledProps) =>
     props.isModalOpened === true ? 'translateY(0)' : 'translateY(-150%)'};
   transition: transform 0.4s;
-  z-index: 12;
+  z-index: 20;
 `;
 interface InfoProps {
   status: 'ok' | 'error' | '';

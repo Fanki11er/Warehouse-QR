@@ -18,6 +18,10 @@ const StyledWrapper = styled.ol`
   margin: 30px 120px;
   padding: 0 10px;
 
+  @media (max-width: 896px) {
+    width: 760px;
+  }
+
   @media (max-width: 600px) {
     width: 350px;
   }

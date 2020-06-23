@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { auth, db, dbBackup } from '../../firebase/firebaseConfig';
 import { storeItem, StatusInfo, Shortage } from '../../types/types';
@@ -7,6 +7,7 @@ import { shortagesPath } from '../../firebase/firebaseEndpoints';
 import { getData } from '../../tools/tools';
 import UserContext from '../../context/userContext';
 import DeleteModalProvider from '../../providers/DeleteModalProvider';
+import MultiStepFormProvider from '../../providers/MultiStepFormProvider';
 import OrderModalContext from '../../context/orderContext';
 import StatusInfoContext from '../../context/StatusInfoContext';
 import TopWrapper from '../../components/molecules/TopWrapper/TopWrapper';
@@ -159,15 +160,17 @@ const MainTemplate = ({ location }) => {
           <DeleteModalProvider>
             <TopWrapper />
             <OrderModalContext.Provider value={toggleOrderModal}>
-              {pathname === scan && <ScanItem />}
-              {pathname === store && <StoreType location={location} />}
-              {pathname === tags && <PrintPage />}
-              {pathname === main && <MainPage />}
-              {pathname === orders && <OrdersPage />}
-              {pathname === shortages && (
-                <Shortages shortagesList={shortagesList} isStoreEmpty={areThereShortages} />
-              )}
-              {isPathNotExist(routes, pathname) && <ScanItem />}
+              <MultiStepFormProvider>
+                {pathname === scan && <ScanItem />}
+                {pathname === store && <StoreType location={location} />}
+                {pathname === tags && <PrintPage />}
+                {pathname === main && <MainPage />}
+                {pathname === orders && <OrdersPage />}
+                {pathname === shortages && (
+                  <Shortages shortagesList={shortagesList} isStoreEmpty={areThereShortages} />
+                )}
+                {isPathNotExist(routes, pathname) && <ScanItem />}
+              </MultiStepFormProvider>
             </OrderModalContext.Provider>
             <LoginModal isModalOpened={isLogInModalOpened} toggleModal={toggleLogInModal} />
             <OrderItemModal

@@ -18,7 +18,7 @@ const InfoModalWrapper = styled.div`
   transition: transform 0.4s;
   z-index: 12;
 
-  @media (max-width: 600px) {
+  @media (max-width: 560px) {
     top: 0;
     bottom: initial;
     justify-content: flex-start;

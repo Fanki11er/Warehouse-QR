@@ -1,6 +1,6 @@
 import { StoreItem, Tag } from '../classes/classes';
 import { baseBranches, storesPath } from '../firebase/firebaseEndpoints';
-import { Order, StatusInfo } from '../types/types';
+import { Order, StatusInfo, storeItem } from '../types/types';
 import { ItemShortage } from '../classes/classes';
 import { db } from '../firebase/firebaseConfig';
 
@@ -132,10 +132,16 @@ export const getData = (mainPath: string, setIsEmpty: Function, setItemsList: Fu
 export const addShortage = async (
   itemIdentifier: string,
   orderDescription: string,
+  catalogNumber: string,
   callback: Function,
 ) => {
   const date = new Date();
-  const shortage = new ItemShortage(itemIdentifier, orderDescription, date.toLocaleString());
+  const shortage = new ItemShortage(
+    itemIdentifier,
+    orderDescription,
+    date.toLocaleString(),
+    catalogNumber,
+  );
 
   await db
     .ref('QR')
@@ -243,4 +249,42 @@ export const deleteStoreItem = async (
           message: 'Nie usunięto',
         });
       });
+};
+//? Add new fields to storeItems-------------------------------
+/*const updateItemsInDataBase = (store: [string, unknown]) => {
+  const storeType = store[0];
+  const items: [string, storeItem][] = Object.entries<any>(
+    store[1] as { index: string; value: storeItem },
+  );
+  items.forEach(([key, value]) => {
+    value.catalogNumber = '';
+    value.quantity = 0;
+
+    db.ref('QR/')
+      .child(`${baseBranches.storesBranch}${storeType}`)
+      .update({ [key]: value })
+      .then(() => console.log('OK'))
+      .catch((err) => {
+        console.log(err);
+      });
+  });
+};*/
+//? Add new fields to storeItems-------------------------------
+//? Update dataBase fields-------------------------------------
+/*export const updateDataBase = async () => {
+  await db.ref(storesPath).once('value', (snapshot) => {
+    const stores = Object.entries(snapshot.val());
+
+    stores.forEach((store) => {
+      updateItemsInDataBase(store);
+    });
+  });
+};*/
+//? Update dataBase fields-------------------------------------
+
+export const withErrors = (errors: Object): boolean => {
+  const values = Object.values(errors).filter((value) => {
+    return value;
+  });
+  return values.length ? true : false;
 };

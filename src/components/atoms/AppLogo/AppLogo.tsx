@@ -10,7 +10,7 @@ const StyledWrapper = styled.div`
   justify-content: center;
   user-select: none;
 
-  @media (max-width: 600px) {
+  @media (max-width: 800px) {
     margin-bottom: 15px;
     width: 170px;
     height: 90px;

@@ -55,7 +55,6 @@ const StoreType = (props: Props) => {
   const [isAddItemModalOpened, setIsAddItemModalOpened] = useState(false);
   const [isEditItemModalOpened, setIsEditItemModalOpened] = useState(false);
   const [itemToEdition, setItemToEdition] = useState<storeItem | null>(null);
-
   const toggleAddItemsModal = () => {
     setIsAddItemModalOpened(!isAddItemModalOpened);
   };
@@ -77,7 +76,7 @@ const StoreType = (props: Props) => {
           const items = await snapshot.val();
 
           items ? setItemsList(Object.values(items)) : setItemsList([]);
-        }
+        } else setItemsList([]);
       });
     };
     const listener = loadItemsList(identifier, storesPath);
@@ -87,8 +86,8 @@ const StoreType = (props: Props) => {
   const filterItems = (itemsList: storeItem[]) => {
     if (filterInput.current) {
       const filteredList = itemsList.length
-        ? itemsList.filter(({ orderDescription }) => {
-            return orderDescription
+        ? itemsList.filter(({ orderDescription, catalogNumber }) => {
+            return `${orderDescription} ${catalogNumber}`
               .toLowerCase()
               .includes(filterInput.current!.value.toLowerCase());
           })

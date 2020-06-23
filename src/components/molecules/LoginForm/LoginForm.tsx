@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { Formik } from 'formik';
 import { auth } from '../../../firebase/firebaseConfig';
+import StatusInfoContext from '../../../context/StatusInfoContext';
 import MenuHeader from '../../atoms/MenuHeader/MenuHeader';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
 import Form from '../../atoms/Form/Form';
@@ -26,6 +27,7 @@ interface Props {
 
 const LoginForm = (props: Props) => {
   const { toggleModal } = props;
+  const sendStatusInfo = useContext(StatusInfoContext);
 
   const initialValues = {
     email: '',
@@ -36,8 +38,11 @@ const LoginForm = (props: Props) => {
     return auth
       .signInWithEmailAndPassword(email, password)
       .then(() => toggleModal())
-      .catch((err) => {
-        console.log(err, 'E-Form');
+      .catch(() => {
+        sendStatusInfo({
+          status: 'error',
+          message: 'Błędne dane',
+        });
       });
   };
 

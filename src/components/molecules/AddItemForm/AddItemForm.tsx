@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-import styled from 'styled-components';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import { storeItem, AddFormSettings } from '../../../types/types';
@@ -15,40 +14,10 @@ import {
 } from '../../../tools/tools';
 import UserContext from '../../../context/userContext';
 import StatusInfoContext from '../../../context/StatusInfoContext';
+import { MultiStepFormContext } from '../../../providers/MultiStepFormProvider';
 import MenuHeader from '../../atoms/MenuHeader/MenuHeader';
-import MenuButton from '../../atoms/MenuButton/MenuButton';
 import Form from '../../atoms/Form/Form';
-import FormInput from '../FormInput/FormInput';
-import FormCheckBox from '../../atoms/FormCheckBox/FormCheckBox';
-
-const StyledInputsWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 5px 0;
-`;
-
-const StyledButtonsWrapper = styled.div`
-  display: flex;
-  width: 100%;
-  padding: 0 15px;
-  justify-content: space-around;
-`;
-
-const StyledCheckBoxesWrapper = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: space-around;
-`;
-
-const StyledError = styled.div`
-  display: flex;
-  justify-content: center;
-  justify-self: center;
-  width: 100%;
-  height: 20px;
-  color: ${({ theme }) => theme.lightRed};
-  margin-top: -15px;
-`;
+import * as FormInputs from '../FormInputsWrapper/FormInputsWrapper';
 
 interface Props {
   toggleModal: Function;
@@ -60,6 +29,7 @@ interface Props {
 const AddItemForm = (props: Props) => {
   const { toggleModal, itemsList, storeType, defaultItemName } = props;
   const user = useContext(UserContext);
+  const { currentIndex, createSettings, resetCurrentIndex } = useContext(MultiStepFormContext);
   const sendStatusInfo = useContext(StatusInfoContext);
   const [itemExists, setItemExists] = useState(false);
   const initialValues: Partial<storeItem> & AddFormSettings = {
@@ -68,17 +38,27 @@ const AddItemForm = (props: Props) => {
     mainType: '',
     secondType: '',
     defaultOrderAmount: 0,
+    quantity: 0,
+    catalogNumber: '',
     additionalDescriptions: '',
     withTag: true,
     withOrder: false,
   };
-
-  const usedItems = getProperties('orderDescription', itemsList);
+  const { minIndex, maxIndex } = createSettings(1, 2);
 
   let validateSchema = yup.object().shape({
     name: yup.string().required('Pole jest wymagane'),
     dimension: yup.string().required('Pole jest wymagane'),
-    defaultOrderAmount: yup.number(),
+    defaultOrderAmount: yup
+      .number()
+      .required('Pole jest wymagane')
+      .integer('Wartość musi być liczbą')
+      .min(0, 'Wartość musi być dodatnia'),
+    quantity: yup
+      .number()
+      .required('Pole jest wymagane')
+      .integer('Wartość musi być liczbą')
+      .min(0, 'Wartość musi być dodatnia'),
   });
 
   const getNextItemNumber = (itemsList: storeItem[]): number => {
@@ -117,128 +97,113 @@ const AddItemForm = (props: Props) => {
     newItem.orderDescription = `${newItem.name} ${newItem.dimension} ${newItem.mainType} ${newItem.secondType}`;
   };
 
+  const withErrors = (errors: Object): boolean => {
+    const values = Object.values(errors).filter((value) => {
+      return value;
+    });
+    return values.length ? true : false;
+  };
+
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validateSchema}
       onSubmit={(values, { setSubmitting, resetForm }) => {
-        const {
-          name,
-          dimension,
-          mainType,
-          secondType,
-          defaultOrderAmount,
-          additionalDescriptions,
-          withTag,
-          withOrder,
-        } = values;
-        const id = getNextItemNumber(itemsList);
-        const identifier = makeIdentifier(id, storeType);
-        const newItem = new StoreItem(
-          storeType,
-          name!,
-          id,
-          identifier,
-          dimension!,
-          mainType!,
-          secondType!,
-          defaultOrderAmount!,
-          additionalDescriptions!,
-        );
+        if (currentIndex === maxIndex) {
+          const {
+            name,
+            dimension,
+            mainType,
+            secondType,
+            defaultOrderAmount,
+            additionalDescriptions,
+            quantity,
+            catalogNumber,
+            withTag,
+            withOrder,
+          } = values;
+          const id = getNextItemNumber(itemsList);
+          const identifier = makeIdentifier(id, storeType);
+          const newItem = new StoreItem(
+            storeType,
+            name!,
+            id,
+            identifier,
+            dimension!,
+            mainType!,
+            secondType!,
+            defaultOrderAmount!,
+            additionalDescriptions!,
+            quantity!,
+            catalogNumber!,
+          );
 
-        createOrderDesc(newItem);
-        if (checkForRepeats(usedItems, newItem.orderDescription)) {
-          setItemExists(true);
-          return;
+          createOrderDesc(newItem);
+          const usedItems = getProperties('orderDescription', itemsList);
+
+          if (checkForRepeats(usedItems, newItem.orderDescription)) {
+            setItemExists(true);
+            return;
+          } else itemExists && setItemExists(false);
+          addNewItem(newItem);
+          if (withTag) {
+            const newTag = createItemTag(newItem);
+            addNewTag(newTag, sendStatusInfo);
+          }
+          if (withOrder) {
+            const extendedExtraInfo = newItem?.catalogNumber;
+            const { orderDescription, identifier, defaultOrderAmount } = newItem;
+            const newOrder = new ItemOrder(
+              identifier,
+              orderDescription,
+              defaultOrderAmount,
+              'szt',
+              extendedExtraInfo ? `Kat: ${extendedExtraInfo}` : '',
+            );
+            user?.uid
+              ? addNewOrderItem(newOrder, user, sendStatusInfo)
+              : sendStatusInfo({ status: 'error', message: 'Brak uprawnień' });
+          }
+          toggleModal();
+          resetForm();
+          resetCurrentIndex(minIndex);
+
+          setSubmitting(false);
         }
-        addNewItem(newItem);
-        if (withTag) {
-          const newTag = createItemTag(newItem);
-          addNewTag(newTag, sendStatusInfo);
-        }
-        if (withOrder) {
-          const { orderDescription, identifier, defaultOrderAmount } = newItem;
-          const newOrder = new ItemOrder(identifier, orderDescription, defaultOrderAmount, 'szt');
-          user?.uid
-            ? addNewOrderItem(newOrder, user, sendStatusInfo)
-            : sendStatusInfo({ status: 'error', message: 'Brak uprawnień' });
-        }
-        toggleModal();
-        resetForm();
-        setSubmitting(false);
       }}
     >
-      {({ handleSubmit, touched, errors, values, resetForm, setSubmitting }) => (
+      {({
+        handleSubmit,
+        touched,
+        errors,
+        values,
+        resetForm,
+        setSubmitting,
+        validateForm,
+        setErrors,
+      }) => (
         <Form onSubmit={handleSubmit}>
-          <MenuHeader>Dodaj do magazynu</MenuHeader>
-          <StyledInputsWrapper>
-            <StyledCheckBoxesWrapper>
-              <FormCheckBox name={'withTag'} label={'Etykieta'} checked={values.withTag} />
-              <FormCheckBox name={'withOrder'} label={'Zamówienie'} checked={values.withOrder} />
-            </StyledCheckBoxesWrapper>
-            <FormInput
-              name={'name'}
-              type={'text'}
-              label={'Nazwa'}
-              maxLength={25}
-              inputMode={'text'}
-              error={errors.name && touched.name ? true : false}
-              errorText={errors.name && touched.name ? errors.name : ''}
+          <MenuHeader>{`Dodaj do magazynu (${currentIndex}/${maxIndex})`}</MenuHeader>
+          <FormInputs.FormInputsWrapper
+            values={values}
+            errors={errors}
+            touched={touched}
+            itemExists={itemExists}
+            currentIndex={currentIndex}
+            formType={'add'}
+          >
+            <FormInputs.FormPartOne index={1} />
+            <FormInputs.FormPartTwo index={2} />
+            <FormInputs.Controls
+              toggleModal={toggleModal}
+              settings={{ minIndex, maxIndex }}
+              setSubmitting={setSubmitting}
+              resetForm={resetForm}
+              validateForm={validateForm}
+              setErrors={setErrors}
+              withErrors={withErrors}
             />
-            <FormInput
-              name={'dimension'}
-              type={'text'}
-              label={'Wymiar'}
-              maxLength={12}
-              inputMode={'text'}
-              error={errors.dimension && touched.dimension ? true : false}
-              errorText={errors.dimension && touched.dimension ? errors.dimension : ''}
-            />
-            <FormInput
-              name={'mainType'}
-              type={'text'}
-              label={'Typ1'}
-              maxLength={12}
-              inputMode={'text'}
-              error={errors.mainType && touched.mainType ? true : false}
-              errorText={errors.mainType && touched.mainType ? errors.mainType : ''}
-            />
-
-            <FormInput
-              name={'secondType'}
-              type={'text'}
-              label={'Typ2'}
-              maxLength={12}
-              inputMode={'text'}
-              error={errors.secondType && touched.secondType ? true : false}
-              errorText={errors.secondType && touched.secondType ? errors.secondType : ''}
-            />
-
-            <FormInput
-              name={'defaultOrderAmount'}
-              type={'text'}
-              label={'Do zamówienia'}
-              maxLength={25}
-              inputMode={'numeric'}
-              pattern={'[0-9]*'}
-              error={errors.defaultOrderAmount && touched.defaultOrderAmount ? true : false}
-              errorText={errors.defaultOrderAmount && touched.defaultOrderAmount ? errors.name : ''}
-            />
-            <StyledError>{itemExists ? 'Taki przedmiot już istnieje' : ''}</StyledError>
-          </StyledInputsWrapper>
-          <StyledButtonsWrapper>
-            <MenuButton type={'submit'}>Dodaj nowy</MenuButton>
-            <MenuButton
-              type="reset"
-              onClick={() => {
-                toggleModal();
-                setSubmitting(false);
-                resetForm();
-              }}
-            >
-              Anuluj
-            </MenuButton>
-          </StyledButtonsWrapper>
+          </FormInputs.FormInputsWrapper>
         </Form>
       )}
     </Formik>

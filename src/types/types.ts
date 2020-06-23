@@ -1,3 +1,5 @@
+import { MultiStepFormSettings } from '../classes/classes';
+
 enum storeTypes {
   screws = 'sruby',
 }
@@ -27,6 +29,8 @@ export type storeItem = {
   secondType: string; //?Stożek
   additionalDescriptions: string; //? Uwagi
   orderDescription: string;
+  quantity: number;
+  catalogNumber: string;
 };
 
 export type Order = {
@@ -51,6 +55,7 @@ export interface Shortage {
   itemIdentifier: string;
   orderDescription: string;
   date: string;
+  catalogNumber: string;
 }
 
 export interface DeleTeModalInterface {
@@ -58,4 +63,20 @@ export interface DeleTeModalInterface {
   itemToDelete: storeItem | null;
   toggleDeleteModal: (item: storeItem | null) => void;
   deleteStoreItem: Function;
+}
+
+export interface MultiStepFormInterface {
+  currentIndex: number;
+  changeCurrentIndex: (
+    currentIndex: number,
+    settings: MultiStepFormSettings,
+    action: 'prev' | 'next',
+  ) => void;
+  createSettings: (minIndex: number, maxIndex: number) => MultiStepFormSettings;
+  resetCurrentIndex: (minIndex: number) => void;
+}
+
+export interface MultiStepFormSettingsInterface {
+  minIndex: number;
+  maxIndex: number;
 }

@@ -20,7 +20,7 @@ const StyledListElement = styled.li`
   border-radius: 10px;
   margin: 10px 10px 0 10px;
 
-  @media (max-width: 600px) {
+  @media (max-width: 1024px) {
     width: 100%;
     min-height: 75px;
     align-content: center;
@@ -41,7 +41,7 @@ const StyledItem = styled.div`
   justify-content: center;
   align-items: center;
 
-  @media (max-width: 600px) {
+  @media (max-width: 1024px) {
     display: flex;
     font-size: ${({ theme }) => theme.fontSizeDesktop.normal};
     width: 100%;
@@ -55,7 +55,7 @@ const StyledButtonsWrapper = styled.div`
   width: 45%;
   justify-content: space-between;
   justify-content: ${(props: StyledProps) => (props.endOf ? 'flex-end' : 'space-between')};
-  @media (max-width: 600px) {
+  @media (max-width: 1024px) {
     justify-content: center;
     width: 95%;
   }
@@ -68,7 +68,7 @@ const StyledButton = styled(MenuButton)`
   width: 100px;
   height: 30px;
   margin: 0 10px;
-  @media (max-width: 600px) {
+  @media (max-width: 1024px) {
     width: 95px;
     margin: 0 5px;
   }
@@ -87,7 +87,7 @@ interface Props {
 
 const StoreItem = (props: Props) => {
   const { item, actions } = props;
-  const { orderDescription } = item;
+  const { orderDescription, catalogNumber } = item;
   const { addNewTag, toggleEditItemModal, orderItem, createItemTag } = actions;
   const user = useContext(UserContext);
   const sendStatusInfo = useContext(StatusInfoContext);
@@ -117,7 +117,9 @@ const StoreItem = (props: Props) => {
 
   return (
     <StyledListElement className={'animateShow'}>
-      <StyledItem>{orderDescription}</StyledItem>
+      <StyledItem>{`${orderDescription} ${
+        catalogNumber ? `Kat: ${catalogNumber}` : ''
+      }`}</StyledItem>
       {user ? renderAuthenticatedWrapper() : renderUnAuthenticatedWrapper()}
     </StyledListElement>
   );

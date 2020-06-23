@@ -18,6 +18,13 @@ const StyledInfo = styled.div`
   background-color: ${({ theme }) => theme.primary};
   font-size: ${({ theme }) => theme.fontSizeDesktop.larger};
   margin-bottom: 20px;
+  user-select: none;
+  &:hover {
+    color: ${({ theme }) => theme.lightRed};
+    border: 2px solid ${({ theme }) => theme.lightRed};
+    box-shadow: 0 0 5px 1px ${({ theme }) => theme.lightRed};
+    cursor: pointer;
+  }
 
   @media (max-width: 600px) {
     margin-top: 25px;

@@ -40,7 +40,7 @@ const StyledStoreItem = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 100%;
+  height: 50%;
   color: ${({ theme }) => theme.primaryBlue};
   font-size: ${({ theme }) => theme.fontSizeDesktop.larger};
   opacity: 0;
@@ -138,7 +138,14 @@ const ScannedStoreItem = (props: Props & ThemeProps) => {
     } else if (!scannedItemId && !item) {
       return <StyledStoreItem>{''}</StyledStoreItem>;
     }
-    return <StyledStoreItem>{item!.orderDescription}</StyledStoreItem>;
+    return (
+      <>
+        <StyledStoreItem>{item!.orderDescription} </StyledStoreItem>
+        <StyledStoreItem>
+          {item!.catalogNumber ? `Kat: ${item!.catalogNumber}` : ''}
+        </StyledStoreItem>
+      </>
+    );
   };
   return (
     <StyledWrapper scannedItemId={scannedItemId} ref={itemInfo}>
@@ -157,7 +164,10 @@ const ScannedStoreItem = (props: Props & ThemeProps) => {
         )}
         <StyledItemButton
           className={scannedItemId ? undefined : 'notActive'}
-          onClick={() => item && addShortage(item.identifier, item.orderDescription, sendStatsInfo)}
+          onClick={() =>
+            item &&
+            addShortage(item.identifier, item.orderDescription, item.catalogNumber, sendStatsInfo)
+          }
         >
           Zgłoś brak
         </StyledItemButton>

@@ -20,8 +20,13 @@ const StyledWrapper = styled.ol`
   margin: 30px 120px;
   padding: 0 10px;
 
+  @media (max-width: 896px) {
+    margin: 30px 90px;
+  }
+
   @media (max-width: 600px) {
     width: 350px;
+    margin: 30px 0;
   }
 `;
 

@@ -8,7 +8,7 @@ const StyledListItem = styled.li`
   display: flex;
   flex-flow: wrap row;
   width: 100%;
-  border: 1px solid black;
+  border-bottom: 1px solid black;
   margin-bottom: 3px;
   padding: 10px;
   justify-content: space-between;
@@ -17,6 +17,7 @@ const StyledListItem = styled.li`
     background-color: ${({ theme }) => theme.transparentRed};
     cursor: pointer;
   }
+  letter-spacing: 1px;
 `;
 
 const StyledItem = styled.div`
