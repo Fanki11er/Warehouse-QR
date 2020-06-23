@@ -65,6 +65,7 @@ export class ItemShortage implements Shortage {
     public itemIdentifier: string,
     public orderDescription: string,
     public date: string,
+    public catalogNumber: string,
   ) {}
 }
 

@@ -65,8 +65,6 @@ const AddItemForm = (props: Props) => {
   };
   const { minIndex, maxIndex } = createSettings(1, 2);
 
-  const usedItems = getProperties('orderDescription', itemsList);
-
   let validateSchema = yup.object().shape({
     name: yup.string().required('Pole jest wymagane'),
     dimension: yup.string().required('Pole jest wymagane'),
@@ -160,11 +158,12 @@ const AddItemForm = (props: Props) => {
           );
 
           createOrderDesc(newItem);
+          const usedItems = getProperties('orderDescription', itemsList);
 
           if (checkForRepeats(usedItems, newItem.orderDescription)) {
             setItemExists(true);
             return;
-          }
+          } else itemExists && setItemExists(false);
           addNewItem(newItem);
           if (withTag) {
             const newTag = createItemTag(newItem);
@@ -180,6 +179,7 @@ const AddItemForm = (props: Props) => {
           toggleModal();
           resetForm();
           resetCurrentIndex(minIndex);
+
           setSubmitting(false);
         }
       }}

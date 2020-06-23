@@ -82,7 +82,7 @@ interface Props {
 
 const ShortageItem = (props: Props) => {
   const { item } = props;
-  const { orderDescription, itemIdentifier, date } = item;
+  const { orderDescription, itemIdentifier, date, catalogNumber } = item;
   const user = useContext(UserContext);
   const orderItem = useContext(OrderContext);
   const sendStatusInfo = useContext(StatusInfoContext);
@@ -108,7 +108,7 @@ const ShortageItem = (props: Props) => {
   return (
     <StyledListElement className={'animateShow'}>
       <StyledItem>
-        {orderDescription}
+        {`${orderDescription} ${catalogNumber ? `Kat: ${catalogNumber}` : ''}`}
         <StyledDate>{date}</StyledDate>
       </StyledItem>
       {user && renderAuthenticatedWrapper()}

@@ -55,6 +55,7 @@ export interface Shortage {
   itemIdentifier: string;
   orderDescription: string;
   date: string;
+  catalogNumber: string;
 }
 
 export interface DeleTeModalInterface {

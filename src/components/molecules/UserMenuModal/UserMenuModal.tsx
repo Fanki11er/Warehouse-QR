@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { Close } from '@styled-icons/evaicons-solid/';
 import { createLinkTag, addNewTag } from '../../../tools/tools';
+import { updateDataBase } from '../../../tools/tools';
 import UserContext from '../../../context/userContext';
 import StatusInfoContext from '../../../context/StatusInfoContext';
 import mainTheme from '../../../themes/mainTheme';
@@ -83,8 +84,8 @@ const UserMenuModal = (props: Props & ModalProps) => {
         <StyledCloseIcon />
       </StyledCloseButton>
 
-      {user && false ? (
-        <StyledMenuButton>Aktualizacja</StyledMenuButton>
+      {user && true ? (
+        <StyledMenuButton onClick={() => updateDataBase()}>Aktualizacja</StyledMenuButton>
       ) : (
         <StyledDummyButton>Aktualizacja</StyledDummyButton>
       )}

@@ -87,7 +87,7 @@ interface Props {
 
 const StoreItem = (props: Props) => {
   const { item, actions } = props;
-  const { orderDescription } = item;
+  const { orderDescription, catalogNumber } = item;
   const { addNewTag, toggleEditItemModal, orderItem, createItemTag } = actions;
   const user = useContext(UserContext);
   const sendStatusInfo = useContext(StatusInfoContext);
@@ -117,7 +117,9 @@ const StoreItem = (props: Props) => {
 
   return (
     <StyledListElement className={'animateShow'}>
-      <StyledItem>{orderDescription}</StyledItem>
+      <StyledItem>{`${orderDescription} ${
+        catalogNumber ? `Kat: ${catalogNumber}` : ''
+      }`}</StyledItem>
       {user ? renderAuthenticatedWrapper() : renderUnAuthenticatedWrapper()}
     </StyledListElement>
   );
