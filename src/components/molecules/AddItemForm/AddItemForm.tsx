@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-import styled from 'styled-components';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import { storeItem, AddFormSettings } from '../../../types/types';
@@ -17,24 +16,8 @@ import UserContext from '../../../context/userContext';
 import StatusInfoContext from '../../../context/StatusInfoContext';
 import { MultiStepFormContext } from '../../../providers/MultiStepFormProvider';
 import MenuHeader from '../../atoms/MenuHeader/MenuHeader';
-import MenuButton from '../../atoms/MenuButton/MenuButton';
 import Form from '../../atoms/Form/Form';
 import * as FormInputs from '../FormInputsWrapper/FormInputsWrapper';
-
-const StyledButtonsWrapper = styled.div`
-  display: flex;
-  width: 100%;
-  padding: 0 15px;
-  justify-content: space-around;
-`;
-
-const StyledMenuButton = styled(MenuButton)`
-  width: 100px;
-`;
-
-const StyledSubmitButton = styled(MenuButton)`
-  width: 250px;
-`;
 
 interface Props {
   toggleModal: Function;
@@ -46,9 +29,7 @@ interface Props {
 const AddItemForm = (props: Props) => {
   const { toggleModal, itemsList, storeType, defaultItemName } = props;
   const user = useContext(UserContext);
-  const { currentIndex, changeCurrentIndex, createSettings, resetCurrentIndex } = useContext(
-    MultiStepFormContext,
-  );
+  const { currentIndex, createSettings, resetCurrentIndex } = useContext(MultiStepFormContext);
   const sendStatusInfo = useContext(StatusInfoContext);
   const [itemExists, setItemExists] = useState(false);
   const initialValues: Partial<storeItem> & AddFormSettings = {
@@ -170,8 +151,15 @@ const AddItemForm = (props: Props) => {
             addNewTag(newTag, sendStatusInfo);
           }
           if (withOrder) {
+            const extendedExtraInfo = newItem?.catalogNumber;
             const { orderDescription, identifier, defaultOrderAmount } = newItem;
-            const newOrder = new ItemOrder(identifier, orderDescription, defaultOrderAmount, 'szt');
+            const newOrder = new ItemOrder(
+              identifier,
+              orderDescription,
+              defaultOrderAmount,
+              'szt',
+              extendedExtraInfo ? `Kat: ${extendedExtraInfo}` : '',
+            );
             user?.uid
               ? addNewOrderItem(newOrder, user, sendStatusInfo)
               : sendStatusInfo({ status: 'error', message: 'Brak uprawnień' });
@@ -202,51 +190,20 @@ const AddItemForm = (props: Props) => {
             touched={touched}
             itemExists={itemExists}
             currentIndex={currentIndex}
+            formType={'add'}
           >
             <FormInputs.FormPartOne index={1} />
             <FormInputs.FormPartTwo index={2} />
+            <FormInputs.Controls
+              toggleModal={toggleModal}
+              settings={{ minIndex, maxIndex }}
+              setSubmitting={setSubmitting}
+              resetForm={resetForm}
+              validateForm={validateForm}
+              setErrors={setErrors}
+              withErrors={withErrors}
+            />
           </FormInputs.FormInputsWrapper>
-
-          <StyledButtonsWrapper>
-            <StyledMenuButton
-              type={'button'}
-              className={currentIndex > minIndex ? undefined : 'notActive'}
-              onClick={() => changeCurrentIndex(currentIndex, { minIndex, maxIndex }, 'prev')}
-            >
-              Cofnij
-            </StyledMenuButton>
-
-            <MenuButton
-              type="reset"
-              onClick={() => {
-                toggleModal();
-                resetCurrentIndex(minIndex);
-                setSubmitting(false);
-                resetForm();
-              }}
-            >
-              Anuluj
-            </MenuButton>
-            <StyledMenuButton
-              type={'button'}
-              className={currentIndex < maxIndex ? undefined : 'notActive'}
-              onClick={() => {
-                validateForm(values).then((err) => {
-                  setErrors(err);
-                  !withErrors(err) &&
-                    changeCurrentIndex(currentIndex, { minIndex, maxIndex }, 'next');
-                });
-              }}
-            >
-              Dalej
-            </StyledMenuButton>
-          </StyledButtonsWrapper>
-          <StyledSubmitButton
-            className={currentIndex === maxIndex ? undefined : 'notActive'}
-            type={'submit'}
-          >
-            Dodaj nowy
-          </StyledSubmitButton>
         </Form>
       )}
     </Formik>

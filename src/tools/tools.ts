@@ -250,8 +250,8 @@ export const deleteStoreItem = async (
         });
       });
 };
-//? Add new fields to storeItems
-const updateItemsInDataBase = (store: [string, unknown]) => {
+//? Add new fields to storeItems-------------------------------
+/*const updateItemsInDataBase = (store: [string, unknown]) => {
   const storeType = store[0];
   const items: [string, storeItem][] = Object.entries<any>(
     store[1] as { index: string; value: storeItem },
@@ -268,9 +268,10 @@ const updateItemsInDataBase = (store: [string, unknown]) => {
         console.log(err);
       });
   });
-};
-
-export const updateDataBase = async () => {
+};*/
+//? Add new fields to storeItems-------------------------------
+//? Update dataBase fields-------------------------------------
+/*export const updateDataBase = async () => {
   await db.ref(storesPath).once('value', (snapshot) => {
     const stores = Object.entries(snapshot.val());
 
@@ -278,4 +279,12 @@ export const updateDataBase = async () => {
       updateItemsInDataBase(store);
     });
   });
+};*/
+//? Update dataBase fields-------------------------------------
+
+export const withErrors = (errors: Object): boolean => {
+  const values = Object.values(errors).filter((value) => {
+    return value;
+  });
+  return values.length ? true : false;
 };
