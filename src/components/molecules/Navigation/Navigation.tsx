@@ -9,7 +9,7 @@ import DummyButton from '../../atoms/DummyButton/DummyButton';
 const StyledWrapper = styled.nav`
   display: flex;
   height: 100%;
-  padding: 0 15px;
+  padding: 0 70px 0 15px;
   justify-content: center;
   width: 100%;
 
@@ -18,6 +18,7 @@ const StyledWrapper = styled.nav`
     flex-flow: wrap row;
     height: 140px;
     margin-top: 20px;
+    padding: 0 15px;
   }
 
   @media (max-width: 800px) {

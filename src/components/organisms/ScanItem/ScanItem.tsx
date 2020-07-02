@@ -1,8 +1,9 @@
 import React, { useState, RefObject, useEffect, useCallback } from 'react';
+import ScannedStoreItem from '../../molecules/ScannedStoreItem/ScannedStoreItem';
 import styled from 'styled-components';
 import ReadQr from '../ReadQR/ReadQr';
-import ScannedStoreItem from '../../molecules/ScannedStoreItem/ScannedStoreItem';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
+import useGoToTheTop from '../../../Hooks/useGoToTheTop';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -81,6 +82,10 @@ const ScanItem = () => {
     setScanError('');
   };
 
+  const resetScannedItem = () => {
+    setScannedItemId('');
+  };
+
   const getScannedItemId = (id: string) => {
     setScannedItemId(id);
   };
@@ -93,20 +98,14 @@ const ScanItem = () => {
     }
   }, []);
 
+  useGoToTheTop([isScanning]);
+
   useEffect(() => {
     window.scrollTo({
       top: scrollToPosition,
       behavior: 'smooth',
     });
   }, [scannedItemId]);
-
-  useEffect(() => {
-    isScanning &&
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
-  }, [isScanning]);
 
   return (
     <StyledWrapper>
@@ -132,6 +131,7 @@ const ScanItem = () => {
         scannedItemId={scannedItemId}
         isScanning={isScanning}
         getPosition={getPosition}
+        resetScannedItem={resetScannedItem}
       />
     </StyledWrapper>
   );

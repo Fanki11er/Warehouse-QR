@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext, useRef, RefObject } from 'react';
 import styled from 'styled-components';
 import theme from '../../../themes/mainTheme';
+import useGoToTheTop from '../../../Hooks/useGoToTheTop';
 import UserContext from '../../../context/userContext';
 import MenuButton from '../../atoms/MenuButton/MenuButton';
 import { storeItem } from '../../../types/types';
@@ -23,7 +24,7 @@ const StyledWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 360px;
-  height: 135px;
+  min-height: 135px;
   border-radius: 10px;
   margin-top: 15px;
   padding: 5px;
@@ -32,16 +33,18 @@ const StyledWrapper = styled.div`
 
 const StyledItemWrapper = styled.div`
   width: 100%;
-  height: 60px;
+  min-height: 60px;
 `;
 
 const StyledStoreItem = styled.div`
   display: flex;
+  flex-flow: wrap row;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 50%;
   color: ${({ theme }) => theme.primaryBlue};
+  text-align: center;
   font-size: ${({ theme }) => theme.fontSizeDesktop.larger};
   opacity: 0;
   animation-name: showing;
@@ -95,10 +98,11 @@ const StyledInfoWrapper = styled.div`
 interface Props {
   isScanning: boolean;
   getPosition: (x: RefObject<any>) => void;
+  resetScannedItem: () => void;
 }
 
 const ScannedStoreItem = (props: Props & ThemeProps) => {
-  const { scannedItemId, isScanning, getPosition } = props;
+  const { scannedItemId, isScanning, getPosition, resetScannedItem } = props;
   const [error, setError] = useState('');
   const [item, setStoreItem] = useState<storeItem | undefined>(undefined);
   const toggleOrderModal = useContext(OrderModalContext);
@@ -106,6 +110,7 @@ const ScannedStoreItem = (props: Props & ThemeProps) => {
   const sendStatsInfo = useContext(StatusInfoContext);
 
   const itemInfo = useRef<any>(null);
+  const goTop = useGoToTheTop();
 
   useEffect(() => {
     getPosition(itemInfo);
@@ -123,6 +128,9 @@ const ScannedStoreItem = (props: Props & ThemeProps) => {
       fetchItem(scannedItemId).then((item) => {
         setStoreItem(item);
       });
+    else {
+      setStoreItem(undefined);
+    }
   }, [scannedItemId]);
 
   const renderItem = (error: string, item: storeItem | undefined) => {
@@ -155,7 +163,11 @@ const ScannedStoreItem = (props: Props & ThemeProps) => {
         {user ? (
           <StyledItemButton
             className={scannedItemId ? undefined : 'notActive'}
-            onClick={() => toggleOrderModal(item)}
+            disabled={scannedItemId ? false : true}
+            onClick={() => {
+              toggleOrderModal(item);
+              goTop();
+            }}
           >
             Zamów
           </StyledItemButton>
@@ -164,10 +176,19 @@ const ScannedStoreItem = (props: Props & ThemeProps) => {
         )}
         <StyledItemButton
           className={scannedItemId ? undefined : 'notActive'}
-          onClick={() =>
+          disabled={scannedItemId ? false : true}
+          onClick={() => {
             item &&
-            addShortage(item.identifier, item.orderDescription, item.catalogNumber, sendStatsInfo)
-          }
+              addShortage(
+                item.identifier,
+                item.orderDescription,
+                item.catalogNumber,
+                sendStatsInfo,
+              ).then(() => {
+                goTop();
+                resetScannedItem();
+              });
+          }}
         >
           Zgłoś brak
         </StyledItemButton>

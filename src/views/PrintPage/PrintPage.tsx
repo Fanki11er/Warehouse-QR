@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { db } from '../../firebase/firebaseConfig';
 import { Tag } from '../../classes/classes';
 import router from '../../routes/routes';
+import useGoToTheTop from '../../Hooks/useGoToTheTop';
 import { tagsPath, baseBranches } from '../../firebase/firebaseEndpoints';
 import { getTagKey, getData } from '../../tools/tools';
 import UserContext from '../../context/userContext';
@@ -76,6 +77,8 @@ const PrintPage = () => {
   const [printer, setPrinter] = useState(true);
   const user = useContext(UserContext);
   const sendStatusInfo = useContext(StatusInfoContext);
+
+  useGoToTheTop();
 
   useEffect(() => {
     const listener = user ? getData(tagsPath, setIsStoreEmpty, setTagsList) : undefined;
