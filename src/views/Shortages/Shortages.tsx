@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 import routes from '../../routes/routes';
 import { Shortage } from '../../types/types';
 import UserContext from '../../context/userContext';
+import useGoToTheTop from '../../Hooks/useGoToTheTop';
 import ItemShortages from '../../components/organisms/ItemShortages/ItemShortages';
 
 const StyledWrapper = styled.div`
@@ -42,9 +43,11 @@ interface Props {
 const Shortages = (props: Props) => {
   const { scan } = routes;
   const { shortagesList, isStoreEmpty } = props;
+  useGoToTheTop();
 
   const user = useContext(UserContext);
   if (!user?.uid) return <Redirect to={scan} />;
+
   return (
     <StyledWrapper>
       <StyledStoreHeader>Braki</StyledStoreHeader>

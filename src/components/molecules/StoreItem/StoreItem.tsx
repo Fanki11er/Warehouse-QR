@@ -13,25 +13,22 @@ interface StyledProps {
 
 const StyledListElement = styled.li`
   display: flex;
-  flex-flow: wrap row;
+  flex-direction: column;
   width: 100%;
-  min-height: 45px;
+  align-content: space-around;
+  justify-content: center;
+  min-height: 90px;
   border: 2px solid ${({ theme }) => theme.green};
   border-radius: 10px;
   margin: 10px 10px 0 10px;
-
-  @media (max-width: 1024px) {
-    width: 100%;
-    min-height: 75px;
-    align-content: center;
-    justify-content: center;
-  }
+  padding: 5px 0;
 `;
 
 const StyledItem = styled.div`
   display: flex;
-  width: 55%;
-  height: 100%;
+  flex-flow: wrap row;
+  width: 100%;
+  min-height: 45%;
   border: none;
   background-color: transparent;
   font-size: ${({ theme }) => theme.fontSizeDesktop.larger};
@@ -40,21 +37,22 @@ const StyledItem = styled.div`
   padding-left: 10px;
   justify-content: center;
   align-items: center;
+  margin-bottom: 5px;
 
   @media (max-width: 1024px) {
     display: flex;
     font-size: ${({ theme }) => theme.fontSizeDesktop.normal};
     width: 100%;
-    height: 45%;
     justify-content: space-around;
   }
 `;
 
 const StyledButtonsWrapper = styled.div`
   display: flex;
-  width: 45%;
-  justify-content: space-between;
-  justify-content: ${(props: StyledProps) => (props.endOf ? 'flex-end' : 'space-between')};
+  width: 95%;
+  justify-content: center;
+  align-items: center;
+  justify-content: ${(props: StyledProps) => (props.endOf ? 'flex-end' : 'center')};
   @media (max-width: 1024px) {
     justify-content: center;
     width: 95%;
@@ -110,7 +108,7 @@ const StoreItem = (props: Props) => {
   );
 
   const renderUnAuthenticatedWrapper = () => (
-    <StyledButtonsWrapper endOf={true}>
+    <StyledButtonsWrapper>
       <StyledButton>Zgłoś brak</StyledButton>
     </StyledButtonsWrapper>
   );

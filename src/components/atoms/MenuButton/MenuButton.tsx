@@ -38,6 +38,13 @@ const MenuButton = styled.button`
     cursor: pointer;
   }
 
+  &:focus {
+    color: ${({ theme }) => theme.orange};
+    border: 2px solid ${({ theme }) => theme.orange};
+    box-shadow: 0 0 5px 1px ${({ theme }) => theme.orange};
+    cursor: pointer;
+  }
+
   &.notActive {
     color: ${({ theme }) => theme.gray};
     border: 1px solid ${({ theme }) => theme.gray};

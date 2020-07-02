@@ -116,7 +116,7 @@ const FormPartOne = ({ index }) => {
         name={'dimension'}
         type={'text'}
         label={'Wymiar'}
-        maxLength={12}
+        maxLength={25}
         inputMode={'text'}
         error={errors.dimension ? true : false}
         errorText={errors.dimension ? errors.dimension : ''}
@@ -125,7 +125,7 @@ const FormPartOne = ({ index }) => {
         name={'mainType'}
         type={'text'}
         label={'Typ1'}
-        maxLength={12}
+        maxLength={25}
         inputMode={'text'}
         error={errors.mainType && touched.mainType ? true : false}
         errorText={errors.mainType && touched.mainType ? errors.mainType : ''}
@@ -135,7 +135,7 @@ const FormPartOne = ({ index }) => {
         name={'secondType'}
         type={'text'}
         label={'Typ2'}
-        maxLength={12}
+        maxLength={25}
         inputMode={'text'}
         error={errors.secondType && touched.secondType ? true : false}
         errorText={errors.secondType && touched.secondType ? errors.secondType : ''}
@@ -211,6 +211,7 @@ const Controls = (props: ControlsProps) => {
       <StyledButtonsWrapper>
         <StyledMenuButton
           type={'button'}
+          disabled={currentIndex === minIndex}
           className={currentIndex > minIndex ? undefined : 'notActive'}
           onClick={() => changeCurrentIndex(currentIndex, { minIndex, maxIndex }, 'prev')}
         >
@@ -231,6 +232,7 @@ const Controls = (props: ControlsProps) => {
         <StyledMenuButton
           type={'button'}
           className={currentIndex < maxIndex ? undefined : 'notActive'}
+          disabled={currentIndex === maxIndex}
           onClick={() => {
             validateForm(values).then((err) => {
               setErrors(err);
@@ -243,6 +245,7 @@ const Controls = (props: ControlsProps) => {
       </StyledButtonsWrapper>
       <StyledSubmitButton
         className={currentIndex === maxIndex ? undefined : 'notActive'}
+        disabled={currentIndex === maxIndex}
         type={'submit'}
       >
         {formType === 'add' && 'Dodaj nowy'}

@@ -96,6 +96,8 @@ const EditItemForm = (props: Props) => {
             secondType,
             defaultOrderAmount,
             additionalDescriptions,
+            quantity,
+            catalogNumber,
           } = values;
           const editedItem = new StoreItem(
             storeType,
@@ -107,6 +109,8 @@ const EditItemForm = (props: Props) => {
             secondType!,
             defaultOrderAmount!,
             additionalDescriptions!,
+            quantity!,
+            catalogNumber!,
           );
 
           createOrderDesc(editedItem);

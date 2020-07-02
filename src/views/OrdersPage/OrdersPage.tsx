@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext, useCallback } from 'react';
 import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
 import routes from '../../routes/routes';
+import useGoToTheTop from '../../Hooks/useGoToTheTop';
 import { db } from '../../firebase/firebaseConfig';
 import { checkIfIsStoreEmpty, getOrderKey } from '../../tools/tools';
 import { ordersPath, baseBranches } from '../../firebase/firebaseEndpoints';
@@ -90,6 +91,8 @@ const OrdersPage = () => {
     const listener = user ? loadItemsList(ordersPath, user) : undefined;
     return () => db.ref(ordersPath).off('value', listener);
   }, [user]);
+
+  useGoToTheTop();
 
   const changePrinter = () => {
     setPrinter(!printer);

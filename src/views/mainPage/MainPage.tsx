@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { db } from '../../firebase/firebaseConfig';
+import useGoToTheTop from '../../Hooks/useGoToTheTop';
 import { storeTypesPath } from '../../firebase/firebaseEndpoints';
 import { storeType } from '../../types/types';
 import StoreTypesMenu from '../../components/organisms/StoreTypesMenu/StoreTypesMenu';
@@ -42,6 +43,7 @@ const MainPage = () => {
   const toggleAddStoreModal = () => {
     setIsStoreModalOpened(!isAddStoreModalOpened);
   };
+  useGoToTheTop();
 
   useEffect(() => {
     const listener = fetchAvailableStoreTypes(storeTypesPath);
