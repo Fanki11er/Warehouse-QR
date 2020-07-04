@@ -101,10 +101,11 @@ const ScanItem = () => {
   useGoToTheTop([isScanning]);
 
   useEffect(() => {
-    window.scrollTo({
-      top: scrollToPosition,
-      behavior: 'smooth',
-    });
+    scannedItemId &&
+      window.scrollTo({
+        top: scrollToPosition,
+        behavior: 'smooth',
+      });
   }, [scannedItemId]);
 
   return (

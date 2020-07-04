@@ -1,6 +1,6 @@
 import { StoreItem, Tag } from '../classes/classes';
 import { baseBranches, storesPath } from '../firebase/firebaseEndpoints';
-import { Order, StatusInfo, storeItem } from '../types/types';
+import { Order, StatusInfo /*storeItem*/ } from '../types/types';
 import { ItemShortage } from '../classes/classes';
 import { db } from '../firebase/firebaseConfig';
 

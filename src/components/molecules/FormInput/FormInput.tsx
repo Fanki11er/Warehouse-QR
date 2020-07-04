@@ -44,6 +44,7 @@ const StyledInput = styled(Field)`
   &:focus {
     box-shadow: 0px 0px 3px 1px ${({ theme }) => theme.green};
     outline: none;
+    caret-color: red;
   }
 
   @media (max-width: 600px) {
@@ -71,7 +72,6 @@ interface Props {
   width?: number;
   inputMode?: string;
   pattern?: string;
-  autoFocus?: boolean;
 }
 
 const FormInput = (props: Props) => {
@@ -87,6 +87,7 @@ const FormInput = (props: Props) => {
     inputMode,
     pattern,
   } = props;
+
   return (
     <StyledWrapper>
       <FormLabel>{`${label}:`}</FormLabel>
