@@ -92,7 +92,10 @@ const OrdersPage = () => {
     return () => db.ref(ordersPath).off('value', listener);
   }, [user]);
 
-  useGoToTheTop();
+  const goTop = useGoToTheTop();
+  useEffect(() => {
+    goTop();
+  }, [goTop]);
 
   const changePrinter = () => {
     setPrinter(!printer);

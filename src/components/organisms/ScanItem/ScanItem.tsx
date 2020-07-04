@@ -98,7 +98,11 @@ const ScanItem = () => {
     }
   }, []);
 
-  useGoToTheTop([isScanning]);
+  const goTop = useGoToTheTop();
+
+  useEffect(() => {
+    isScanning && goTop();
+  }, [isScanning]);
 
   useEffect(() => {
     scannedItemId &&

@@ -113,6 +113,10 @@ const ScannedStoreItem = (props: Props & ThemeProps) => {
   const goTop = useGoToTheTop();
 
   useEffect(() => {
+    goTop();
+  }, [goTop]);
+
+  useEffect(() => {
     getPosition(itemInfo);
   }, [itemInfo, getPosition]);
 
