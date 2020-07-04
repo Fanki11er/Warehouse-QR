@@ -1,6 +1,6 @@
 import React, { useContext, createContext } from 'react';
 import styled from 'styled-components';
-import { FormikErrors, FormikTouched, FormikValues } from 'formik';
+import { FormikErrors, FormikTouched } from 'formik';
 import { storeItem, AddFormSettings } from '../../../types/types';
 import FormInput from '../FormInput/FormInput';
 import FormCheckBox from '../../atoms/FormCheckBox/FormCheckBox';
@@ -245,7 +245,7 @@ const Controls = (props: ControlsProps) => {
       </StyledButtonsWrapper>
       <StyledSubmitButton
         className={currentIndex === maxIndex ? undefined : 'notActive'}
-        disabled={currentIndex === maxIndex}
+        disabled={currentIndex !== maxIndex}
         type={'submit'}
       >
         {formType === 'add' && 'Dodaj nowy'}

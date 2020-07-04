@@ -10,7 +10,7 @@ const useGoToTheTop = (dependenciesArr: DependencyList = []) => {
 
   useEffect(() => {
     goTop();
-  }, dependenciesArr);
+  }, [dependenciesArr, goTop]);
   return goTop;
 };
 
