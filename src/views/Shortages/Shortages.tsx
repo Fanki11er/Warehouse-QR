@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
 import routes from '../../routes/routes';
@@ -43,7 +43,10 @@ interface Props {
 const Shortages = (props: Props) => {
   const { scan } = routes;
   const { shortagesList, isStoreEmpty } = props;
-  useGoToTheTop();
+  const goTop = useGoToTheTop();
+  useEffect(() => {
+    goTop();
+  }, [goTop]);
 
   const user = useContext(UserContext);
   if (!user?.uid) return <Redirect to={scan} />;

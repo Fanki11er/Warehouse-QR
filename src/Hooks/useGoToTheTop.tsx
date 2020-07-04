@@ -1,6 +1,6 @@
-import { useCallback, useEffect, DependencyList } from 'react';
+import { useCallback } from 'react';
 
-const useGoToTheTop = (dependenciesArr: DependencyList = []) => {
+const useGoToTheTop = () => {
   const goTop = useCallback(() => {
     window.scrollTo({
       top: 0,
@@ -8,9 +8,6 @@ const useGoToTheTop = (dependenciesArr: DependencyList = []) => {
     });
   }, []);
 
-  useEffect(() => {
-    goTop();
-  }, [dependenciesArr, goTop]);
   return goTop;
 };
 

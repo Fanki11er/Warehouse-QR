@@ -43,7 +43,10 @@ const MainPage = () => {
   const toggleAddStoreModal = () => {
     setIsStoreModalOpened(!isAddStoreModalOpened);
   };
-  useGoToTheTop();
+  const goTop = useGoToTheTop();
+  useEffect(() => {
+    goTop();
+  }, [goTop]);
 
   useEffect(() => {
     const listener = fetchAvailableStoreTypes(storeTypesPath);
