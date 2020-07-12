@@ -37,7 +37,7 @@ const StoreTypesMenu = (props: Props) => {
 
   const renderDummyButtons = () => <DummyButton>Dodaj nowy</DummyButton>;
   return (
-    <MenuWrapper>
+    <MenuWrapper className={'withScroll'}>
       <MenuHeader>Magazyny</MenuHeader>
       {user ? renderButtons() : renderDummyButtons()}
 

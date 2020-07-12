@@ -9,6 +9,7 @@ const MenuButton = styled.button`
   display: flex;
   width: 180px;
   height: 40px;
+  min-height: 40px;
   color: ${(props: Props) => (props.color ? props.color : theme.green)};
   border: 2px solid ${(props: Props) => (props.color ? props.color : theme.green)};
   border-radius: 10px;

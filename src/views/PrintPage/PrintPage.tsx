@@ -27,7 +27,8 @@ const StyledWrapper = styled.div`
 const StyledPage = styled.div`
   display: flex;
   flex-flow: wrap row;
-  align-content: center;
+  align-content: flex-start;
+  padding: 40px 0;
   justify-content: center;
   margin: 30px;
   width: 180mm;

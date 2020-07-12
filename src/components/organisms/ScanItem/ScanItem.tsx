@@ -94,7 +94,7 @@ const ScanItem = () => {
   };
   const getPosition = useCallback((element: RefObject<HTMLDivElement>) => {
     if (element.current) {
-      setScrollToPosition(element.current.offsetTop);
+      setScrollToPosition(element.current.offsetTop - 300);
     }
   }, []);
 

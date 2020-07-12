@@ -11,7 +11,7 @@ export const createItemTag = (newItem: StoreItem) => {
 };
 
 export const createLinkTag = (link: string) => {
-  return new Tag(link, '', link);
+  return new Tag(link, link, '');
 };
 
 export const addNewTag = (tag: Tag, callback: (x: StatusInfo) => void) => {

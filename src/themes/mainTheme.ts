@@ -11,6 +11,7 @@ const theme = {
   transparentYellow: 'rgba(255, 195, 20, 0.18)',
   transparentBlue: 'rgba(1,160, 226, 0.1)',
   transparentRed: 'rgba(217, 72, 99, 0.4)',
+  transparentPrimary: 'rgba(1, 13, 38, 0.7)',
   gray: '#A1A1A1',
   darkGray: 'rgba(54, 53, 53, 1)',
   orange: '#FF8C00',
