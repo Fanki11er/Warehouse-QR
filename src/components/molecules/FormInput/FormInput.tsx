@@ -27,6 +27,11 @@ const StyledInput = styled(Field)`
   background-color: transparent;
   font-size: ${({ theme }) => theme.fontSizeDesktop.larger};
   caret-color: ${({ theme }) => theme.orange};
+  ::-webkit-outer-spin-button,
+  ::-webkit-inner-spin-button {
+    display: none;
+    margin: 0;
+  }
 
   &.error {
     color: ${({ theme }) => theme.lightRed};
@@ -44,7 +49,7 @@ const StyledInput = styled(Field)`
   &:focus {
     box-shadow: 0px 0px 3px 1px ${({ theme }) => theme.green};
     outline: none;
-    caret-color: red;
+    caret-color: ${({ theme }) => theme.orange};
   }
 
   @media (max-width: 600px) {

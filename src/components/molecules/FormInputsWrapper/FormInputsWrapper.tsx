@@ -150,7 +150,7 @@ const FormPartTwo = ({ index }) => {
     <StyledInputsWrapper>
       <FormInput
         name={'defaultOrderAmount'}
-        type={'text'}
+        type={'number'}
         label={'Do zamówienia'}
         maxLength={5}
         inputMode={'numeric'}
@@ -171,11 +171,11 @@ const FormPartTwo = ({ index }) => {
       />
       <FormInput
         name={'quantity'}
-        type={'text'}
+        type={'number'}
         label={'Ilość w magazynie'}
         maxLength={12}
         inputMode={'number'}
-        pattern={'[0-9]*'}
+        pattern={'[1-9]*'}
         error={errors.quantity && touched.quantity ? true : false}
         errorText={errors.quantity && touched.quantity ? errors.quantity : ''}
       />

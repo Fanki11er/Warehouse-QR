@@ -60,14 +60,14 @@ const GlobalStyle = createGlobalStyle`
       transform: scale(1);
       margin: 0;
       padding: 0;
-      margin-bottom: 45px;  
-      height: 265mm;
+      margin-bottom: 25px;  
+      height: 265mm; 
    }
 
    .pagePdf {
      transform: scale(1);
      margin: 0;
-     margin-bottom: 45px;
+     margin-bottom: 80px;
      padding:0;
      height: 255mm;
      
