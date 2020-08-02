@@ -1,4 +1,4 @@
-import React, { useState, RefObject, useEffect, useCallback } from 'react';
+import React, { useState, RefObject, useEffect, useCallback, useRef } from 'react';
 import ScannedStoreItem from '../../molecules/ScannedStoreItem/ScannedStoreItem';
 import styled from 'styled-components';
 import ReadQr from '../ReadQR/ReadQr';
@@ -76,6 +76,8 @@ const ScanItem = () => {
   const [scanError, setScanError] = useState<string>('');
   const [scrollToPosition, setScrollToPosition] = useState<number>(0);
 
+  const button = useRef<HTMLButtonElement>(null);
+
   const toggleScanning = () => {
     !isScanning && setScannedItemId('');
     setIsScanning(!isScanning);
@@ -92,13 +94,18 @@ const ScanItem = () => {
   const handleErr = (err: string) => {
     setScanError(err);
   };
-  const getPosition = useCallback((element: RefObject<HTMLDivElement>) => {
+  const getPosition = useCallback((element: RefObject<HTMLDivElement | HTMLButtonElement>) => {
     if (element.current) {
-      setScrollToPosition(element.current.offsetTop - 300);
+      console.log(element);
+      setScrollToPosition(element.current.offsetTop + 150);
     }
   }, []);
 
   const goTop = useGoToTheTop();
+
+  useEffect(() => {
+    getPosition(button);
+  }, [button, getPosition]);
 
   useEffect(() => {
     isScanning && goTop();
@@ -123,7 +130,7 @@ const ScanItem = () => {
           />
         )}
       </StyledScannerWrapper>
-      <StyledButton onClick={() => toggleScanning()}>
+      <StyledButton onClick={() => toggleScanning()} ref={button}>
         {isScanning ? 'Wyłącz' : 'Skanuj'}
       </StyledButton>
 
@@ -135,7 +142,6 @@ const ScanItem = () => {
       <ScannedStoreItem
         scannedItemId={scannedItemId}
         isScanning={isScanning}
-        getPosition={getPosition}
         resetScannedItem={resetScannedItem}
       />
     </StyledWrapper>

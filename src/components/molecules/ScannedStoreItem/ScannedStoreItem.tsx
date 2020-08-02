@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useRef, RefObject } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import styled from 'styled-components';
 import theme from '../../../themes/mainTheme';
 import useGoToTheTop from '../../../Hooks/useGoToTheTop';
@@ -97,28 +97,22 @@ const StyledInfoWrapper = styled.div`
 
 interface Props {
   isScanning: boolean;
-  getPosition: (x: RefObject<any>) => void;
   resetScannedItem: () => void;
 }
 
 const ScannedStoreItem = (props: Props & ThemeProps) => {
-  const { scannedItemId, isScanning, getPosition, resetScannedItem } = props;
+  const { scannedItemId, isScanning, resetScannedItem } = props;
   const [error, setError] = useState('');
   const [item, setStoreItem] = useState<storeItem | undefined>(undefined);
   const toggleOrderModal = useContext(OrderModalContext);
   const user = useContext(UserContext);
   const sendStatsInfo = useContext(StatusInfoContext);
 
-  const itemInfo = useRef<any>(null);
   const goTop = useGoToTheTop();
 
   useEffect(() => {
     goTop();
   }, [goTop]);
-
-  useEffect(() => {
-    getPosition(itemInfo);
-  }, [itemInfo, getPosition]);
 
   useEffect(() => {
     if (isScanning) {
@@ -137,6 +131,12 @@ const ScannedStoreItem = (props: Props & ThemeProps) => {
     }
   }, [scannedItemId]);
 
+  const isValid = (item: storeItem) => {
+    const isOk = /^\w{3}-\d{3,4}$/.test(item.identifier);
+    console.log(isOk);
+    return isOk;
+  };
+
   const renderItem = (error: string, item: storeItem | undefined) => {
     if (error) {
       return <StyledErrorInfo>{error}</StyledErrorInfo>;
@@ -149,7 +149,10 @@ const ScannedStoreItem = (props: Props & ThemeProps) => {
       );
     } else if (!scannedItemId && !item) {
       return <StyledStoreItem>{''}</StyledStoreItem>;
+    } else if (scannedItemId && item && !isValid(item)) {
+      return <StyledStoreItem>{'Nie odpowiedni format kodu'}</StyledStoreItem>;
     }
+
     return (
       <>
         <StyledStoreItem>{item!.orderDescription} </StyledStoreItem>
@@ -159,8 +162,9 @@ const ScannedStoreItem = (props: Props & ThemeProps) => {
       </>
     );
   };
+
   return (
-    <StyledWrapper scannedItemId={scannedItemId} ref={itemInfo}>
+    <StyledWrapper scannedItemId={scannedItemId}>
       <StyledItemWrapper>{renderItem(error, item)}</StyledItemWrapper>
 
       <StyledButtonsWrapper>

@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import styled from 'styled-components';
 import { storeType } from '../../../types/types';
 import UserContext from '../../../context/userContext';
 import MenuHeader from '../../atoms/MenuHeader/MenuHeader';
@@ -9,6 +10,10 @@ import MenuWrapper from '../../atoms/MenuWrapper/MenuWrapper';
 import LoadingImage from '../../atoms/LoadingImage/LoadingImage';
 import ErrorInfo from '../../atoms/ErrorInfo/ErrorInfo';
 import DummyButton from '../../atoms/DummyButton/DummyButton';
+
+const StyledMenuButton = styled(MenuButton)`
+  margin-bottom: 20px;
+`;
 
 interface Props {
   availableStores: storeType[];
@@ -30,9 +35,12 @@ const StoreTypesMenu = (props: Props) => {
     );
   };
   const renderButtons = () => (
-    <MenuButton className={!baseStatus ? 'notActive' : undefined} onClick={() => toggleModal()}>
+    <StyledMenuButton
+      className={!baseStatus ? 'notActive' : undefined}
+      onClick={() => toggleModal()}
+    >
       Dodaj nowy
-    </MenuButton>
+    </StyledMenuButton>
   );
 
   const renderDummyButtons = () => <DummyButton>Dodaj nowy</DummyButton>;

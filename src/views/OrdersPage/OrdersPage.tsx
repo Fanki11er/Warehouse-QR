@@ -69,7 +69,7 @@ const OrdersPage = () => {
   const [isStoreEmpty, setIsStoreEmpty] = useState<boolean | undefined>(undefined);
   const [ordersList, setOrdersList] = useState([]);
   const [pagesList, setPagesList] = useState<Array<Order[]>>([]);
-  const [printer, setPrinter] = useState(true);
+  const [printer, setPrinter] = useState(false);
 
   useEffect(() => {
     const loadItemsList = (ordersPath: string, user: firebase.User) => {
@@ -121,18 +121,18 @@ const OrdersPage = () => {
   const spliceForPages = useCallback((ordersList: Order[]): Array<Order>[] => {
     const list = sortOrdersList([...ordersList]);
 
-    const check = (list: Order[]) => {
+    /*const check = (list: Order[]) => {
       let counter = 0;
       let isLargeItem = 0;
-      while (counter < 20 && counter < list.length) {
+      while (counter < 21 && counter < list.length) {
         isLargeItem = list[counter].extraInfo ? (isLargeItem += 1) : isLargeItem;
         counter += 1;
       }
-      return isLargeItem ? Number((isLargeItem / 2).toFixed(0)) + 1 : 0;
-    };
+      return isLargeItem ? Number((isLargeItem / 2).toFixed(0)) + 2 : 0;
+    };*/
     const pages: Array<Order>[] = [];
     do {
-      const limit = 20 - check(list);
+      const limit = 13;
       const page = list.splice(0, limit);
       pages.push(page);
     } while (list.length > 0);
@@ -189,7 +189,7 @@ const OrdersPage = () => {
         let startIndex = 0;
         if (index) startIndex = arr[index - 1].length;
         return (
-          <StyledPage className={printer ? 'pagePrinter' : 'pagePdf'} key={index}>
+          <StyledPage className={printer ? 'pagePdf' : 'pagePdf'} key={index}>
             <OrdersList
               ordersList={page}
               startIndex={startIndex}
@@ -205,7 +205,7 @@ const OrdersPage = () => {
   return (
     <StyledWrapper>
       <StyledButtonsWrapper className={'printHide'}>
-        <MenuButton onClick={() => changePrinter()}>{printer ? 'PDF' : 'DRUKARKA'}</MenuButton>
+        <MenuButton onClick={() => changePrinter()}>{!printer ? 'PDF' : 'DRUKARKA'}</MenuButton>
         <StyledMenuButton onClick={() => user && resetOrdersList(user)}>Resetuj</StyledMenuButton>
       </StyledButtonsWrapper>
       {user && !isStoreEmpty ? (

@@ -9,8 +9,12 @@ import DummyButton from '../../atoms/DummyButton/DummyButton';
 
 const StyledWrapper = styled(MenuWrapper)`
   min-height: 150px;
-  height: 180px;
+  height: 150px;
   justify-content: flex-start;
+  min-width: 300px;
+  @media (max-width: 560px) {
+    height: inherit;
+  }
 `;
 
 interface Props {

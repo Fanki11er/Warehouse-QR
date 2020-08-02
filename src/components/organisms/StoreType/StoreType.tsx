@@ -9,6 +9,7 @@ import StoreItemsView from '../StoreItemsView/StoreItemsView';
 import AddItemModal from '../AddItemModal/AddItemModal';
 import EditItemModal from '../EditItemModal/EditItemModal';
 import SearchInput from '../../atoms/SearchInput/SearchInput';
+import useGoToTheTop from '../../../Hooks/useGoToTheTop';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -39,6 +40,10 @@ const StyledStoreHeader = styled.div`
   }
 `;
 
+const StyledMenu = styled(StoreMenu)`
+  width: 150px;
+  min-height: 300px;
+`;
 interface Props {
   location: any; //! What type is it??
 }
@@ -63,6 +68,15 @@ const StoreType = (props: Props) => {
     setItemToEdition(item);
     setIsEditItemModalOpened(!isEditItemModalOpened);
   };
+
+  const goTop = useGoToTheTop();
+  useEffect(() => {
+    goTop();
+  }, [goTop]);
+
+  useEffect(() => {
+    filterItems(itemsList);
+  }, [itemsList]);
 
   useEffect(() => {
     if (!identifier) return;
@@ -107,7 +121,7 @@ const StoreType = (props: Props) => {
         onKeyUp={() => filterItems(itemsList)}
       />
       <StyledFlexWrapper>
-        <StoreMenu toggleModal={toggleAddItemsModal} />
+        <StyledMenu toggleModal={toggleAddItemsModal} />
         <StoreItemsView
           isStoreEmpty={isStoreEmpty!}
           items={filterInput.current?.value ? filteredItemsList : itemsList}
