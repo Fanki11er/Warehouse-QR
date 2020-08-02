@@ -7,7 +7,9 @@ const StyledListItem = styled.li`
   position: relative;
   display: flex;
   flex-flow: wrap row;
+  align-items: center;
   width: 100%;
+  height: 65px;
   border-bottom: 1px solid black;
   margin-bottom: 3px;
   padding: 10px;

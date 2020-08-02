@@ -5,7 +5,7 @@ const MenuHeader = styled.div`
   align-self: center;
   color: ${({ theme }) => theme.primaryBlue};
   font-size: ${({ theme }) => theme.fontSizeDesktop.large};
-  margin: 10px;
+  margin: 15px;
 `;
 
 export default MenuHeader;

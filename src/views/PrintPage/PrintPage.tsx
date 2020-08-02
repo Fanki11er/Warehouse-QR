@@ -79,7 +79,11 @@ const PrintPage = () => {
   const user = useContext(UserContext);
   const sendStatusInfo = useContext(StatusInfoContext);
 
-  useGoToTheTop();
+  const goTop = useGoToTheTop();
+
+  useEffect(() => {
+    goTop();
+  }, [goTop]);
 
   useEffect(() => {
     const listener = user ? getData(tagsPath, setIsStoreEmpty, setTagsList) : undefined;

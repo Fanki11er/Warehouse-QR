@@ -50,17 +50,25 @@ const OrderItemForm = (props: Props) => {
     orderDescription: yup.string().required('Pole jest wymagane'),
   });
 
+  const trimField = (field: string) => {
+    while (field[0] === '0') {
+      field.replace('0', '');
+    }
+    return field;
+  };
+
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validateSchema}
       onSubmit={(values) => {
+        //!remove 0
         const { itemIdentifier, quantity, extraInfo, units, orderDescription } = values;
         const extendedExtraInfo = item?.catalogNumber;
         const newOrderItem = new ItemOrder(
           itemIdentifier,
           orderDescription,
-          quantity,
+          Number(quantity),
           units,
           extendedExtraInfo ? `Kat: ${extendedExtraInfo}  ${extraInfo}` : extraInfo,
         );
