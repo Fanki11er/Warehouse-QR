@@ -3,7 +3,7 @@ import styled from 'styled-components';
 const DummyButton = styled.button`
   display: flex;
   width: 180px;
-  height: 40px;
+  height: 50px;
   color: ${({ theme }) => theme.darkGray};
   border: 2px solid ${({ theme }) => theme.darkGray};
   border-radius: 10px;

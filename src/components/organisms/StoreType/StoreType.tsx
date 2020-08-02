@@ -59,6 +59,7 @@ const StoreType = (props: Props) => {
   const [filteredItemsList, setFilteredItemsList] = useState<storeItem[]>([]);
   const [isAddItemModalOpened, setIsAddItemModalOpened] = useState(false);
   const [isEditItemModalOpened, setIsEditItemModalOpened] = useState(false);
+  const [isSortByName, setSortByName] = useState(false);
   const [itemToEdition, setItemToEdition] = useState<storeItem | null>(null);
   const toggleAddItemsModal = () => {
     setIsAddItemModalOpened(!isAddItemModalOpened);
@@ -67,6 +68,10 @@ const StoreType = (props: Props) => {
   const toggleEditItemModal = async (item: storeItem) => {
     setItemToEdition(item);
     setIsEditItemModalOpened(!isEditItemModalOpened);
+  };
+
+  const toggleSortType = () => {
+    setSortByName(!isSortByName);
   };
 
   const goTop = useGoToTheTop();
@@ -121,8 +126,13 @@ const StoreType = (props: Props) => {
         onKeyUp={() => filterItems(itemsList)}
       />
       <StyledFlexWrapper>
-        <StyledMenu toggleModal={toggleAddItemsModal} />
+        <StyledMenu
+          toggleModal={toggleAddItemsModal}
+          toggleSortType={toggleSortType}
+          isSortByName={isSortByName}
+        />
         <StoreItemsView
+          sortByName={isSortByName}
           isStoreEmpty={isStoreEmpty!}
           items={filterInput.current?.value ? filteredItemsList : itemsList}
           toggleEditItemModal={toggleEditItemModal}
