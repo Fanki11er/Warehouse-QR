@@ -38,6 +38,7 @@ type Props = {
   items: storeItem[];
   isStoreEmpty: boolean;
   toggleEditItemModal: (a: storeItem) => void;
+  sortByName: boolean;
 };
 
 const StyledErrorInfo = styled(ErrorInfo)`
@@ -45,7 +46,7 @@ const StyledErrorInfo = styled(ErrorInfo)`
 `;
 
 const StoreItemsView = (props: Props) => {
-  const { isStoreEmpty, items, toggleEditItemModal } = props;
+  const { isStoreEmpty, items, toggleEditItemModal, sortByName } = props;
   const orderItem = useContext(OrderContext);
   const actions = { addNewTag, toggleEditItemModal, orderItem, createItemTag };
 
@@ -53,6 +54,14 @@ const StoreItemsView = (props: Props) => {
     return items.length ? (
       items
         .sort((a, b) => {
+          if (sortByName) {
+            if (a.orderDescription > b.orderDescription) {
+              return 1;
+            } else if (a.orderDescription < b.orderDescription) {
+              return -1;
+            }
+            return 0;
+          }
           return b.id - a.id;
         })
         .map((item, index) => {

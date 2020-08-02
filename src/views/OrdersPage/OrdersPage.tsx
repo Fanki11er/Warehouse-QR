@@ -121,15 +121,6 @@ const OrdersPage = () => {
   const spliceForPages = useCallback((ordersList: Order[]): Array<Order>[] => {
     const list = sortOrdersList([...ordersList]);
 
-    /*const check = (list: Order[]) => {
-      let counter = 0;
-      let isLargeItem = 0;
-      while (counter < 21 && counter < list.length) {
-        isLargeItem = list[counter].extraInfo ? (isLargeItem += 1) : isLargeItem;
-        counter += 1;
-      }
-      return isLargeItem ? Number((isLargeItem / 2).toFixed(0)) + 2 : 0;
-    };*/
     const pages: Array<Order>[] = [];
     do {
       const limit = 13;
@@ -223,15 +214,3 @@ const OrdersPage = () => {
   );
 };
 export default OrdersPage;
-
-/* {user && !isStoreEmpty ? (
-        renderPages(pagesList)
-      ) : (
-        <StyledPage>
-          {user ? (
-            <StyledErrorInfo>Brak elementów do wyświetlenia</StyledErrorInfo>
-          ) : (
-            <StyledErrorInfo>Brak uprawnień</StyledErrorInfo>
-          )}
-        </StyledPage>
-      )} */

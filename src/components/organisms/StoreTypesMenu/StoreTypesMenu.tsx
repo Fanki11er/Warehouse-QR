@@ -14,6 +14,10 @@ import DummyButton from '../../atoms/DummyButton/DummyButton';
 const StyledMenuButton = styled(MenuButton)`
   margin-bottom: 20px;
 `;
+const StyledDummyButton = styled(DummyButton)`
+  min-height: 45px;
+  margin-bottom: 20px;
+`;
 
 interface Props {
   availableStores: storeType[];
@@ -43,7 +47,7 @@ const StoreTypesMenu = (props: Props) => {
     </StyledMenuButton>
   );
 
-  const renderDummyButtons = () => <DummyButton>Dodaj nowy</DummyButton>;
+  const renderDummyButtons = () => <StyledDummyButton>Dodaj nowy</StyledDummyButton>;
   return (
     <MenuWrapper className={'withScroll'}>
       <MenuHeader>Magazyny</MenuHeader>
